@@ -39,11 +39,11 @@ function Stat({ n, label }) {
 
 /* ── CategoryTabs ── */
 const DIRECTORY_TABS = [
-  { label: "Itinerary", count: "2.4K", href: "/" },
+  { label: "Itinerary", count: "2.4K", href: "/itinerary" },
   { label: "Destinasi", count: "180", href: "/destinations" },
   { label: "Atraksi", count: "1.2K", href: "/attractions" },
   { label: "Tour Guide", count: "640", href: "/tour-guides" },
-  { label: "Desa Wisata", count: "320", href: "/" },
+  { label: "Desa Wisata", count: "320", href: "/tourism-villages" },
 ];
 function CategoryTabs({ active = "Tour Guide" }) {
   return (
