@@ -28,18 +28,16 @@
 
 1. **Trigger**: When the user types `cm`, generate an **English** conventional commit message.
 2. **Logic**: Check staged changes first (`git diff --staged`). If nothing staged, check unstaged (`git diff`). If nothing at all, respond "Nothing to commit".
-3. **Output format** — exactly **2 fenced code blocks**, nothing else:
+3. **Output format** — exactly **2 fenced code blocks**, nothing else (no outer wrapping):
 
-````
-```subject
+```
 type(scope): concise imperative summary
 ```
 
-```body
+```
 Optional body wrapped at 72 chars. Include what and why,
 not how. Omit this block if the subject says it all.
 ```
-````
 
 4. **Style rules**:
    - Follow [Conventional Commits](https://www.conventionalcommits.org/): `feat`, `fix`, `refactor`, `style`, `docs`, `chore`, `perf`, `test`.
