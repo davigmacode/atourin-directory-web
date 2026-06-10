@@ -1,0 +1,146 @@
+/* Atourin Design System Tokens — from colors_and_type.css */
+
+@font-face {
+  font-family: 'Product Sans';
+  src: url('/assets/atr/fonts/Product-Sans-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Product Sans';
+  src: url('/assets/atr/fonts/Product-Sans-Italic.ttf') format('truetype');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Product Sans';
+  src: url('/assets/atr/fonts/Product-Sans-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Product Sans';
+  src: url('/assets/atr/fonts/Product-Sans-Bold-Italic.ttf') format('truetype');
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}
+
+:root {
+  /* Brand: Purple (primary) */
+  --atr-purple:           #7068D5;
+  --atr-purple-soft:      #A49EE4;
+  --atr-purple-light:     #CDCDED;
+  --atr-purple-alt:       rgba(112, 104, 213, 0.4);
+  --atr-purple-50:        #F1F0FB;
+  --atr-purple-6564ab:    #6564AB;
+  --atr-purple-6c559c:    #6C559C;
+  --atr-purple-654093:    #654093;
+  --atr-purple-9b6aab:    #9B6AAB;
+
+  /* Brand: Yellow */
+  --atr-yellow:           #FFC442;
+  --atr-yellow-fdc442:    #FDC442;
+
+  /* Brand: Red / Pink */
+  --atr-red:              #F46263;
+  --atr-red-ec6466:       #EC6466;
+  --atr-red-ec6366:       #EC6366;
+
+  /* Functional */
+  --atr-arti:             #51B054;
+
+  /* Neutrals */
+  --atr-text:             #58595B;
+  --atr-text-muted:       #8A8B8D;
+  --atr-outline:          #E6E6E6;
+  --atr-bg:               #FFFFFF;
+  --atr-bg-soft:          #F6F6FB;
+  --atr-bg-cool:          #E4E6F3;
+  --atr-bg-cool-2:        #D4ECF4;
+  --atr-bg-warm:          #F6F6FB;
+
+  /* Semantic */
+  --atr-fg-1:             var(--atr-text);
+  --atr-fg-2:             var(--atr-text-muted);
+  --atr-fg-on-purple:     #FFFFFF;
+  --atr-fg-link:          var(--atr-purple);
+
+  /* Status */
+  --atr-success:          var(--atr-arti);
+  --atr-warning:          var(--atr-yellow);
+  --atr-danger:           var(--atr-red);
+  --atr-info:             var(--atr-purple);
+
+  /* Type */
+  --atr-font-sans: 'Product Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --atr-fs-display-lg:    32px;
+  --atr-fs-display-md:    28px;
+  --atr-fs-headline-md:   20px;
+  --atr-fs-headline-sm:   18px;
+  --atr-fs-title-lg:      18px;
+  --atr-fs-title-md:      16px;
+  --atr-fs-title-sm:      14px;
+  --atr-fs-body-lg:       16px;
+  --atr-fs-body-md:       14px;
+  --atr-fs-body-sm:       12px;
+  --atr-fs-label-lg:      14px;
+  --atr-fs-label-sm:      11px;
+  --atr-lh-base:          1.4;
+  --atr-lh-tight:         1.2;
+
+  /* Spacing */
+  --atr-space-0:          0px;
+  --atr-space-1:          4px;
+  --atr-space-2:          8px;
+  --atr-space-3:          12px;
+  --atr-space-4:          16px;
+  --atr-space-5:          20px;
+  --atr-space-6:          24px;
+  --atr-space-7:          32px;
+  --atr-space-8:          40px;
+
+  /* Radii */
+  --atr-radius-xs:        4px;
+  --atr-radius-sm:        5px;
+  --atr-radius-md:        8px;
+  --atr-radius-lg:        12px;
+  --atr-radius-xl:        16px;
+  --atr-radius-pill:      9999px;
+}
+
+html, body {
+  font-family: var(--atr-font-sans);
+  color: var(--atr-fg-1);
+  background: var(--atr-bg);
+  line-height: var(--atr-lh-base);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  margin: 0;
+  padding: 0;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+h1, h2, h3, h4, h5, h6, p { margin: 0; }
+
+a { color: var(--atr-fg-link); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+button, input { font-family: var(--atr-font-sans); }
+
+/* Mobile responsive overrides */
+@media (max-width: 900px) {
+  [style*="repeat(8"], [style*="repeat(6"], [style*="repeat(5"] { grid-template-columns: repeat(3, 1fr) !important; }
+  [style*="repeat(4,"], [style*="repeat(4 "] { grid-template-columns: repeat(2, 1fr) !important; }
+}
+@media (max-width: 560px) {
+  [style*="repeat(8"], [style*="repeat(6"], [style*="repeat(5"],
+  [style*="repeat(4,"], [style*="repeat(4 "],
+  [style*="repeat(3,"], [style*="repeat(3 "] { grid-template-columns: repeat(2, 1fr) !important; }
+}
