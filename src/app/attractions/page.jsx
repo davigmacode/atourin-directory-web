@@ -564,6 +564,40 @@ function AttractionHero() {
   );
 }
 
+/* ── SkeletonCard ── */
+function SkeletonCard() {
+  const skeletonBg = { background: "var(--atr-outline)", borderRadius: 4 };
+  return (
+    <div style={{ ...cardStyles.card, pointerEvents: "none" }}>
+      <div
+        style={{ ...cardStyles.cardImgWrap, background: "var(--atr-outline)" }}
+      />
+      <div style={cardStyles.cardBody}>
+        <div
+          style={{ ...skeletonBg, height: 18, width: "70%", marginBottom: 4 }}
+        />
+        <div style={{ ...skeletonBg, height: 13, width: "50%" }} />
+        <div style={{ display: "flex", gap: 8, marginTop: 4 }}>
+          <div style={{ ...skeletonBg, height: 12, width: "35%" }} />
+          <div style={{ ...skeletonBg, height: 12, width: "30%" }} />
+        </div>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            marginTop: 8,
+            paddingTop: 10,
+            borderTop: "1px solid var(--atr-outline)",
+          }}
+        >
+          <div style={{ ...skeletonBg, height: 14, width: 80 }} />
+          <div style={{ ...skeletonBg, height: 12, width: 70 }} />
+        </div>
+      </div>
+    </div>
+  );
+}
+
 /* ── AttractionGrid + AttrCard ── */
 function AttractionGrid({ data, loadMore, hasMore, pagination }) {
   const [saved, setSaved] = useState({});
@@ -935,15 +969,21 @@ export default function AttractionsPage() {
       <CategoryTabs active="Atraksi" />
 
       {isLoading && data.length === 0 && !isError ? (
-        <div
-          style={{
-            textAlign: "center",
-            padding: "80px 0",
-            color: "var(--atr-text-muted)",
-          }}
-        >
-          Memuat atraksi...
-        </div>
+        <section style={cardStyles.gridSection}>
+          <div style={cardStyles.gridHeader}>
+            <div>
+              <div style={cardStyles.eyebrow}>
+                {"\uD83D\uDCCD"} Direktori atraksi
+              </div>
+              <h2 style={cardStyles.railTitle}>Semua tempat wisata</h2>
+            </div>
+          </div>
+          <div style={cardStyles.grid}>
+            {Array.from({ length: 6 }).map((_, i) => (
+              <SkeletonCard key={i} />
+            ))}
+          </div>
+        </section>
       ) : isError && data.length === 0 ? (
         <div
           style={{

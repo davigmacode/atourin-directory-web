@@ -405,6 +405,61 @@ function VillageCard({
   );
 }
 
+/* ── SkeletonCard ── */
+function SkeletonCard() {
+  const skeletonBg = { background: "var(--atr-outline)", borderRadius: 4 };
+  return (
+    <div style={{ ...cardStyles.card, pointerEvents: "none" }}>
+      <div
+        style={{ ...cardStyles.cardImgWrap, background: "var(--atr-outline)" }}
+      />
+      <div style={cardStyles.cardBody}>
+        <div>
+          <div
+            style={{
+              ...skeletonBg,
+              height: 18,
+              width: "75%",
+              marginBottom: 6,
+            }}
+          />
+          <div style={{ ...skeletonBg, height: 12, width: "55%" }} />
+        </div>
+        <div style={{ display: "flex", gap: 4, flexWrap: "wrap" }}>
+          <div style={{ ...skeletonBg, height: 22, width: 65 }} />
+          <div style={{ ...skeletonBg, height: 22, width: 75 }} />
+          <div style={{ ...skeletonBg, height: 22, width: 60 }} />
+        </div>
+        <div style={{ ...cardStyles.cardFooter, paddingTop: 10 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+            <div style={{ ...skeletonBg, height: 14, width: 55 }} />
+            <div style={{ ...skeletonBg, height: 12, width: 75 }} />
+          </div>
+          <div style={{ textAlign: "right" }}>
+            <div
+              style={{
+                ...skeletonBg,
+                height: 10,
+                width: 45,
+                marginLeft: "auto",
+                marginBottom: 4,
+              }}
+            />
+            <div
+              style={{
+                ...skeletonBg,
+                height: 16,
+                width: 85,
+                marginLeft: "auto",
+              }}
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 /* ── VillagesGrid ── */
 function VillagesGrid({
   data,
@@ -426,17 +481,9 @@ function VillagesGrid({
             <h2 style={cardStyles.railTitle}>Semua desa wisata Indonesia</h2>
           </div>
         </div>
-        <div style={{ ...cardStyles.grid, opacity: 0.35 }}>
+        <div style={cardStyles.grid}>
           {Array.from({ length: 6 }).map((_, i) => (
-            <div
-              key={i}
-              style={{
-                ...cardStyles.card,
-                height: 340,
-                background: "var(--atr-bg-soft)",
-                border: "none",
-              }}
-            />
+            <SkeletonCard key={i} />
           ))}
         </div>
       </section>

@@ -490,16 +490,93 @@ function GuideCard({
 }
 
 /* ── Loading / Error / Empty states ── */
+function SkeletonGuideCard() {
+  const skeletonBg = { background: "var(--atr-outline)", borderRadius: 4 };
+  return (
+    <div style={{ ...gc.card, pointerEvents: "none" }}>
+      <div style={gc.topRow}>
+        <div
+          style={{
+            ...gc.avatar,
+            background: "var(--atr-outline)",
+            border: "none",
+          }}
+        />
+        <div style={gc.info}>
+          <div
+            style={{ ...skeletonBg, height: 16, width: "70%", marginBottom: 6 }}
+          />
+          <div
+            style={{ ...skeletonBg, height: 12, width: "50%", marginBottom: 6 }}
+          />
+          <div style={{ ...skeletonBg, height: 12, width: "60%" }} />
+        </div>
+      </div>
+
+      <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginTop: 10 }}>
+        {[1, 2, 3].map((i) => (
+          <div
+            key={i}
+            style={{ ...skeletonBg, height: 22, width: `${60 + i * 10}px` }}
+          />
+        ))}
+      </div>
+
+      <div
+        style={{
+          display: "flex",
+          gap: 6,
+          alignItems: "center",
+          marginTop: 10,
+        }}
+      >
+        <div style={{ ...skeletonBg, height: 12, width: 50 }} />
+        {[1, 2].map((i) => (
+          <div key={i} style={{ ...skeletonBg, height: 22, width: 55 }} />
+        ))}
+      </div>
+
+      <div style={{ display: "flex", gap: 6, marginTop: 8 }}>
+        {[1, 2].map((i) => (
+          <div
+            key={i}
+            style={{ ...skeletonBg, height: 24, width: `${80 + i * 20}px` }}
+          />
+        ))}
+      </div>
+
+      <div style={gc.footer}>
+        <div style={{ ...skeletonBg, height: 14, width: "35%" }} />
+        <div style={{ textAlign: "right" }}>
+          <div
+            style={{
+              ...skeletonBg,
+              height: 10,
+              width: 50,
+              marginLeft: "auto",
+              marginBottom: 4,
+            }}
+          />
+          <div
+            style={{
+              ...skeletonBg,
+              height: 16,
+              width: 80,
+              marginLeft: "auto",
+            }}
+          />
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function GuidesLoading() {
   return (
-    <div
-      style={{
-        textAlign: "center",
-        padding: "60px 20px",
-        color: "var(--atr-text-muted)",
-      }}
-    >
-      <div style={{ fontSize: 14 }}>Memuat data tour guide...</div>
+    <div style={cardStyles.grid}>
+      {Array.from({ length: 6 }).map((_, i) => (
+        <SkeletonGuideCard key={i} />
+      ))}
     </div>
   );
 }
