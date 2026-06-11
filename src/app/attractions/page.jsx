@@ -5,262 +5,13 @@ import TopNav from "@/components/TopNav";
 import Breadcrumb from "@/components/Breadcrumb";
 import SiteFooter from "@/components/SiteFooter";
 import { dirStyles, cardStyles, attrHero } from "@/styles/attraction-styles";
-
-/* ── Images ── */
-const ATTR_IMG = {
-  padar:
-    "https://images.unsplash.com/photo-1539367628448-4bc5c9d171c8?w=1200&auto=format&fit=crop&q=70",
-  borobudur:
-    "https://images.unsplash.com/photo-1555400038-63f5ba517a47?w=1200&auto=format&fit=crop&q=70",
-  bromo:
-    "https://images.unsplash.com/photo-1596402184320-417e7178b2cd?w=1200&auto=format&fit=crop&q=70",
-  ulundanu:
-    "https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=1200&auto=format&fit=crop&q=70",
-  tanjung:
-    "https://images.unsplash.com/photo-1518684079-3c830dcef090?w=1200&auto=format&fit=crop&q=70",
-  prambanan:
-    "https://images.unsplash.com/photo-1596402184320-417e7178b2cd?w=1200&auto=format&fit=crop&q=70",
-  toba: "https://images.unsplash.com/photo-1570214476695-19bd467e6f7a?w=1200&auto=format&fit=crop&q=70",
-  raja: "https://images.unsplash.com/photo-1604999333679-b86d54738315?w=1200&auto=format&fit=crop&q=70",
-  manta:
-    "https://images.unsplash.com/photo-1604999333679-b86d54738315?w=1200&auto=format&fit=crop&q=70",
-  tirta:
-    "https://images.unsplash.com/photo-1555400038-63f5ba517a47?w=1200&auto=format&fit=crop&q=70",
-  sendang:
-    "https://images.unsplash.com/photo-1518684079-3c830dcef090?w=1200&auto=format&fit=crop&q=70",
-  kawah:
-    "https://images.unsplash.com/photo-1596422846543-75c6fc197f07?w=1200&auto=format&fit=crop&q=70",
-};
-
-/* ── Filters ── */
-const ATTR_FILTERS = [
-  { label: "Provinsi", icon: "pin" },
-  { label: "Kategori", icon: "tag" },
-  { label: "Tiket masuk", icon: "wallet" },
-  { label: "Fasilitas", icon: "users" },
-  { label: "Rating", icon: "clock" },
-];
-const ATTR_FILTER_OPTIONS = {
-  Provinsi: [
-    "Bali",
-    "DI Yogyakarta",
-    "Jawa Timur",
-    "NTB",
-    "NTT",
-    "Jawa Barat",
-    "Sumatera Utara",
-    "Papua Barat Daya",
-    "Sulawesi Selatan",
-    "Aceh",
-  ],
-  Kategori: [
-    "Pantai",
-    "Air Terjun",
-    "Gunung",
-    "Candi & Sejarah",
-    "Museum",
-    "Religi",
-    "Taman",
-    "Snorkeling & Diving",
-    "Pemandian",
-    "Kuliner",
-  ],
-  "Tiket masuk": [
-    "Gratis",
-    "< Rp25rb",
-    "Rp25rb \u2013 Rp100rb",
-    "Rp100rb \u2013 Rp250rb",
-    "> Rp250rb",
-  ],
-  Fasilitas: [
-    "Parkir",
-    "Toilet",
-    "Mushola",
-    "Restoran",
-    "Penyewaan alat",
-    "Ramah anak",
-    "Akses kursi roda",
-  ],
-  Rating: ["\u2605 4.5+", "\u2605 4.0+", "\u2605 3.5+", "Semua rating"],
-};
-const SORT_OPTIONS = [
-  "Paling populer",
-  "Terbaru",
-  "Rating tertinggi",
-  "Harga terendah",
-  "Harga tertinggi",
-];
-
-const ATTR_DATA = [
-  {
-    img: ATTR_IMG.padar,
-    name: "Pulau Padar Viewpoint",
-    cat: "Alam",
-    catBg: "#D9F2DA",
-    catFg: "#2D8838",
-    region: "Labuan Bajo, NTT",
-    price: 50000,
-    rating: 4.95,
-    reviews: 412,
-    hours: "06.00\u201318.00",
-    trekking: true,
-    save: false,
-  },
-  {
-    img: ATTR_IMG.borobudur,
-    name: "Candi Borobudur",
-    cat: "Sejarah",
-    catBg: "#FFF4D9",
-    catFg: "#B47A00",
-    region: "Magelang, Jateng",
-    price: 75000,
-    rating: 4.9,
-    reviews: 1240,
-    hours: "06.30\u201317.30",
-    trekking: false,
-    save: false,
-  },
-  {
-    img: ATTR_IMG.bromo,
-    name: "Gunung Bromo",
-    cat: "Gunung",
-    catBg: "#EDE9FF",
-    catFg: "#5448B5",
-    region: "Probolinggo, Jatim",
-    price: 35000,
-    rating: 4.88,
-    reviews: 856,
-    hours: "24 jam",
-    trekking: true,
-    save: true,
-  },
-  {
-    img: ATTR_IMG.ulundanu,
-    name: "Pura Ulun Danu Beratan",
-    cat: "Religi",
-    catBg: "#FFE9E9",
-    catFg: "#C44949",
-    region: "Tabanan, Bali",
-    price: 50000,
-    rating: 4.8,
-    reviews: 624,
-    hours: "07.00\u201319.00",
-    trekking: false,
-    save: false,
-  },
-  {
-    img: ATTR_IMG.tanjung,
-    name: "Pantai Tanjung Aan",
-    cat: "Pantai",
-    catBg: "#E2F1FF",
-    catFg: "#1F6FB0",
-    region: "Lombok Tengah, NTB",
-    price: 0,
-    rating: 4.75,
-    reviews: 388,
-    hours: "24 jam",
-    trekking: false,
-    save: false,
-  },
-  {
-    img: ATTR_IMG.prambanan,
-    name: "Candi Prambanan",
-    cat: "Sejarah",
-    catBg: "#FFF4D9",
-    catFg: "#B47A00",
-    region: "Sleman, DIY",
-    price: 75000,
-    rating: 4.85,
-    reviews: 942,
-    hours: "06.30\u201317.00",
-    trekking: false,
-    save: false,
-  },
-  {
-    img: ATTR_IMG.toba,
-    name: "Danau Toba",
-    cat: "Alam",
-    catBg: "#D9F2DA",
-    catFg: "#2D8838",
-    region: "Sumatera Utara",
-    price: 0,
-    rating: 4.7,
-    reviews: 510,
-    hours: "24 jam",
-    trekking: false,
-    save: false,
-  },
-  {
-    img: ATTR_IMG.raja,
-    name: "Wayag Viewpoint",
-    cat: "Alam",
-    catBg: "#D9F2DA",
-    catFg: "#2D8838",
-    region: "Raja Ampat, Pabar",
-    price: 200000,
-    rating: 4.98,
-    reviews: 320,
-    hours: "05.30\u201317.00",
-    trekking: true,
-    save: true,
-  },
-  {
-    img: ATTR_IMG.sendang,
-    name: "Air Terjun Tiu Kelep",
-    cat: "Air Terjun",
-    catBg: "#E2F1FF",
-    catFg: "#1F6FB0",
-    region: "Lombok Utara, NTB",
-    price: 25000,
-    rating: 4.72,
-    reviews: 234,
-    hours: "07.00\u201317.00",
-    trekking: true,
-    save: false,
-  },
-  {
-    img: ATTR_IMG.kawah,
-    name: "Kawah Putih Ciwidey",
-    cat: "Alam",
-    catBg: "#D9F2DA",
-    catFg: "#2D8838",
-    region: "Bandung, Jabar",
-    price: 75000,
-    rating: 4.5,
-    reviews: 678,
-    hours: "07.00\u201317.00",
-    trekking: false,
-    save: false,
-  },
-  {
-    img: ATTR_IMG.manta,
-    name: "Manta Point Karang Makassar",
-    cat: "Diving",
-    catBg: "#E2F1FF",
-    catFg: "#1F6FB0",
-    region: "Labuan Bajo, NTT",
-    price: 350000,
-    rating: 4.92,
-    reviews: 192,
-    hours: "08.00\u201315.00",
-    trekking: false,
-    save: false,
-  },
-  {
-    img: ATTR_IMG.tirta,
-    name: "Pura Tirta Empul",
-    cat: "Religi",
-    catBg: "#FFE9E9",
-    catFg: "#C44949",
-    region: "Tampaksiring, Bali",
-    price: 50000,
-    rating: 4.78,
-    reviews: 540,
-    hours: "07.00\u201318.00",
-    trekking: false,
-    save: false,
-  },
-];
+import { useAttractions } from "@/lib/hooks/use-attractions";
+import {
+  ATTR_IMG,
+  ATTR_FILTERS,
+  ATTR_FILTER_OPTIONS,
+  SORT_OPTIONS,
+} from "@/data/attractions";
 
 /* ── SVG icons ── */
 function HeartIcon({ filled, color = "var(--atr-text)" }) {
@@ -564,7 +315,11 @@ function CategoryTabs({ active = "Atraksi" }) {
 
 /* ── FilterBar ── */
 function FilterBar({
-  state,
+  ui,
+  onPickFilter,
+  onRemoveFilter,
+  onClearFilters,
+  onSortChange,
   filters = ATTR_FILTERS,
   filterOptions = ATTR_FILTER_OPTIONS,
   resultLabel = "atraksi",
@@ -574,8 +329,8 @@ function FilterBar({
   useEffect(() => {
     function onDoc(e) {
       if (wrapRef.current && !wrapRef.current.contains(e.target)) {
-        state.setOpenFilter(null);
-        state.setOpenSort(false);
+        ui.setOpenFilter(null);
+        ui.setOpenSort(false);
       }
     }
     document.addEventListener("mousedown", onDoc);
@@ -583,17 +338,19 @@ function FilterBar({
   }, []);
 
   function toggleFilter(label) {
-    state.setOpenFilter(state.openFilter === label ? null : label);
-    state.setOpenSort(false);
+    ui.setOpenFilter(ui.openFilter === label ? null : label);
+    ui.setOpenSort(false);
   }
   function pickFilter(label, value) {
-    if (!state.activeChips.includes(value)) {
-      state.setActiveChips([...state.activeChips, value]);
+    if (!ui.activeChips.includes(value)) {
+      ui.setActiveChips([...ui.activeChips, value]);
     }
-    state.setOpenFilter(null);
+    onPickFilter?.(label, value);
+    ui.setOpenFilter(null);
   }
   function removeChip(c) {
-    state.setActiveChips(state.activeChips.filter((x) => x !== c));
+    ui.setActiveChips(ui.activeChips.filter((x) => x !== c));
+    onRemoveFilter?.(c);
   }
 
   return (
@@ -601,7 +358,7 @@ function FilterBar({
       <div style={dirStyles.filterRow}>
         <div style={dirStyles.filterLeft}>
           {filters.map((f) => {
-            const open = state.openFilter === f.label;
+            const open = ui.openFilter === f.label;
             return (
               <div key={f.label} style={{ position: "relative" }}>
                 <button
@@ -623,7 +380,7 @@ function FilterBar({
                 {open && (
                   <div style={dirStyles.dropdown}>
                     {(filterOptions[f.label] || []).map((opt) => {
-                      const checked = state.activeChips.includes(opt);
+                      const checked = ui.activeChips.includes(opt);
                       return (
                         <button
                           key={opt}
@@ -651,19 +408,19 @@ function FilterBar({
         <div style={dirStyles.filterRight}>
           <div style={dirStyles.viewToggle}>
             <button
-              onClick={() => state.setView("grid")}
+              onClick={() => ui.setView("grid")}
               style={{
                 ...dirStyles.viewBtn,
-                ...(state.view === "grid" ? dirStyles.viewBtnActive : {}),
+                ...(ui.view === "grid" ? dirStyles.viewBtnActive : {}),
               }}
             >
               <GridIcon /> Grid
             </button>
             <button
-              onClick={() => state.setView("map")}
+              onClick={() => ui.setView("map")}
               style={{
                 ...dirStyles.viewBtn,
-                ...(state.view === "map" ? dirStyles.viewBtnActive : {}),
+                ...(ui.view === "map" ? dirStyles.viewBtnActive : {}),
               }}
             >
               <MapIcon /> Peta
@@ -672,26 +429,27 @@ function FilterBar({
           <div style={{ position: "relative" }}>
             <button
               onClick={() => {
-                state.setOpenSort(!state.openSort);
-                state.setOpenFilter(null);
+                ui.setOpenSort(!ui.openSort);
+                ui.setOpenFilter(null);
               }}
               style={dirStyles.sortBtn}
             >
-              <SortIcon /> {state.sort}
-              <ChevDown rotated={state.openSort} />
+              <SortIcon /> {ui.sort}
+              <ChevDown rotated={ui.openSort} />
             </button>
-            {state.openSort && (
+            {ui.openSort && (
               <div style={{ ...dirStyles.dropdown, right: 0, left: "auto" }}>
                 {SORT_OPTIONS.map((s) => (
                   <button
                     key={s}
                     onClick={() => {
-                      state.setSort(s);
-                      state.setOpenSort(false);
+                      ui.setSort(s);
+                      onSortChange?.(s);
+                      ui.setOpenSort(false);
                     }}
                     style={{
                       ...dirStyles.dropdownItem,
-                      ...(s === state.sort
+                      ...(s === ui.sort
                         ? { color: "var(--atr-purple)", fontWeight: 600 }
                         : {}),
                     }}
@@ -699,7 +457,7 @@ function FilterBar({
                     <span
                       style={{
                         ...dirStyles.radio,
-                        ...(s === state.sort ? dirStyles.radioOn : {}),
+                        ...(s === ui.sort ? dirStyles.radioOn : {}),
                       }}
                     />
                     <span>{s}</span>
@@ -715,7 +473,7 @@ function FilterBar({
           <strong>{totalResults}</strong> {resultLabel} cocok untukmu
         </span>
         <div style={dirStyles.activeChips}>
-          {state.activeChips.map((c) => (
+          {ui.activeChips.map((c) => (
             <span key={c} style={dirStyles.activeChip}>
               {c}
               <span style={dirStyles.chipX} onClick={() => removeChip(c)}>
@@ -723,9 +481,12 @@ function FilterBar({
               </span>
             </span>
           ))}
-          {state.activeChips.length > 0 && (
+          {ui.activeChips.length > 0 && (
             <button
-              onClick={() => state.setActiveChips([])}
+              onClick={() => {
+                ui.setActiveChips([]);
+                onClearFilters?.();
+              }}
               style={dirStyles.clearAll}
             >
               Hapus semua
@@ -804,10 +565,10 @@ function AttractionHero() {
 }
 
 /* ── AttractionGrid + AttrCard ── */
-function AttractionGrid({ state }) {
-  const [data, setData] = useState(ATTR_DATA);
+function AttractionGrid({ data, loadMore, hasMore, pagination }) {
+  const [saved, setSaved] = useState({});
   function toggleSave(i) {
-    setData(data.map((d, idx) => (idx === i ? { ...d, save: !d.save } : d)));
+    setSaved((prev) => ({ ...prev, [i]: !prev[i] }));
   }
   return (
     <section style={cardStyles.gridSection}>
@@ -821,12 +582,24 @@ function AttractionGrid({ state }) {
       </div>
       <div style={cardStyles.grid}>
         {data.map((a, i) => (
-          <AttrCard key={i} {...a} onSave={() => toggleSave(i)} />
+          <AttrCard
+            key={a.id || i}
+            {...a}
+            save={saved[i] ?? false}
+            onSave={() => toggleSave(i)}
+          />
         ))}
       </div>
       <div style={cardStyles.paginationRow}>
-        <button style={cardStyles.loadMore}>Muat 24 atraksi lagi</button>
-        <div style={cardStyles.pageInfo}>Menampilkan 12 dari 1.247</div>
+        {hasMore && (
+          <button style={cardStyles.loadMore} onClick={loadMore}>
+            Muat 24 atraksi lagi
+          </button>
+        )}
+        <div style={cardStyles.pageInfo}>
+          Menampilkan {data.length} dari{" "}
+          {pagination?.total?.toLocaleString("id-ID") || data.length}
+        </div>
       </div>
     </section>
   );
@@ -1073,7 +846,6 @@ function useDirectoryState(defaultChips = ["Bali", "Pantai", "< Rp25rb"]) {
   const [openFilter, setOpenFilter] = useState(null);
   const [openSort, setOpenSort] = useState(false);
   const [sort, setSort] = useState("Paling populer");
-  const [filterValues, setFilterValues] = useState({});
   return {
     view,
     setView,
@@ -1085,27 +857,125 @@ function useDirectoryState(defaultChips = ["Bali", "Pantai", "< Rp25rb"]) {
     setOpenSort,
     sort,
     setSort,
-    filterValues,
-    setFilterValues,
   };
 }
 
+const FILTER_KEY_MAP = {
+  Provinsi: "provinsi",
+  Kategori: "kategori",
+  "Tiket masuk": "tiket_masuk",
+  Fasilitas: "fasilitas",
+  Rating: "rating",
+};
+
 /* ── Page ── */
 export default function AttractionsPage() {
-  const state = useDirectoryState(["Bali", "Pantai", "< Rp25rb"]);
+  const ui = useDirectoryState(["Bali", "Pantai", "< Rp25rb"]);
+  const {
+    data,
+    isLoading,
+    isError,
+    error,
+    loadMore,
+    hasMore,
+    filters,
+    setFilters,
+    pagination,
+  } = useAttractions();
+
+  // Sync default chips to API filters on first mount
+  useEffect(() => {
+    setFilters({
+      provinsi: "Bali",
+      kategori: "Pantai",
+      tiket_masuk: "< Rp25rb",
+      fasilitas: "",
+      rating: "",
+      sort: "Paling populer",
+    });
+  }, []);
+
+  function handlePickFilter(label, value) {
+    const fkey = FILTER_KEY_MAP[label];
+    if (fkey) {
+      setFilters({ ...filters, [fkey]: value });
+    }
+  }
+
+  function handleRemoveFilter(chip) {
+    for (const [flabel, opts] of Object.entries(ATTR_FILTER_OPTIONS)) {
+      if (opts.includes(chip)) {
+        const fkey = FILTER_KEY_MAP[flabel];
+        if (fkey) setFilters({ ...filters, [fkey]: "" });
+        break;
+      }
+    }
+  }
+
+  function handleClearFilters() {
+    setFilters({
+      provinsi: "",
+      kategori: "",
+      tiket_masuk: "",
+      fasilitas: "",
+      rating: "",
+      sort: filters.sort,
+    });
+  }
+
+  function handleSortChange(value) {
+    ui.setSort(value);
+    setFilters({ ...filters, sort: value });
+  }
+
   return (
     <div data-screen-label="Attractions Directory">
       <TopNav active="Atraksi" />
       <AttractionHero />
       <CategoryTabs active="Atraksi" />
-      <FilterBar
-        state={state}
-        filters={ATTR_FILTERS}
-        filterOptions={ATTR_FILTER_OPTIONS}
-        resultLabel="atraksi"
-        totalResults={1247}
-      />
-      <AttractionGrid state={state} />
+
+      {isLoading && data.length === 0 && !isError ? (
+        <div
+          style={{
+            textAlign: "center",
+            padding: "80px 0",
+            color: "var(--atr-text-muted)",
+          }}
+        >
+          Memuat atraksi...
+        </div>
+      ) : isError && data.length === 0 ? (
+        <div
+          style={{
+            textAlign: "center",
+            padding: "80px 0",
+            color: "var(--atr-red)",
+          }}
+        >
+          Gagal memuat data. Silakan coba lagi.
+        </div>
+      ) : (
+        <>
+          <FilterBar
+            ui={ui}
+            onPickFilter={handlePickFilter}
+            onRemoveFilter={handleRemoveFilter}
+            onClearFilters={handleClearFilters}
+            onSortChange={handleSortChange}
+            filters={ATTR_FILTERS}
+            filterOptions={ATTR_FILTER_OPTIONS}
+            resultLabel="atraksi"
+            totalResults={pagination?.total || 1247}
+          />
+          <AttractionGrid
+            data={data}
+            loadMore={loadMore}
+            hasMore={hasMore}
+            pagination={pagination}
+          />
+        </>
+      )}
+
       <CTABand />
       <SiteFooter />
     </div>

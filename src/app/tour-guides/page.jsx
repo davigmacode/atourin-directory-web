@@ -5,6 +5,12 @@ import TopNav from "@/components/TopNav";
 import Breadcrumb from "@/components/Breadcrumb";
 import SiteFooter from "@/components/SiteFooter";
 import { dirStyles, cardStyles } from "@/styles/attraction-styles";
+import { useGuides } from "@/lib/hooks/use-guides";
+import {
+  GUIDE_FILTERS,
+  GUIDE_FILTER_OPTIONS,
+  SORT_OPTIONS,
+} from "@/data/guides";
 
 /* ── Icons ── */
 function PinSm() {
@@ -374,189 +380,6 @@ const gc = {
   priceUnit: { fontSize: 11, color: "var(--atr-text-muted)" },
 };
 
-const GUIDE_DATA = [
-  {
-    name: "Welli Wilyanto",
-    img: "https://i.pravatar.cc/200?img=12",
-    region: "Labuan Bajo, NTT",
-    spec: ["Bahari", "Petualangan"],
-    specBg: "#E2F1FF",
-    specFg: "#1F6FB0",
-    langs: ["ID", "EN", "JP"],
-    certs: ["HPI", "BNSP"],
-    rating: 4.95,
-    trips: 412,
-    price: 1200000,
-    exp: "8 tahun",
-    verified: true,
-  },
-  {
-    name: "Putu Adi Wirawan",
-    img: "https://i.pravatar.cc/200?img=64",
-    region: "Ubud, Bali",
-    spec: ["Heritage", "Spiritual"],
-    specBg: "#FFE9E9",
-    specFg: "#C44949",
-    langs: ["ID", "EN", "FR"],
-    certs: ["HPI", "BNSP"],
-    rating: 4.92,
-    trips: 538,
-    price: 950000,
-    exp: "12 tahun",
-    verified: true,
-  },
-  {
-    name: "Sari Wibowo Putri",
-    img: "https://i.pravatar.cc/200?img=15",
-    region: "Yogyakarta, DIY",
-    spec: ["Heritage", "Kuliner"],
-    specBg: "#FFF4D9",
-    specFg: "#B47A00",
-    langs: ["ID", "EN", "DE"],
-    certs: ["HPI"],
-    rating: 4.88,
-    trips: 287,
-    price: 650000,
-    exp: "6 tahun",
-    verified: true,
-  },
-  {
-    name: "Catur Hidayat",
-    img: "https://i.pravatar.cc/200?img=33",
-    region: "Bromo, Jatim",
-    spec: ["Petualangan", "Hiking"],
-    specBg: "#D9F2DA",
-    specFg: "#2D8838",
-    langs: ["ID", "EN"],
-    certs: ["HPI", "Mountain Guide"],
-    rating: 4.86,
-    trips: 312,
-    price: 750000,
-    exp: "9 tahun",
-    verified: true,
-  },
-  {
-    name: "Komang Adi Susila",
-    img: "https://i.pravatar.cc/200?img=68",
-    region: "Sanur, Bali",
-    spec: ["Diving", "Bahari"],
-    specBg: "#E2F1FF",
-    specFg: "#1F6FB0",
-    langs: ["ID", "EN", "JP"],
-    certs: ["BNSP", "Diving Master"],
-    rating: 4.96,
-    trips: 228,
-    price: 1500000,
-    exp: "10 tahun",
-    verified: true,
-  },
-  {
-    name: "Andreyan Saputra",
-    img: "https://i.pravatar.cc/200?img=8",
-    region: "Lombok Tengah, NTB",
-    spec: ["Petualangan", "Surf"],
-    specBg: "#D9F2DA",
-    specFg: "#2D8838",
-    langs: ["ID", "EN"],
-    certs: ["HPI"],
-    rating: 4.78,
-    trips: 142,
-    price: 580000,
-    exp: "4 tahun",
-    verified: true,
-  },
-  {
-    name: "Ronal Sitorus",
-    img: "https://i.pravatar.cc/200?img=22",
-    region: "Samosir, Sumut",
-    spec: ["Heritage", "Family"],
-    specBg: "#FFE9E9",
-    specFg: "#C44949",
-    langs: ["ID", "EN"],
-    certs: ["HPI"],
-    rating: 4.7,
-    trips: 88,
-    price: 480000,
-    exp: "5 tahun",
-    verified: false,
-  },
-  {
-    name: "Anisa Latifah",
-    img: "https://i.pravatar.cc/200?img=47",
-    region: "Bandung, Jabar",
-    spec: ["Family", "Kuliner"],
-    specBg: "#FFF4D9",
-    specFg: "#B47A00",
-    langs: ["ID", "EN"],
-    certs: ["HPI", "BNSP"],
-    rating: 4.82,
-    trips: 198,
-    price: 620000,
-    exp: "5 tahun",
-    verified: true,
-  },
-  {
-    name: "Mighfari Arlianza",
-    img: "https://i.pravatar.cc/200?img=51",
-    region: "Surabaya, Jatim",
-    spec: ["Heritage", "Fotografi"],
-    specBg: "#EDE9FF",
-    specFg: "#5448B5",
-    langs: ["ID", "EN", "ZH"],
-    certs: ["HPI"],
-    rating: 4.75,
-    trips: 156,
-    price: 580000,
-    exp: "6 tahun",
-    verified: true,
-  },
-  {
-    name: "Laela Urfiya",
-    img: "https://i.pravatar.cc/200?img=32",
-    region: "Magelang, Jateng",
-    spec: ["Heritage", "Spiritual"],
-    specBg: "#FFE9E9",
-    specFg: "#C44949",
-    langs: ["ID", "EN"],
-    certs: ["HPI", "BNSP"],
-    rating: 4.84,
-    trips: 174,
-    price: 550000,
-    exp: "7 tahun",
-    verified: true,
-  },
-  {
-    name: "Thoriq Abror",
-    img: "https://i.pravatar.cc/200?img=11",
-    region: "Garut, Jabar",
-    spec: ["Petualangan", "Hiking"],
-    specBg: "#D9F2DA",
-    specFg: "#2D8838",
-    langs: ["ID", "EN"],
-    certs: ["Mountain Guide"],
-    rating: 4.68,
-    trips: 92,
-    price: 520000,
-    exp: "3 tahun",
-    verified: false,
-  },
-  {
-    name: "Andini Mahardika",
-    img: "https://i.pravatar.cc/200?img=44",
-    region: "Sorong, Pabar",
-    spec: ["Bahari", "Diving"],
-    specBg: "#E2F1FF",
-    specFg: "#1F6FB0",
-    langs: ["ID", "EN"],
-    certs: ["BNSP", "Diving Master"],
-    rating: 4.94,
-    trips: 268,
-    price: 1450000,
-    exp: "9 tahun",
-    verified: true,
-  },
-];
-
 function GuideCard({
   name,
   img,
@@ -666,7 +489,66 @@ function GuideCard({
   );
 }
 
-function GuidesGrid() {
+/* ── Loading / Error / Empty states ── */
+function GuidesLoading() {
+  return (
+    <div
+      style={{
+        textAlign: "center",
+        padding: "60px 20px",
+        color: "var(--atr-text-muted)",
+      }}
+    >
+      <div style={{ fontSize: 14 }}>Memuat data tour guide...</div>
+    </div>
+  );
+}
+
+function GuidesError({ message }) {
+  return (
+    <div
+      style={{
+        textAlign: "center",
+        padding: "60px 20px",
+        color: "#C44949",
+      }}
+    >
+      <div style={{ fontSize: 14 }}>
+        Gagal memuat data: {message || "Terjadi kesalahan"}
+      </div>
+    </div>
+  );
+}
+
+function GuidesEmpty() {
+  return (
+    <div
+      style={{
+        textAlign: "center",
+        padding: "60px 20px",
+        color: "var(--atr-text-muted)",
+      }}
+    >
+      <div style={{ fontSize: 14 }}>
+        Tidak ada tour guide yang cocok dengan filter kamu.
+      </div>
+    </div>
+  );
+}
+
+/* ── GuidesGrid ── */
+function GuidesGrid({
+  data = [],
+  loadMore,
+  hasMore,
+  isLoading,
+  isError,
+  error,
+  total,
+}) {
+  if (isError) return <GuidesError message={error?.message} />;
+  if (!isLoading && data.length === 0) return <GuidesEmpty />;
+
   return (
     <section style={cardStyles.gridSection}>
       <div style={cardStyles.gridHeader}>
@@ -677,85 +559,51 @@ function GuidesGrid() {
           <h2 style={cardStyles.railTitle}>Pemandu lokal terverifikasi</h2>
         </div>
       </div>
-      <div style={cardStyles.grid}>
-        {GUIDE_DATA.map((g, i) => (
-          <GuideCard key={i} {...g} />
-        ))}
-      </div>
-      <div style={cardStyles.paginationRow}>
-        <button style={cardStyles.loadMore}>Muat 24 guide lagi</button>
-        <div style={cardStyles.pageInfo}>Menampilkan 12 dari 638</div>
-      </div>
+      {isLoading && data.length === 0 ? (
+        <GuidesLoading />
+      ) : (
+        <>
+          <div style={cardStyles.grid}>
+            {data.map((g, i) => (
+              <GuideCard key={g.id ?? i} {...g} />
+            ))}
+          </div>
+          <div style={cardStyles.paginationRow}>
+            {hasMore && (
+              <button style={cardStyles.loadMore} onClick={loadMore}>
+                Muat 24 guide lagi
+              </button>
+            )}
+            <div style={cardStyles.pageInfo}>
+              Menampilkan {data.length} dari {total ?? data.length}
+            </div>
+          </div>
+        </>
+      )}
     </section>
   );
 }
 
 /* ── FilterBar (reuses dirStyles) ── */
-const GUIDE_FILTERS = [
-  { label: "Wilayah", icon: "pin" },
-  { label: "Spesialisasi", icon: "tag" },
-  { label: "Bahasa", icon: "users" },
-  { label: "Harga", icon: "wallet" },
-  { label: "Sertifikasi", icon: "clock" },
-];
-const GUIDE_FILTER_OPTIONS = {
-  Wilayah: [
-    "Bali",
-    "Yogyakarta",
-    "Labuan Bajo",
-    "Lombok",
-    "Bandung",
-    "Bromo",
-    "Raja Ampat",
-    "Danau Toba",
-    "Komodo",
-    "Sumba",
-  ],
-  Spesialisasi: [
-    "Heritage & Sejarah",
-    "Petualangan",
-    "Bahari & Diving",
-    "Kuliner",
-    "Fotografi",
-    "Birdwatching",
-    "Hiking",
-    "Family Friendly",
-    "Honeymoon",
-    "Spiritual",
-  ],
-  Bahasa: [
-    "Indonesia",
-    "English",
-    "Mandarin",
-    "Japanese",
-    "Korean",
-    "Spanish",
-    "French",
-    "German",
-    "Arabic",
-    "Dutch",
-  ],
-  Harga: [
-    "< Rp500rb/hari",
-    "Rp500rb \u2013 Rp1jt",
-    "Rp1jt \u2013 Rp2jt",
-    "> Rp2jt/hari",
-  ],
-  Sertifikasi: [
-    "HPI",
-    "BNSP",
-    "Diving Master",
-    "Mountain Guide",
-    "Bersertifikat semua",
-  ],
+const FILTER_KEY_MAP = {
+  Wilayah: "wilayah",
+  Spesialisasi: "spesialisasi",
+  Bahasa: "bahasa",
+  Harga: "harga",
+  Sertifikasi: "sertifikasi",
 };
-const SORT_OPTIONS = [
-  "Paling populer",
-  "Rating tertinggi",
-  "Harga terendah",
-  "Harga tertinggi",
-  "Pengalaman terbanyak",
-];
+
+const SORT_LABEL_TO_VALUE = {
+  "Paling populer": "popular",
+  "Rating tertinggi": "rating",
+  "Harga terendah": "price_low",
+  "Harga tertinggi": "price_high",
+  "Pengalaman terbanyak": "experience",
+};
+
+const SORT_VALUE_TO_LABEL = Object.fromEntries(
+  Object.entries(SORT_LABEL_TO_VALUE).map(([k, v]) => [v, k]),
+);
 
 function FilterGlyph({ kind }) {
   const c = "var(--atr-purple)";
@@ -865,29 +713,57 @@ function CheckIcon() {
 }
 
 function FilterBar({
-  state,
   filters = GUIDE_FILTERS,
   filterOptions = GUIDE_FILTER_OPTIONS,
   resultLabel = "tour guide",
   totalResults = 638,
+  activeFilterValues = {},
+  onFilterChange,
 }) {
   const [openFilter, setOpenFilter] = useState(null);
   const [openSort, setOpenSort] = useState(false);
-  const [sort, setSort] = useState("Paling populer");
-  const [activeChips, setActiveChips] = useState(
-    state?.chips || ["Labuan Bajo", "English", "HPI"],
-  );
+
+  const activeChips = Object.entries(activeFilterValues)
+    .filter(([key, val]) => val && key !== "sort")
+    .map(([, val]) => val);
+
+  const currentSortLabel =
+    SORT_VALUE_TO_LABEL[activeFilterValues.sort] || "Paling populer";
 
   function toggleFilter(label) {
     setOpenFilter(openFilter === label ? null : label);
     setOpenSort(false);
   }
   function pickFilter(label, value) {
-    if (!activeChips.includes(value)) setActiveChips([...activeChips, value]);
+    const key = FILTER_KEY_MAP[label];
+    if (key) {
+      onFilterChange({ ...activeFilterValues, [key]: value });
+    }
     setOpenFilter(null);
   }
-  function removeChip(c) {
-    setActiveChips(activeChips.filter((x) => x !== c));
+  function removeChip(chip) {
+    const next = { ...activeFilterValues };
+    for (const key of Object.values(FILTER_KEY_MAP)) {
+      if (next[key] === chip) {
+        next[key] = "";
+        break;
+      }
+    }
+    onFilterChange(next);
+  }
+  function clearAll() {
+    const next = { ...activeFilterValues };
+    for (const key of Object.values(FILTER_KEY_MAP)) {
+      next[key] = "";
+    }
+    onFilterChange(next);
+  }
+  function pickSort(label) {
+    const val = SORT_LABEL_TO_VALUE[label];
+    if (val) {
+      onFilterChange({ ...activeFilterValues, sort: val });
+    }
+    setOpenSort(false);
   }
 
   return (
@@ -960,7 +836,7 @@ function FilterBar({
                   strokeLinejoin="round"
                 />
               </svg>
-              {sort}
+              {currentSortLabel}
               <ChevDown rotated={openSort} />
             </button>
             {openSort && (
@@ -968,13 +844,10 @@ function FilterBar({
                 {SORT_OPTIONS.map((s) => (
                   <button
                     key={s}
-                    onClick={() => {
-                      setSort(s);
-                      setOpenSort(false);
-                    }}
+                    onClick={() => pickSort(s)}
                     style={{
                       ...dirStyles.dropdownItem,
-                      ...(s === sort
+                      ...(s === currentSortLabel
                         ? { color: "var(--atr-purple)", fontWeight: 600 }
                         : {}),
                     }}
@@ -982,7 +855,7 @@ function FilterBar({
                     <span
                       style={{
                         ...dirStyles.radio,
-                        ...(s === sort
+                        ...(s === currentSortLabel
                           ? {
                               border: "1.5px solid var(--atr-purple)",
                               boxShadow: "inset 0 0 0 3px var(--atr-purple)",
@@ -1013,10 +886,7 @@ function FilterBar({
             </span>
           ))}
           {activeChips.length > 0 && (
-            <button
-              onClick={() => setActiveChips([])}
-              style={dirStyles.clearAll}
-            >
+            <button onClick={clearAll} style={dirStyles.clearAll}>
               Hapus semua
             </button>
           )}
@@ -1141,13 +1011,37 @@ function CTABand() {
 
 /* ── Page ── */
 export default function TourGuidesPage() {
+  const {
+    data: guides,
+    pagination,
+    isLoading,
+    isError,
+    error,
+    filters,
+    setFilters,
+    loadMore,
+    hasMore,
+  } = useGuides();
+
   return (
     <div data-screen-label="Tour Guides Directory">
       <TopNav active="Tour Guide" />
       <GuidesHero />
       <CategoryTabs active="Tour Guide" />
-      <FilterBar />
-      <GuidesGrid />
+      <FilterBar
+        activeFilterValues={filters}
+        onFilterChange={setFilters}
+        totalResults={pagination?.total || 0}
+      />
+      <GuidesGrid
+        data={guides}
+        loadMore={loadMore}
+        hasMore={hasMore}
+        isLoading={isLoading}
+        isError={isError}
+        error={error}
+        total={pagination?.total}
+      />
       <CTABand />
       <SiteFooter />
     </div>

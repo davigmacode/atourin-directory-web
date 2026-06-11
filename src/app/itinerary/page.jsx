@@ -1,45 +1,11 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import TopNav from "@/components/TopNav";
 import Breadcrumb from "@/components/Breadcrumb";
 import SiteFooter from "@/components/SiteFooter";
+import { useItineraries } from "@/lib/hooks/use-itineraries";
 import { dirStyles, cardStyles } from "@/styles/attraction-styles";
-
-/* ── Images ── */
-const IMG = {
-  bali: "https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=1200&auto=format&fit=crop&q=70",
-  yogya:
-    "https://images.unsplash.com/photo-1596402184320-417e7178b2cd?w=1200&auto=format&fit=crop&q=70",
-  lombok:
-    "https://images.unsplash.com/photo-1589394815804-964ed0be2eb5?w=1200&auto=format&fit=crop&q=70",
-  labuan:
-    "https://images.unsplash.com/photo-1539367628448-4bc5c9d171c8?w=1200&auto=format&fit=crop&q=70",
-  raja: "https://images.unsplash.com/photo-1604999333679-b86d54738315?w=1200&auto=format&fit=crop&q=70",
-  bandung:
-    "https://images.unsplash.com/photo-1596422846543-75c6fc197f07?w=1200&auto=format&fit=crop&q=70",
-  bromo:
-    "https://images.unsplash.com/photo-1596402184320-417e7178b2cd?w=1200&auto=format&fit=crop&q=70",
-  toba: "https://images.unsplash.com/photo-1570214476695-19bd467e6f7a?w=1200&auto=format&fit=crop&q=70",
-  borobudur:
-    "https://images.unsplash.com/photo-1555400038-63f5ba517a47?w=1200&auto=format&fit=crop&q=70",
-  garut:
-    "https://images.unsplash.com/photo-1518684079-3c830dcef090?w=1200&auto=format&fit=crop&q=70",
-  surabaya:
-    "https://images.unsplash.com/photo-1596402184320-417e7178b2cd?w=1200&auto=format&fit=crop&q=70",
-  malang:
-    "https://images.unsplash.com/photo-1571406252241-db0730fc71ce?w=1200&auto=format&fit=crop&q=70",
-};
-const AVATARS = [
-  "https://i.pravatar.cc/80?img=12",
-  "https://i.pravatar.cc/80?img=32",
-  "https://i.pravatar.cc/80?img=47",
-  "https://i.pravatar.cc/80?img=15",
-  "https://i.pravatar.cc/80?img=22",
-  "https://i.pravatar.cc/80?img=8",
-  "https://i.pravatar.cc/80?img=51",
-  "https://i.pravatar.cc/80?img=64",
-];
 
 /* ── SVG Icons ── */
 function PinSm() {
@@ -372,7 +338,11 @@ function ItineraryHero() {
         <div style={dirStyles.heroRight}>
           <div style={dirStyles.heroIllustrationCard}>
             <div style={dirStyles.dayPill}>Hari 2 / 5</div>
-            <img src={IMG.bali} alt="" style={dirStyles.heroImg1} />
+            <img
+              src="https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=1200&auto=format&fit=crop&q=70"
+              alt=""
+              style={dirStyles.heroImg1}
+            />
             <div style={dirStyles.heroFloatCard}>
               <div style={dirStyles.heroFloatTime}>09:30</div>
               <div>
@@ -410,7 +380,7 @@ function ItineraryHero() {
   );
 }
 
-/* ── useDirectoryState hook ── */
+/* ── useDirectoryState hook (local UI state for FilterBar) ── */
 function useDirectoryState(
   defaultChips = ["Bali", "Yogyakarta", "2D1N", "< Rp1jt"],
 ) {
@@ -419,7 +389,6 @@ function useDirectoryState(
   const [openFilter, setOpenFilter] = useState(null);
   const [openSort, setOpenSort] = useState(false);
   const [sort, setSort] = useState("Paling populer");
-  const [filterValues, setFilterValues] = useState({});
   return {
     view,
     setView,
@@ -431,8 +400,6 @@ function useDirectoryState(
     setOpenSort,
     sort,
     setSort,
-    filterValues,
-    setFilterValues,
   };
 }
 
@@ -493,12 +460,22 @@ const DEFAULT_FILTERS = [
   { label: "Kategori wisata", icon: "tag" },
 ];
 
+/* Maps FilterBar category labels to the hook filter keys */
+const FILTER_KEY_MAP = {
+  "Destinasi tujuan": "destination",
+  Durasi: "durasi",
+  Budget: "budget",
+  "Tipe perjalanan": "tipe_perjalanan",
+  "Kategori wisata": "kategori",
+};
+
 function FilterBar({
   state,
   filters = DEFAULT_FILTERS,
   filterOptions = FILTER_OPTIONS,
   resultLabel = "itinerary",
   totalResults = 2412,
+  onFilterChange,
 }) {
   const wrapRef = useRef(null);
   useEffect(() => {
@@ -517,12 +494,26 @@ function FilterBar({
     state.setOpenSort(false);
   }
   function pickFilter(label, value) {
-    if (!state.activeChips.includes(value))
+    if (!state.activeChips.includes(value)) {
       state.setActiveChips([...state.activeChips, value]);
+      const key = FILTER_KEY_MAP[label];
+      if (key && onFilterChange) {
+        onFilterChange(key, value);
+      }
+    }
     state.setOpenFilter(null);
   }
   function removeChip(c) {
     state.setActiveChips(state.activeChips.filter((x) => x !== c));
+    for (const [label, opts] of Object.entries(FILTER_OPTIONS)) {
+      if (opts.includes(c)) {
+        const key = FILTER_KEY_MAP[label];
+        if (key && onFilterChange) {
+          onFilterChange(key, "");
+        }
+        break;
+      }
+    }
   }
 
   return (
@@ -630,7 +621,10 @@ function FilterBar({
                     style={{
                       ...dirStyles.dropdownItem,
                       ...(s === state.sort
-                        ? { color: "var(--atr-purple)", fontWeight: 600 }
+                        ? {
+                            color: "var(--atr-purple)",
+                            fontWeight: 600,
+                          }
                         : {}),
                     }}
                   >
@@ -692,7 +686,11 @@ function FilterBar({
 function FeatureBig() {
   return (
     <article style={cardStyles.featBig}>
-      <img src={IMG.bali} alt="" style={cardStyles.featBigImg} />
+      <img
+        src="https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=1200&auto=format&fit=crop&q=70"
+        alt=""
+        style={cardStyles.featBigImg}
+      />
       <div style={cardStyles.featBigOverlay} />
       <div style={cardStyles.featBigBadge}>
         <span style={cardStyles.editorBadge}>EDITOR'S PICK</span>
@@ -715,7 +713,11 @@ function FeatureBig() {
         </p>
         <div style={cardStyles.featBigFooter}>
           <div style={cardStyles.authorRow}>
-            <img src={AVATARS[0]} style={cardStyles.authorImg} alt="" />
+            <img
+              src="https://i.pravatar.cc/80?img=12"
+              style={cardStyles.authorImg}
+              alt=""
+            />
             <div>
               <div style={cardStyles.authorName}>Putu Adi Wirawan</div>
               <div style={cardStyles.authorRole}>
@@ -726,7 +728,8 @@ function FeatureBig() {
           <div style={cardStyles.featBigBudget}>
             <div style={cardStyles.budgetLabel}>Estimasi budget</div>
             <div style={cardStyles.budgetVal}>
-              Rp 4.2jt<span style={cardStyles.budgetUnit}>/orang</span>
+              Rp 4.2jt
+              <span style={cardStyles.budgetUnit}>/orang</span>
             </div>
           </div>
         </div>
@@ -770,7 +773,7 @@ function FeaturedRail() {
         <FeatureBig />
         <div style={cardStyles.railSide}>
           <FeatureSmall
-            img={IMG.raja}
+            img="https://images.unsplash.com/photo-1604999333679-b86d54738315?w=1200&auto=format&fit=crop&q=70"
             tag="Honeymoon"
             days={"5 Hari \u00B7 4 Malam"}
             title="Raja Ampat untuk Berdua"
@@ -778,7 +781,7 @@ function FeaturedRail() {
             budget="Rp 8.4jt"
           />
           <FeatureSmall
-            img={IMG.bromo}
+            img="https://images.unsplash.com/photo-1596402184320-417e7178b2cd?w=1200&auto=format&fit=crop&q=70"
             tag="Adventure"
             days={"3 Hari \u00B7 2 Malam"}
             title="Sunrise Bromo & Madakaripura"
@@ -792,149 +795,14 @@ function FeaturedRail() {
 }
 
 /* ── ItineraryGrid + ItinCard ── */
-const ITIN_DATA = [
-  {
-    img: IMG.yogya,
-    days: "3 Hari \u00B7 2 Malam",
-    city: "Yogyakarta",
-    tag: "Culture",
-    title: "Senja di Borobudur, Pagi di Prambanan",
-    author: "Syah Ari Wiharjo",
-    role: "Local Expert",
-    price: "Rp 1.2jt",
-    rating: 4.9,
-    reviews: 128,
-    views: 522,
-    save: false,
-    day1: ["Borobudur", "Pasar Beringharjo", "Malioboro"],
-  },
-  {
-    img: IMG.lombok,
-    days: "1 Hari",
-    city: "Lombok Tengah",
-    tag: "Adventure",
-    title: "One Day Tour In Central Lombok, Mandalika",
-    author: "Andreyan Saputra",
-    role: "Tour Guide",
-    price: "Rp 480rb",
-    rating: 4.7,
-    reviews: 64,
-    views: 388,
-    save: true,
-    day1: ["Sirkuit Mandalika", "Pantai Kuta", "Bukit Merese"],
-  },
-  {
-    img: IMG.surabaya,
-    days: "3 Hari \u00B7 2 Malam",
-    city: "Surabaya",
-    tag: "City Break",
-    title: "3 Hari Mengulik Sejarah Kota Pahlawan",
-    author: "Mighfari Arlianza",
-    role: "Local Expert",
-    price: "Rp 1.6jt",
-    rating: 4.8,
-    reviews: 41,
-    views: 444,
-    save: false,
-    day1: ["House of Sampoerna", "Jembatan Suramadu", "Kya-Kya"],
-  },
-  {
-    img: IMG.labuan,
-    days: "4 Hari \u00B7 3 Malam",
-    city: "Labuan Bajo",
-    tag: "Adventure",
-    title: "Labuan Bajo Sailing, Padar, Pink Beach & Komodo",
-    author: "Welli Wilyanto",
-    role: "Local Expert",
-    price: "Rp 5.8jt",
-    rating: 4.95,
-    reviews: 212,
-    views: 2104,
-    save: false,
-    day1: ["Padar Trekking", "Pink Beach", "Manta Point"],
-  },
-  {
-    img: IMG.bandung,
-    days: "2 Hari \u00B7 1 Malam",
-    city: "Bandung",
-    tag: "Family",
-    title: "Weekend Lembang bareng Anak-anak",
-    author: "Anisa Latifah Arisanti",
-    role: "Family Traveler",
-    price: "Rp 950rb",
-    rating: 4.6,
-    reviews: 73,
-    views: 612,
-    save: true,
-    day1: ["Farmhouse", "Floating Market", "The Lodge Maribaya"],
-  },
-  {
-    img: IMG.bromo,
-    days: "2 Hari \u00B7 1 Malam",
-    city: "Probolinggo",
-    tag: "Adventure",
-    title: "Bromo Midnight, Sunrise & Bukit Cinta",
-    author: "Catur Hidayat",
-    role: "Tour Guide",
-    price: "Rp 780rb",
-    rating: 4.8,
-    reviews: 156,
-    views: 1288,
-    save: false,
-    day1: ["Pananjakan", "Lautan Pasir", "Madakaripura"],
-  },
-  {
-    img: IMG.toba,
-    days: "5 Hari \u00B7 4 Malam",
-    city: "Danau Toba",
-    tag: "Honeymoon",
-    title: "Toba & Samosir untuk Pasangan",
-    author: "Ronal Sitorus",
-    role: "Local Expert",
-    price: "Rp 3.9jt",
-    rating: 4.7,
-    reviews: 38,
-    views: 421,
-    save: false,
-    day1: ["Bukit Holbung", "Tomok", "Aek Sipitu Dai"],
-  },
-  {
-    img: IMG.borobudur,
-    days: "1 Hari",
-    city: "Magelang",
-    tag: "Culture",
-    title: "Pagi di Borobudur, Punthuk Setumbu",
-    author: "Laela Urfiya Azzahra",
-    role: "Solo Traveler",
-    price: "Rp 320rb",
-    rating: 4.6,
-    reviews: 92,
-    views: 758,
-    save: false,
-    day1: ["Punthuk Setumbu", "Candi Borobudur", "Svargabumi"],
-  },
-  {
-    img: IMG.garut,
-    days: "2 Hari \u00B7 1 Malam",
-    city: "Garut",
-    tag: "Family",
-    title: "Kawah Papandayan & Cipanas Hot Spring",
-    author: "Thoriq Abror",
-    role: "Local Expert",
-    price: "Rp 720rb",
-    rating: 4.5,
-    reviews: 47,
-    views: 174,
-    save: false,
-    day1: ["Cipanas", "Papandayan", "Cangkuang"],
-  },
-];
-
-function ItineraryGrid({ state }) {
-  const [data, setData] = useState(ITIN_DATA);
-  function toggleSave(i) {
-    setData(data.map((d, idx) => (idx === i ? { ...d, save: !d.save } : d)));
-  }
+function ItineraryGrid({
+  data = [],
+  isLoading,
+  isError,
+  loadMore,
+  hasMore,
+  totalCount,
+}) {
   return (
     <section style={cardStyles.gridSection}>
       <div style={cardStyles.gridHeader}>
@@ -945,20 +813,86 @@ function ItineraryGrid({ state }) {
           <h2 style={cardStyles.railTitle}>Semua rute publik</h2>
         </div>
       </div>
-      <div style={cardStyles.grid}>
-        {data.map((it, i) => (
-          <ItinCard key={i} {...it} />
-        ))}
-      </div>
-      <div style={cardStyles.paginationRow}>
-        <button
-          style={cardStyles.loadMore}
-          onClick={() => alert("Memuat 24 itinerary lagi\u2026")}
+
+      {isError && (
+        <div
+          style={{
+            textAlign: "center",
+            padding: "60px 20px",
+            color: "var(--atr-text-muted)",
+          }}
         >
-          Muat 24 itinerary lagi
-        </button>
-        <div style={cardStyles.pageInfo}>Menampilkan 9 dari 2.412</div>
-      </div>
+          <p style={{ fontSize: 18, marginBottom: 12 }}>
+            Gagal memuat itinerary. Silakan coba lagi.
+          </p>
+          <button
+            onClick={() => window.location.reload()}
+            style={{
+              background: "var(--atr-purple)",
+              color: "#fff",
+              border: "none",
+              borderRadius: 8,
+              padding: "10px 24px",
+              cursor: "pointer",
+              fontWeight: 600,
+            }}
+          >
+            Muat ulang
+          </button>
+        </div>
+      )}
+
+      {isLoading && (
+        <div style={cardStyles.grid}>
+          {Array.from({ length: 6 }).map((_, i) => (
+            <div
+              key={i}
+              style={{
+                ...cardStyles.card,
+                background: "#f5f5f5",
+                borderRadius: 12,
+                minHeight: 340,
+                animation: "pulse 1.5s ease-in-out infinite",
+              }}
+            />
+          ))}
+        </div>
+      )}
+
+      {!isLoading && !isError && data.length === 0 && (
+        <div
+          style={{
+            textAlign: "center",
+            padding: "60px 20px",
+            color: "var(--atr-text-muted)",
+          }}
+        >
+          <p style={{ fontSize: 18 }}>
+            Belum ada itinerary yang cocok dengan filter kamu.
+          </p>
+        </div>
+      )}
+
+      {!isLoading && data.length > 0 && (
+        <>
+          <div style={cardStyles.grid}>
+            {data.map((it, i) => (
+              <ItinCard key={it.id || i} {...it} />
+            ))}
+          </div>
+          <div style={cardStyles.paginationRow}>
+            {hasMore && (
+              <button style={cardStyles.loadMore} onClick={loadMore}>
+                Muat 24 itinerary lagi
+              </button>
+            )}
+            <div style={cardStyles.pageInfo}>
+              Menampilkan {data.length.toLocaleString("id-ID")}
+              {totalCount ? ` dari ${totalCount.toLocaleString("id-ID")}` : ""}
+            </div>
+          </div>
+        </>
+      )}
     </section>
   );
 }
@@ -1023,7 +957,7 @@ function ItinCard({
         <h3 style={cardStyles.cardTitle}>{title}</h3>
         <div style={cardStyles.cardDayPreview}>
           <span style={cardStyles.dayLabel}>Hari 1:</span>
-          {day1.map((d, i) => (
+          {day1?.map((d, i) => (
             <React.Fragment key={d}>
               <span style={cardStyles.dayPoint}>{d}</span>
               {i < day1.length - 1 && (
@@ -1034,7 +968,7 @@ function ItinCard({
         </div>
         <div style={cardStyles.cardFooter}>
           <div style={cardStyles.cardAuthor}>
-            <div style={cardStyles.authorAvatar}>{author[0]}</div>
+            <div style={cardStyles.authorAvatar}>{author?.[0]}</div>
             <div>
               <div style={cardStyles.cardAuthorName}>{author}</div>
               <div style={cardStyles.cardAuthorRole}>{role}</div>
@@ -1064,7 +998,10 @@ function BuilderMock() {
         <div style={cardStyles.builderTitle}>3 Hari di Yogyakarta</div>
         <div style={cardStyles.builderTabs}>
           <span
-            style={{ ...cardStyles.builderTab, ...cardStyles.builderTabActive }}
+            style={{
+              ...cardStyles.builderTab,
+              ...cardStyles.builderTabActive,
+            }}
           >
             Hari 1
           </span>
@@ -1170,14 +1107,44 @@ function CTABand() {
 /* ── Page ── */
 export default function ItineraryPage() {
   const state = useDirectoryState();
+  const {
+    data: itineraries,
+    pagination,
+    isLoading,
+    isValidating,
+    isError,
+    filters,
+    setFilters: setHookFilters,
+    loadMore,
+    hasMore,
+  } = useItineraries();
+
+  const handleFilterChange = useCallback(
+    (key, value) => {
+      setHookFilters({ ...filters, [key]: value });
+    },
+    [filters, setHookFilters],
+  );
+
   return (
     <div data-screen-label="Itinerary Directory">
       <TopNav active="Itinerary" />
       <ItineraryHero />
       <CategoryTabs active="Itinerary" />
-      <FilterBar state={state} />
+      <FilterBar
+        state={state}
+        onFilterChange={handleFilterChange}
+        totalResults={pagination?.total || 2412}
+      />
       {state.view === "grid" && <FeaturedRail />}
-      <ItineraryGrid state={state} />
+      <ItineraryGrid
+        data={itineraries}
+        isLoading={isLoading}
+        isError={isError}
+        loadMore={loadMore}
+        hasMore={hasMore}
+        totalCount={pagination?.total}
+      />
       <CTABand />
       <SiteFooter />
     </div>

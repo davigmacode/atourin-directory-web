@@ -5,6 +5,8 @@ import TopNav from "@/components/TopNav";
 import Breadcrumb from "@/components/Breadcrumb";
 import SiteFooter from "@/components/SiteFooter";
 import { dirStyles, cardStyles } from "@/styles/attraction-styles";
+import { useVillages } from "@/lib/hooks/use-villages";
+import { VIL_FILTERS, VIL_FILTER_OPTIONS, SORT_OPTIONS } from "@/data/villages";
 
 /* ── Icons ── */
 function PinSm() {
@@ -242,178 +244,6 @@ function VillagesHero() {
 }
 
 /* ── Village Card ── */
-const VIL_DATA = [
-  {
-    img: "https://images.unsplash.com/photo-1570214476695-19bd467e6f7a?w=600&auto=format&fit=crop&q=70",
-    name: "Desa Wae Rebo",
-    region: "Manggarai, NTT",
-    adwi: "Mandiri",
-    adwiBg: "rgba(180,122,0,0.16)",
-    adwiFg: "#B47A00",
-    theme: "Budaya & Adat",
-    activities: ["Homestay", "Tarian", "Trekking"],
-    price: 350000,
-    rating: 4.95,
-    families: 7,
-    signature: "Mbaru Niang",
-    featured: true,
-  },
-  {
-    img: "https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=600&auto=format&fit=crop&q=70",
-    name: "Desa Penglipuran",
-    region: "Bangli, Bali",
-    adwi: "Mandiri",
-    adwiBg: "rgba(180,122,0,0.16)",
-    adwiFg: "#B47A00",
-    theme: "Budaya & Adat",
-    activities: ["Homestay", "Workshop", "Kuliner"],
-    price: 200000,
-    rating: 4.88,
-    families: 76,
-    signature: "Pekarangan seragam",
-  },
-  {
-    img: "https://images.unsplash.com/photo-1555400038-63f5ba517a47?w=600&auto=format&fit=crop&q=70",
-    name: "Desa Nglanggeran",
-    region: "Gunungkidul, DIY",
-    adwi: "Maju",
-    adwiBg: "rgba(81,176,84,0.16)",
-    adwiFg: "#2D8838",
-    theme: "Alam & Ekowisata",
-    activities: ["Trekking", "Homestay", "Coklat"],
-    price: 175000,
-    rating: 4.82,
-    families: 38,
-    signature: "Gunung api purba",
-  },
-  {
-    img: "https://images.unsplash.com/photo-1604999333679-b86d54738315?w=600&auto=format&fit=crop&q=70",
-    name: "Desa Pemuteran",
-    region: "Buleleng, Bali",
-    adwi: "Maju",
-    adwiBg: "rgba(81,176,84,0.16)",
-    adwiFg: "#2D8838",
-    theme: "Bahari",
-    activities: ["Snorkel", "Coral Garden", "Homestay"],
-    price: 250000,
-    rating: 4.85,
-    families: 24,
-    signature: "Bio-rock coral",
-  },
-  {
-    img: "https://images.unsplash.com/photo-1518684079-3c830dcef090?w=600&auto=format&fit=crop&q=70",
-    name: "Desa Pentingsari",
-    region: "Sleman, DIY",
-    adwi: "Mandiri",
-    adwiBg: "rgba(180,122,0,0.16)",
-    adwiFg: "#B47A00",
-    theme: "Pertanian",
-    activities: ["Bertani", "Workshop", "Memasak"],
-    price: 165000,
-    rating: 4.78,
-    families: 48,
-    signature: "Sawah terasering",
-  },
-  {
-    img: "https://images.unsplash.com/photo-1589394815804-964ed0be2eb5?w=600&auto=format&fit=crop&q=70",
-    name: "Desa Sasak Sade",
-    region: "Lombok Tengah, NTB",
-    adwi: "Berkembang",
-    adwiBg: "rgba(31,111,176,0.14)",
-    adwiFg: "#1F6FB0",
-    theme: "Budaya & Adat",
-    activities: ["Tenun", "Tari Peresean"],
-    price: 0,
-    rating: 4.7,
-    families: 150,
-    signature: "Rumah Sasak adat",
-  },
-  {
-    img: "https://images.unsplash.com/photo-1596402184320-417e7178b2cd?w=600&auto=format&fit=crop&q=70",
-    name: "Desa Tete Batu",
-    region: "Lombok Timur, NTB",
-    adwi: "Maju",
-    adwiBg: "rgba(81,176,84,0.16)",
-    adwiFg: "#2D8838",
-    theme: "Alam & Ekowisata",
-    activities: ["Trekking", "Air terjun", "Sawah"],
-    price: 220000,
-    rating: 4.84,
-    families: 34,
-    signature: "Monkey Forest",
-  },
-  {
-    img: "https://images.unsplash.com/photo-1596422846543-75c6fc197f07?w=600&auto=format&fit=crop&q=70",
-    name: "Desa Saribu Gonjong",
-    region: "Tanah Datar, Sumbar",
-    adwi: "Berkembang",
-    adwiBg: "rgba(31,111,176,0.14)",
-    adwiFg: "#1F6FB0",
-    theme: "Budaya & Adat",
-    activities: ["Rumah Gadang", "Workshop Tenun", "Kuliner"],
-    price: 180000,
-    rating: 4.65,
-    families: 28,
-    signature: "Rumah Gadang berundak",
-  },
-  {
-    img: "https://images.unsplash.com/photo-1596402184320-417e7178b2cd?w=600&auto=format&fit=crop&q=70",
-    name: "Desa Ranu Pani",
-    region: "Lumajang, Jatim",
-    adwi: "Rintisan",
-    adwiBg: "rgba(196,73,73,0.14)",
-    adwiFg: "#C44949",
-    theme: "Alam & Ekowisata",
-    activities: ["Hiking Semeru", "Homestay", "Danau"],
-    price: 150000,
-    rating: 4.72,
-    families: 19,
-    signature: "Pintu masuk Semeru",
-  },
-  {
-    img: "https://images.unsplash.com/photo-1570214476695-19bd467e6f7a?w=600&auto=format&fit=crop&q=70",
-    name: "Desa Liang Ndara",
-    region: "Manggarai Barat, NTT",
-    adwi: "Berkembang",
-    adwiBg: "rgba(31,111,176,0.14)",
-    adwiFg: "#1F6FB0",
-    theme: "Budaya & Adat",
-    activities: ["Tari Caci", "Homestay", "Sawah Lingko"],
-    price: 280000,
-    rating: 4.78,
-    families: 22,
-    signature: "Tari Caci tradisional",
-  },
-  {
-    img: "https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=600&auto=format&fit=crop&q=70",
-    name: "Desa Tenganan",
-    region: "Karangasem, Bali",
-    adwi: "Maju",
-    adwiBg: "rgba(81,176,84,0.16)",
-    adwiFg: "#2D8838",
-    theme: "Kerajinan",
-    activities: ["Tenun Gringsing", "Lontar", "Mekare"],
-    price: 250000,
-    rating: 4.86,
-    families: 42,
-    signature: "Tenun ikat ganda",
-  },
-  {
-    img: "https://images.unsplash.com/photo-1555400038-63f5ba517a47?w=600&auto=format&fit=crop&q=70",
-    name: "Desa Tinalah",
-    region: "Kulon Progo, DIY",
-    adwi: "Mandiri",
-    adwiBg: "rgba(180,122,0,0.16)",
-    adwiFg: "#B47A00",
-    theme: "Alam & Ekowisata",
-    activities: ["River tubing", "Camping", "Homestay"],
-    price: 195000,
-    rating: 4.8,
-    families: 35,
-    signature: "Sungai Tinalah",
-  },
-];
-
 function VillageCard({
   img,
   name,
@@ -575,7 +405,87 @@ function VillageCard({
   );
 }
 
-function VillagesGrid() {
+/* ── VillagesGrid ── */
+function VillagesGrid({
+  data,
+  loadMore,
+  hasMore,
+  isLoading,
+  isError,
+  pagination,
+}) {
+  /* Loading state – skeleton cards */
+  if (isLoading && (!data || data.length === 0)) {
+    return (
+      <section style={cardStyles.gridSection}>
+        <div style={cardStyles.gridHeader}>
+          <div>
+            <div style={cardStyles.eyebrow}>
+              {"\uD83C\uDFE0"} Direktori desa wisata
+            </div>
+            <h2 style={cardStyles.railTitle}>Semua desa wisata Indonesia</h2>
+          </div>
+        </div>
+        <div style={{ ...cardStyles.grid, opacity: 0.35 }}>
+          {Array.from({ length: 6 }).map((_, i) => (
+            <div
+              key={i}
+              style={{
+                ...cardStyles.card,
+                height: 340,
+                background: "var(--atr-bg-soft)",
+                border: "none",
+              }}
+            />
+          ))}
+        </div>
+      </section>
+    );
+  }
+
+  /* Error state */
+  if (isError) {
+    return (
+      <section style={cardStyles.gridSection}>
+        <div style={cardStyles.gridHeader}>
+          <div>
+            <div style={cardStyles.eyebrow}>
+              {"\uD83C\uDFE0"} Direktori desa wisata
+            </div>
+            <h2 style={cardStyles.railTitle}>Semua desa wisata Indonesia</h2>
+          </div>
+        </div>
+        <div style={{ textAlign: "center", padding: "60px 20px" }}>
+          <p style={{ color: "var(--atr-text-muted)", fontSize: 15 }}>
+            Gagal memuat data desa wisata. Silakan coba lagi.
+          </p>
+        </div>
+      </section>
+    );
+  }
+
+  /* Empty state */
+  if (!data || data.length === 0) {
+    return (
+      <section style={cardStyles.gridSection}>
+        <div style={cardStyles.gridHeader}>
+          <div>
+            <div style={cardStyles.eyebrow}>
+              {"\uD83C\uDFE0"} Direktori desa wisata
+            </div>
+            <h2 style={cardStyles.railTitle}>Semua desa wisata Indonesia</h2>
+          </div>
+        </div>
+        <div style={{ textAlign: "center", padding: "60px 20px" }}>
+          <p style={{ color: "var(--atr-text-muted)", fontSize: 15 }}>
+            Tidak ada desa wisata yang cocok dengan filter yang dipilih.
+          </p>
+        </div>
+      </section>
+    );
+  }
+
+  /* Normal grid */
   return (
     <section style={cardStyles.gridSection}>
       <div style={cardStyles.gridHeader}>
@@ -587,79 +497,37 @@ function VillagesGrid() {
         </div>
       </div>
       <div style={cardStyles.grid}>
-        {VIL_DATA.map((v, i) => (
+        {data.map((v, i) => (
           <VillageCard key={i} {...v} />
         ))}
       </div>
       <div style={cardStyles.paginationRow}>
-        <button style={cardStyles.loadMore}>Muat 24 desa lagi</button>
-        <div style={cardStyles.pageInfo}>Menampilkan 12 dari 318</div>
+        {hasMore && (
+          <button
+            style={cardStyles.loadMore}
+            onClick={loadMore}
+            disabled={isLoading}
+          >
+            {isLoading ? "Memuat\u2026" : "Muat lebih banyak"}
+          </button>
+        )}
+        <div style={cardStyles.pageInfo}>
+          Menampilkan {data.length}
+          {pagination?.total ? ` dari ${pagination.total}` : ""}
+        </div>
       </div>
     </section>
   );
 }
 
 /* ── FilterBar ── */
-const VIL_FILTERS = [
-  { label: "Provinsi", icon: "pin" },
-  { label: "Kategori ADWI", icon: "tag" },
-  { label: "Tema utama", icon: "users" },
-  { label: "Aktivitas", icon: "clock" },
-  { label: "Harga homestay", icon: "wallet" },
-];
-const VIL_FILTER_OPTIONS = {
-  Provinsi: [
-    "Bali",
-    "DI Yogyakarta",
-    "NTT",
-    "NTB",
-    "Jawa Tengah",
-    "Jawa Timur",
-    "Jawa Barat",
-    "Sumatera Barat",
-    "Sumatera Utara",
-    "Sulawesi Selatan",
-  ],
-  "Kategori ADWI": [
-    "Mandiri",
-    "Maju",
-    "Berkembang",
-    "Rintisan",
-    "Belum terklasifikasi",
-  ],
-  "Tema utama": [
-    "Budaya & Adat",
-    "Alam & Ekowisata",
-    "Kerajinan",
-    "Kuliner Lokal",
-    "Edukasi",
-    "Religi",
-    "Pertanian",
-    "Bahari",
-  ],
-  Aktivitas: [
-    "Homestay",
-    "Workshop kerajinan",
-    "Trekking",
-    "Bersepeda",
-    "Tarian tradisional",
-    "Memasak bareng",
-    "Memancing",
-    "Bertani",
-  ],
-  "Harga homestay": [
-    "< Rp150rb",
-    "Rp150rb \u2013 Rp300rb",
-    "Rp300rb \u2013 Rp500rb",
-    "> Rp500rb",
-  ],
+const FILTER_KEY_MAP = {
+  Provinsi: "provinsi",
+  "Kategori ADWI": "adwi_kategori",
+  "Tema utama": "tema",
+  Aktivitas: "aktivitas",
+  "Harga homestay": "harga",
 };
-const SORT_OPTIONS = [
-  "Paling populer",
-  "Rating tertinggi",
-  "Harga terendah",
-  "Harga tertinggi",
-];
 
 function FilterGlyph({ kind }) {
   const c = "var(--atr-purple)";
@@ -768,26 +636,39 @@ function CheckIcon() {
   );
 }
 
-function FilterBar() {
+function FilterBar({ filters, setFilters, totalCount }) {
   const [openFilter, setOpenFilter] = useState(null);
   const [openSort, setOpenSort] = useState(false);
-  const [sort, setSort] = useState("Paling populer");
-  const [activeChips, setActiveChips] = useState([
-    "Bali",
-    "ADWI Mandiri",
-    "Budaya & Adat",
-  ]);
+
+  const activeChips = Object.values(FILTER_KEY_MAP)
+    .map((k) => filters[k])
+    .filter(Boolean);
 
   function toggleFilter(label) {
     setOpenFilter(openFilter === label ? null : label);
     setOpenSort(false);
   }
+
   function pickFilter(label, value) {
-    if (!activeChips.includes(value)) setActiveChips([...activeChips, value]);
+    const key = FILTER_KEY_MAP[label];
+    const next = value === filters[key] ? "" : value;
+    setFilters({ ...filters, [key]: next });
     setOpenFilter(null);
   }
-  function removeChip(c) {
-    setActiveChips(activeChips.filter((x) => x !== c));
+
+  function pickSort(value) {
+    const next = value === filters.sort ? "" : value;
+    setFilters({ ...filters, sort: next });
+    setOpenSort(false);
+  }
+
+  function removeChip(chip) {
+    const entry = Object.entries(FILTER_KEY_MAP).find(
+      ([_, v]) => filters[v] === chip,
+    );
+    if (entry) {
+      setFilters({ ...filters, [entry[1]]: "" });
+    }
   }
 
   return (
@@ -817,7 +698,8 @@ function FilterBar() {
                 {open && (
                   <div style={dirStyles.dropdown}>
                     {(VIL_FILTER_OPTIONS[f.label] || []).map((opt) => {
-                      const checked = activeChips.includes(opt);
+                      const key = FILTER_KEY_MAP[f.label];
+                      const checked = filters[key] === opt;
                       return (
                         <button
                           key={opt}
@@ -860,7 +742,7 @@ function FilterBar() {
                   strokeLinejoin="round"
                 />
               </svg>
-              {sort}
+              {filters.sort || "Urutkan"}
               <ChevDown rotated={openSort} />
             </button>
             {openSort && (
@@ -868,13 +750,10 @@ function FilterBar() {
                 {SORT_OPTIONS.map((s) => (
                   <button
                     key={s}
-                    onClick={() => {
-                      setSort(s);
-                      setOpenSort(false);
-                    }}
+                    onClick={() => pickSort(s)}
                     style={{
                       ...dirStyles.dropdownItem,
-                      ...(s === sort
+                      ...(s === filters.sort
                         ? { color: "var(--atr-purple)", fontWeight: 600 }
                         : {}),
                     }}
@@ -882,7 +761,7 @@ function FilterBar() {
                     <span
                       style={{
                         ...dirStyles.radio,
-                        ...(s === sort
+                        ...(s === filters.sort
                           ? {
                               border: "1.5px solid var(--atr-purple)",
                               boxShadow: "inset 0 0 0 3px var(--atr-purple)",
@@ -901,7 +780,7 @@ function FilterBar() {
       </div>
       <div style={dirStyles.activeRow}>
         <span style={dirStyles.resultCount}>
-          <strong>318</strong> desa wisata cocok untukmu
+          <strong>{totalCount ?? 0}</strong> desa wisata cocok untukmu
         </span>
         <div style={dirStyles.activeChips}>
           {activeChips.map((c) => (
@@ -914,7 +793,16 @@ function FilterBar() {
           ))}
           {activeChips.length > 0 && (
             <button
-              onClick={() => setActiveChips([])}
+              onClick={() =>
+                setFilters({
+                  provinsi: "",
+                  adwi_kategori: "",
+                  tema: "",
+                  aktivitas: "",
+                  harga: "",
+                  sort: filters.sort,
+                })
+              }
               style={dirStyles.clearAll}
             >
               Hapus semua
@@ -1041,13 +929,35 @@ function CTABand() {
 
 /* ── Page ── */
 export default function TourismVillagesPage() {
+  const {
+    data,
+    pagination,
+    isLoading,
+    isError,
+    filters,
+    setFilters,
+    loadMore,
+    hasMore,
+  } = useVillages();
+
   return (
     <div data-screen-label="Tourism Villages Directory">
       <TopNav active="Desa Wisata" />
       <VillagesHero />
       <CategoryTabs active="Desa Wisata" />
-      <FilterBar />
-      <VillagesGrid />
+      <FilterBar
+        filters={filters}
+        setFilters={setFilters}
+        totalCount={pagination?.total}
+      />
+      <VillagesGrid
+        data={data}
+        loadMore={loadMore}
+        hasMore={hasMore}
+        isLoading={isLoading}
+        isError={isError}
+        pagination={pagination}
+      />
       <CTABand />
       <SiteFooter />
     </div>
