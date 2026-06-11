@@ -16,7 +16,7 @@ const ds = {
   mainCol: { display: "flex", flexDirection: "column", gap: 20, minWidth: 0 },
   sideCol: {
     position: "sticky",
-    top: 96,
+    top: 99.8,
     display: "flex",
     flexDirection: "column",
     gap: 14,

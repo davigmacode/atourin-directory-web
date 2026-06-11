@@ -148,7 +148,7 @@ const dirStyles = {
     background: "#fff",
     borderBottom: "1px solid var(--atr-outline)",
     position: "sticky",
-    top: 71,
+    top: 74.8,
     zIndex: 40,
   },
   tabsInner: {
