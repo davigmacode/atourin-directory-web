@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 import ex from "@/styles/explore-styles";
 
 export default function ProvinceGrid({
@@ -8,15 +9,29 @@ export default function ProvinceGrid({
   islands = [],
   isLoading = false,
 }) {
+  const router = useRouter();
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState("alpha");
   const [island, setIsland] = useState("Semua");
+
+  const list = islands.map((i) => i.name);
+  const islandsAll = ["Semua", ...list];
+
   const filtered = provinces
     .filter((p) => p.name.toLowerCase().includes(search.toLowerCase()))
     .filter((p) => island === "Semua" || p.island === island)
     .sort((a, b) =>
       sort === "alpha" ? a.name.localeCompare(b.name) : b.popular - a.popular,
     );
+
+  function goToProvince(name) {
+    const slug = name
+      .toLowerCase()
+      .replace(/[^a-z0-9\s]/g, "")
+      .replace(/\s+/g, "-");
+    router.push(`/destinations?province=${slug}`);
+  }
+
   return (
     <section style={ex.section} id="provinces">
       <div style={ex.secHeader}>
@@ -45,20 +60,21 @@ export default function ProvinceGrid({
           </button>
         </div>
       </div>
+
       <div style={ex.provFilters}>
         <div style={ex.provSearchWrap}>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
             <circle
               cx="11"
               cy="11"
               r="7"
               stroke="var(--atr-text-muted)"
-              strokeWidth="2"
+              strokeWidth="1.8"
             />
             <path
               d="M20 20l-3.5-3.5"
               stroke="var(--atr-text-muted)"
-              strokeWidth="2"
+              strokeWidth="1.8"
               strokeLinecap="round"
             />
           </svg>
@@ -70,13 +86,13 @@ export default function ProvinceGrid({
           />
         </div>
         <div style={ex.islandChips}>
-          {["Semua", ...islands.map((i) => i.name)].map((i) => (
+          {islandsAll.map((i, idx) => (
             <button
               key={i}
-              onClick={() => setIsland(i)}
+              onClick={() => setIsland(idx)}
               style={{
                 ...ex.islandChip,
-                ...(island === i ? ex.islandChipActive : {}),
+                ...(island === idx ? ex.islandChipActive : {}),
               }}
             >
               {i}
@@ -84,10 +100,11 @@ export default function ProvinceGrid({
           ))}
         </div>
       </div>
+
       <div style={ex.provGrid}>
         {isLoading
           ? Array.from({ length: 8 }).map((_, i) => (
-              <div key={i} style={ex.provCard}>
+              <div key={i} style={{ ...ex.provCard, pointerEvents: "none" }}>
                 <div
                   style={{
                     ...ex.provImgWrap,
@@ -97,65 +114,75 @@ export default function ProvinceGrid({
                 <div style={ex.provBody}>
                   <div
                     style={{
-                      height: 14,
-                      background: "var(--atr-outline)",
-                      borderRadius: 6,
+                      height: 16,
                       width: "60%",
+                      background: "var(--atr-outline)",
+                      borderRadius: 4,
                     }}
                   />
-                  <div style={{ display: "flex", gap: 4, marginTop: 8 }}>
+                  <div style={{ display: "flex", gap: 8, marginTop: 6 }}>
                     <div
                       style={{
-                        height: 11,
-                        background: "var(--atr-outline)",
-                        borderRadius: 4,
+                        height: 12,
                         width: "30%",
+                        background: "var(--atr-outline)",
+                        borderRadius: 4,
                       }}
                     />
                     <div
                       style={{
-                        height: 11,
+                        height: 12,
+                        width: "25%",
                         background: "var(--atr-outline)",
                         borderRadius: 4,
-                        width: "25%",
                       }}
                     />
                     <div
                       style={{
-                        height: 11,
+                        height: 12,
+                        width: "25%",
                         background: "var(--atr-outline)",
                         borderRadius: 4,
-                        width: "25%",
                       }}
                     />
                   </div>
                 </div>
               </div>
             ))
-          : filtered.map((p) => (
-              <a key={p.name} href="/" style={ex.provCard}>
-                <div style={ex.provImgWrap}>
-                  <img src={p.img} alt="" style={ex.provImg} />
-                  <span style={ex.provIslandBadge}>{p.island}</span>
-                </div>
-                <div style={ex.provBody}>
-                  <div style={ex.provName}>{p.name}</div>
-                  <div style={ex.provStats}>
-                    <span>
-                      <strong>{p.dest}</strong> destinasi
-                    </span>
-                    <span style={ex.provDot}>·</span>
-                    <span>
-                      <strong>{p.attr}</strong> atraksi
-                    </span>
-                    <span style={ex.provDot}>·</span>
-                    <span>
-                      <strong>{p.desa}</strong> desa
-                    </span>
+          : filtered.map((p) => {
+              const slug = p.name
+                .toLowerCase()
+                .replace(/[^a-z0-9\s]/g, "")
+                .replace(/\s+/g, "-");
+              return (
+                <div
+                  key={p.name}
+                  onClick={() => goToProvince(p.name)}
+                  style={{ ...ex.provCard, cursor: "pointer" }}
+                >
+                  <div style={ex.provImgWrap}>
+                    <img src={p.img} alt="" style={ex.provImg} />
+                    <span style={ex.provIslandBadge}>{p.island}</span>
+                  </div>
+                  <div style={ex.provBody}>
+                    <div style={ex.provName}>{p.name}</div>
+                    <div style={ex.provStats}>
+                      <span>
+                        <strong>{p.dest}</strong> destinasi
+                      </span>
+                      <span style={ex.provDot}>·</span>
+                      <span>
+                        <strong>{p.attr}</strong> atraksi
+                      </span>
+                      <span style={ex.provDot}>·</span>
+                      <span>
+                        <strong>{p.desa}</strong> desa
+                      </span>
+                    </div>
                   </div>
                 </div>
-              </a>
-            ))}
+              );
+            })}
       </div>
       {!isLoading && filtered.length === 0 && (
         <div style={ex.emptyState}>

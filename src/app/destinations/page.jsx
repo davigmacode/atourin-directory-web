@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import TopNav from "@/components/TopNav";
 import Breadcrumb from "@/components/Breadcrumb";
 import SiteFooter from "@/components/SiteFooter";
@@ -126,12 +127,21 @@ function ChevDownSm({ rotated }) {
 
 function DestinationCard({ d }) {
   const [hover, setHover] = useState(false);
+  const router = useRouter();
+  const slug = d.name
+    .toLowerCase()
+    .replace(/[^a-z0-9\s]/g, "")
+    .replace(/\s+/g, "-");
   return (
-    <a
-      href="/"
-      style={{ ...rg.destCard, ...(hover ? rg.destCardHover : {}) }}
+    <div
+      onClick={() => router.push(`/destinations/${slug}`)}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
+      style={{
+        ...rg.destCard,
+        ...(hover ? rg.destCardHover : {}),
+        cursor: "pointer",
+      }}
     >
       <div style={rg.destImgWrap}>
         <img src={d.img} alt="" style={rg.destImg} />
@@ -190,7 +200,7 @@ function DestinationCard({ d }) {
           ))}
         </div>
       </div>
-    </a>
+    </div>
   );
 }
 
@@ -227,6 +237,30 @@ function ErrorBanner() {
 }
 
 export default function DestinationsPage() {
+  /* ─── Read URL params for initial filter ─── */
+  const getInitialFilters = () => {
+    if (typeof window === "undefined") return undefined;
+    const sp = new URLSearchParams(window.location.search);
+    const urlIsland = sp.get("island");
+    const urlProvince = sp.get("province");
+    const f = { island: "", province: "", search: "", sort: "alpha" };
+    if (urlIsland) {
+      const name = ISLAND_LIST.find(
+        (i) => i.toLowerCase().replace(/[^a-z0-9]+/g, "-") === urlIsland,
+      );
+      if (name) f.island = name;
+    }
+    if (urlProvince) {
+      const name = PROVINCES.find(
+        (p) => p.name.toLowerCase().replace(/[^a-z0-9]+/g, "-") === urlProvince,
+      )?.name;
+      if (name) f.province = name;
+    }
+    return f;
+  };
+
+  const initFilters = getInitialFilters();
+
   const {
     data,
     pagination,
@@ -237,7 +271,7 @@ export default function DestinationsPage() {
     setFilters,
     loadMore,
     hasMore,
-  } = useDestinations();
+  } = useDestinations(initFilters);
 
   /* Multi-select and availability filters — kept client-side
      since the hook/API supports single-string island/province only. */
@@ -253,6 +287,12 @@ export default function DestinationsPage() {
   /* UI-only local state */
   const [provDropdownOpen, setProvDropdownOpen] = useState(false);
   const [provSearch, setProvSearch] = useState("");
+
+  /* Sync selectedIslands/Provinces from initial URL filters */
+  useEffect(() => {
+    if (initFilters.island) setSelectedIslands([initFilters.island]);
+    if (initFilters.province) setSelectedProvinces([initFilters.province]);
+  }, []);
 
   /* Sync search and sort to the hook — drives server-side filtering */
   const handleSearchChange = (e) => {

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 import TopNav from "@/components/TopNav";
 import Breadcrumb from "@/components/Breadcrumb";
 import SiteFooter from "@/components/SiteFooter";
@@ -260,6 +261,11 @@ function VillageCard({
   featured,
 }) {
   const [hover, setHover] = useState(false);
+  const router = useRouter();
+  const slug = name
+    .toLowerCase()
+    .replace(/[^a-z0-9\s]/g, "")
+    .replace(/\s+/g, "-");
   return (
     <article
       style={{
@@ -274,7 +280,7 @@ function VillageCard({
       }}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
-      onClick={() => alert("Buka detail desa wisata\u2026")}
+      onClick={() => router.push(`/tourism-villages/${slug}`)}
     >
       <div style={cardStyles.cardImgWrap}>
         <img src={img} alt="" style={cardStyles.cardImg} />

@@ -8,7 +8,7 @@ function slugify(text) {
 }
 
 export async function GET(req, { params }) {
-  const { slug } = params;
+  const { slug } = await params;
   const item = GUIDE_DATA.find((g) => slugify(g.name) === slug);
   if (!item) return Response.json({ error: "Not found" }, { status: 404 });
   return Response.json({ data: { ...item, id: slug } });

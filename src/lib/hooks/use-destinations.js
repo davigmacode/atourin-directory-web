@@ -5,15 +5,13 @@ import { useState, useCallback, useEffect } from "react";
 
 const PER_PAGE = 12;
 
-export function useDestinations() {
+export function useDestinations(initialFilters) {
   const [page, setPage] = useState(1);
-  const [filters, setFilters] = useState({
-    island: "",
-    province: "",
-    search: "",
-    sort: "alpha",
-  });
+  const [filters, setFilters] = useState(
+    initialFilters || { island: "", province: "", search: "", sort: "alpha" },
+  );
   const [allData, setAllData] = useState([]);
+  const [firstLoad, setFirstLoad] = useState(true);
 
   const params = new URLSearchParams();
   params.set("page", String(page));
@@ -25,6 +23,12 @@ export function useDestinations() {
   const { data, error, isLoading, isValidating } = useSWR(
     `/destinations?${params}`,
   );
+
+  useEffect(() => {
+    if (firstLoad && data?.data) {
+      setFirstLoad(false);
+    }
+  }, [data]);
 
   useEffect(() => {
     if (data?.data) {

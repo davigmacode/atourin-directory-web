@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect, useCallback } from "react";
+import { useRouter } from "next/navigation";
 import TopNav from "@/components/TopNav";
 import Breadcrumb from "@/components/Breadcrumb";
 import SiteFooter from "@/components/SiteFooter";
@@ -914,6 +915,11 @@ function ItinCard({
 }) {
   const [save, setSave] = useState(initialSave);
   const [hover, setHover] = useState(false);
+  const router = useRouter();
+  const slug = title
+    .toLowerCase()
+    .replace(/[^a-z0-9\s]/g, "")
+    .replace(/\s+/g, "-");
   return (
     <article
       style={{
@@ -927,7 +933,7 @@ function ItinCard({
       }}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
-      onClick={() => alert("Buka detail: " + title)}
+      onClick={() => router.push(`/itinerary/${slug}`)}
     >
       <div style={cardStyles.cardImgWrap}>
         <img src={img} alt="" style={cardStyles.cardImg} />

@@ -1,9 +1,11 @@
 "use client";
 
 import React from "react";
+import { useRouter } from "next/navigation";
 import ex from "@/styles/explore-styles";
 
 export default function IslandTiles({ islands = [], isLoading = false }) {
+  const router = useRouter();
   return (
     <section style={ex.section}>
       <div style={ex.secHeader}>
@@ -25,12 +27,19 @@ export default function IslandTiles({ islands = [], isLoading = false }) {
               />
             ))
           : islands.map((isl, i) => (
-              <a
+              <div
                 key={isl.name}
-                href="/"
+                onClick={() => {
+                  const slug = isl.name
+                    .toLowerCase()
+                    .replace(/[^a-z0-9\s]/g, "")
+                    .replace(/\s+/g, "-");
+                  router.push(`/destinations?island=${slug}`);
+                }}
                 style={{
                   ...ex.islandTile,
                   ...(i === 0 ? ex.islandTileBig : {}),
+                  cursor: "pointer",
                 }}
               >
                 <img src={isl.img} alt="" style={ex.islandImg} />
@@ -41,7 +50,7 @@ export default function IslandTiles({ islands = [], isLoading = false }) {
                     {isl.provinces} provinsi {"\u2192"}
                   </div>
                 </div>
-              </a>
+              </div>
             ))}
       </div>
     </section>
