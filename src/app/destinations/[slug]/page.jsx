@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from "react";
+import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import TopNav from "@/components/TopNav";
 import SiteFooter from "@/components/SiteFooter";
@@ -12,19 +13,69 @@ import { GUIDE_DATA } from "@/data/guides";
 import { cat } from "@/lib/i18n";
 import dh from "@/styles/destination-detail";
 
-/* ── Helpers ────────────────────────────────────────── */
+/* ── SafeImage: Next.js Image with broken-image fallback ── */
+function SafeImage({ src, alt, style = {}, ...props }) {
+  const [errored, setErrored] = useState(false);
+
+  if (errored || !src) {
+    return (
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          background: "var(--atr-bg-soft)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
+          <rect
+            x="2"
+            y="2"
+            width="20"
+            height="20"
+            rx="2"
+            stroke="var(--atr-text-muted)"
+            strokeWidth="1.5"
+          />
+          <circle
+            cx="8.5"
+            cy="8.5"
+            r="2.5"
+            stroke="var(--atr-text-muted)"
+            strokeWidth="1.5"
+          />
+          <path
+            d="M3 19l5-6 4 5 3-4 6 7"
+            stroke="var(--atr-text-muted)"
+            strokeWidth="1.5"
+            strokeLinejoin="round"
+          />
+        </svg>
+      </div>
+    );
+  }
+
+  return (
+    <Image
+      src={src}
+      alt={alt}
+      fill
+      sizes="(max-width: 600px) 100vw, (max-width: 1080px) 50vw, 33vw"
+      style={{ ...style, objectFit: "cover" }}
+      onError={() => setErrored(true)}
+      unoptimized
+      {...props}
+    />
+  );
+}
+
 function slugify(text) {
   return text
     .toLowerCase()
     .replace(/[^a-z0-9\s]/g, "")
     .replace(/\s+/g, "-");
-}
-
-function unslug(slug) {
-  return slug
-    .split("-")
-    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-    .join(" ");
 }
 
 function formatPrice(price) {
@@ -614,7 +665,7 @@ function AtrCardGrid({ a }) {
       style={{ ...dh.atrCard, textDecoration: "none", color: "inherit" }}
     >
       <div style={dh.atrImgWrap}>
-        <img src={a.img} alt="" style={dh.atrImg} />
+        <SafeImage src={a.img} alt="" style={{}} />
         <span
           style={{
             ...dh.atrCat,
@@ -688,7 +739,7 @@ function AtrCardList({ a }) {
       }}
     >
       <div style={dh.atrListImgWrap}>
-        <img src={a.img} alt="" style={dh.atrListImg} />
+        <SafeImage src={a.img} alt="" style={dh.atrListImg} />
         <span
           style={{
             ...dh.atrCat,
@@ -895,7 +946,7 @@ function DesaTab({ dest }) {
               }}
             >
               <div style={dh.atrImgWrap}>
-                <img src={d.img} alt="" style={dh.atrImg} />
+                <SafeImage src={d.img} alt="" style={{}} />
                 <span
                   style={{
                     ...dh.desaStatus,
@@ -1035,7 +1086,7 @@ function ItineraryTab({ dest }) {
         {filtered.map((it, i) => (
           <article key={i} style={dh.itinCard}>
             <div style={dh.atrImgWrap}>
-              <img src={it.img} alt="" style={dh.atrImg} />
+              <SafeImage src={it.img} alt="" style={{}} />
               <span style={dh.itinDaysBadge}>{it.days}</span>
               <span
                 style={{
@@ -1209,7 +1260,7 @@ function PemanduTab({ dest }) {
             }}
           >
             <div style={dh.guideImgWrap}>
-              <img src={p.img} alt="" style={dh.guideImg} />
+              <SafeImage src={p.img} alt="" style={{}} />
               {p.verified && (
                 <span style={dh.guideVerified}>
                   <svg width="10" height="10" viewBox="0 0 24 24" fill="#fff">
