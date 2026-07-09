@@ -1,0 +1,236 @@
+/* Destination Detail styles — converted from destination-styles.jsx */
+const dh = {
+  /* ─── HERO ─── */
+  hero: { position: "relative", minHeight: 540, overflow: "hidden", background: "#1F1B33" },
+  heroBg: { position: "absolute", inset: 0, backgroundSize: "cover", backgroundPosition: "center", transition: "opacity 1.2s ease" },
+  heroOverlay: { position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(31,27,51,0.25) 0%, rgba(31,27,51,0.5) 50%, rgba(31,27,51,0.92) 100%)" },
+  heroDots: { position: "absolute", top: 24, right: 32, display: "flex", gap: 6, zIndex: 3 },
+  heroDot: { width: 28, height: 4, background: "rgba(255,255,255,0.4)", border: "none", borderRadius: 999, cursor: "pointer", transition: "background .25s" },
+  heroDotActive: { background: "#fff" },
+  heroContent: { position: "relative", maxWidth: 1376, margin: "0 auto", padding: "32px 32px 40px", color: "#fff", zIndex: 2, marginTop: 120 },
+  heroCrumb: { display: "flex", gap: 8, fontSize: 13, alignItems: "center", color: "rgba(255,255,255,0.85)", flexWrap: "wrap" },
+  heroCrumbLink: { color: "rgba(255,255,255,0.85)", textDecoration: "none" },
+  heroCrumbSep: { color: "rgba(255,255,255,0.4)" },
+  heroCrumbCurrent: { color: "#fff", fontWeight: 600 },
+  heroBadgeRow: { display: "flex", gap: 6, marginTop: 14, flexWrap: "wrap" },
+  heroTypeBadge: { background: "var(--atr-yellow)", color: "#3D2900", fontSize: 10, fontWeight: 700, padding: "4px 10px", borderRadius: 999, letterSpacing: "0.04em" },
+  heroProvBadge: { background: "rgba(255,255,255,0.18)", backdropFilter: "blur(8px)", color: "#fff", fontSize: 11, fontWeight: 600, padding: "4px 10px", borderRadius: 999 },
+  heroIslandBadge: { background: "rgba(255,255,255,0.1)", color: "#fff", fontSize: 11, fontWeight: 600, padding: "4px 10px", borderRadius: 999, border: "1px solid rgba(255,255,255,0.2)" },
+  heroTitle: { fontSize: 68, fontWeight: 700, letterSpacing: "-0.02em", lineHeight: 1, marginTop: 10, textShadow: "0 2px 20px rgba(0,0,0,0.3)" },
+  heroQuickStats: { display: "flex", gap: 10, marginTop: 22, flexWrap: "wrap" },
+  heroQsPill: { background: "rgba(255,255,255,0.15)", backdropFilter: "blur(8px)", border: "1px solid rgba(255,255,255,0.25)", color: "#fff", padding: "8px 14px", borderRadius: 999, fontSize: 13 },
+  heroTagRow: { display: "flex", gap: 6, flexWrap: "wrap", marginTop: 14 },
+  heroTag: { background: "rgba(255,255,255,0.1)", color: "#fff", fontSize: 11, fontWeight: 600, padding: "5px 12px", borderRadius: 999, textDecoration: "none", border: "1px solid rgba(255,255,255,0.2)" },
+  heroActions: { display: "flex", gap: 10, marginTop: 24, alignItems: "center", flexWrap: "wrap" },
+  heroWeather: { display: "flex", alignItems: "center", gap: 12, background: "rgba(255,255,255,0.15)", backdropFilter: "blur(12px)", border: "1px solid rgba(255,255,255,0.25)", padding: "10px 16px", borderRadius: 12 },
+  heroWeatherIcon: { fontSize: 28 },
+  heroWeatherTemp: { fontSize: 18, fontWeight: 700 },
+  heroWeatherCond: { fontSize: 11, opacity: 0.85 },
+  heroIconBtn: { display: "inline-flex", alignItems: "center", gap: 8, background: "rgba(255,255,255,0.15)", border: "1px solid rgba(255,255,255,0.25)", color: "#fff", padding: "12px 16px", borderRadius: 10, fontSize: 13, fontWeight: 600, cursor: "pointer", fontFamily: "var(--atr-font-sans)", backdropFilter: "blur(8px)" },
+  heroIconBtnOn: { background: "rgba(255,196,66,0.2)", border: "1px solid var(--atr-yellow)" },
+
+  /* ─── TAB BAR ─── */
+  tabBar: { position: "sticky", top: 71, zIndex: 30, background: "#fff", borderBottom: "1px solid var(--atr-outline)", boxShadow: "0 1px 0 var(--atr-outline)" },
+  tabInner: { maxWidth: 1376, margin: "0 auto", padding: "0 32px", display: "flex", gap: 8, overflowX: "auto" },
+  tabBtn: { display: "inline-flex", alignItems: "center", gap: 8, background: "transparent", border: "none", padding: "18px 4px", marginRight: 28, fontSize: 14, fontWeight: 600, color: "var(--atr-text-muted)", cursor: "pointer", borderBottom: "3px solid transparent", fontFamily: "var(--atr-font-sans)", whiteSpace: "nowrap" },
+  tabBtnActive: { color: "var(--atr-purple)", fontWeight: 700, borderBottom: "3px solid var(--atr-purple)" },
+  tabCount: { fontSize: 11, fontWeight: 700, background: "var(--atr-bg-soft)", color: "var(--atr-text-muted)", padding: "2px 8px", borderRadius: 999 },
+  tabCountActive: { background: "#EDE9FF", color: "var(--atr-purple)" },
+
+  /* ─── LAYOUT ─── */
+  pageBody: { maxWidth: 1376, margin: "0 auto", padding: "32px 32px 0", display: "grid", gridTemplateColumns: "1fr 280px", gap: 32, alignItems: "flex-start" },
+
+  /* ─── SIDEBAR ─── */
+  sidebar: { position: "sticky", top: 140, display: "flex", flexDirection: "column", gap: 12 },
+  sbCtaCard: { display: "flex", gap: 12, alignItems: "center", background: "#F6F4FF", border: "1px solid #EDE9FF", borderRadius: 12, padding: 14, textDecoration: "none", color: "inherit", transition: "all .2s" },
+  sbCtaIcon: { width: 44, height: 44, borderRadius: 10, background: "#fff", display: "inline-flex", alignItems: "center", justifyContent: "center", fontSize: 22, flexShrink: 0 },
+  sbCtaTitle: { fontSize: 13, fontWeight: 700, color: "var(--atr-text)", lineHeight: 1.3 },
+  sbCtaSub: { fontSize: 11, color: "var(--atr-text-muted)", marginTop: 2 },
+  sbCard: { background: "#fff", border: "1px solid var(--atr-outline)", borderRadius: 12, padding: 16 },
+  sbCardTitle: { fontSize: 11, fontWeight: 700, color: "var(--atr-text-muted)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 12 },
+  sbWeatherMain: { display: "flex", alignItems: "center", gap: 12 },
+  sbWeatherIcon: { fontSize: 36 },
+  sbWeatherTemp: { fontSize: 22, fontWeight: 700, color: "var(--atr-text)" },
+  sbWeatherCond: { fontSize: 11, color: "var(--atr-text-muted)" },
+  sbForecastRow: { display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 6, marginTop: 12, paddingTop: 12, borderTop: "1px dashed var(--atr-outline)" },
+  sbForecast: { textAlign: "center", background: "var(--atr-bg-soft)", borderRadius: 8, padding: "8px 4px" },
+  sbForecastDay: { fontSize: 10, fontWeight: 700, color: "var(--atr-text-muted)" },
+  sbForecastIcon: { fontSize: 18, margin: "2px 0" },
+  sbForecastTemp: { fontSize: 12, fontWeight: 700, color: "var(--atr-text)" },
+  sbShareRow: { display: "flex", flexDirection: "column", gap: 6 },
+  sbShareBtn: { display: "inline-flex", alignItems: "center", gap: 8, background: "var(--atr-bg-soft)", border: "1px solid var(--atr-outline)", borderRadius: 8, padding: "8px 12px", fontSize: 12, fontWeight: 600, cursor: "pointer", fontFamily: "var(--atr-font-sans)" },
+
+  /* ─── TAB CONTENT ─── */
+  tabContent: { paddingBottom: 60 },
+  filterBar: { background: "#fff", border: "1px solid var(--atr-outline)", borderRadius: 14, padding: 16, marginBottom: 20, display: "flex", flexDirection: "column", gap: 14 },
+  filterTopRow: { display: "flex", gap: 10, alignItems: "center" },
+  filterSearch: { flex: 1, display: "flex", alignItems: "center", gap: 8, background: "var(--atr-bg-soft)", border: "1px solid var(--atr-outline)", borderRadius: 10, padding: "10px 14px" },
+  filterSearchInput: { border: "none", outline: "none", background: "transparent", fontSize: 13, flex: 1, fontFamily: "var(--atr-font-sans)" },
+  filterSort: { background: "#fff", border: "1px solid var(--atr-outline)", borderRadius: 10, padding: "10px 14px", fontSize: 13, fontWeight: 600, color: "var(--atr-text)", cursor: "pointer", fontFamily: "var(--atr-font-sans)" },
+  viewToggle: { display: "flex", background: "var(--atr-bg-soft)", border: "1px solid var(--atr-outline)", borderRadius: 10, padding: 3 },
+  viewBtn: { background: "transparent", border: "none", padding: "8px 12px", color: "var(--atr-text-muted)", cursor: "pointer", borderRadius: 8, fontFamily: "var(--atr-font-sans)" },
+  viewBtnOn: { background: "#fff", color: "var(--atr-text)", boxShadow: "0 1px 3px rgba(0,0,0,0.08)" },
+
+  /* ─── FILTER GROUPS ─── */
+  fgroup: { display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" },
+  fgroupLabel: { fontSize: 11, fontWeight: 700, color: "var(--atr-text-muted)", textTransform: "uppercase", letterSpacing: "0.06em", minWidth: 110 },
+  fgroupRow: { display: "flex", gap: 6, flexWrap: "wrap", flex: 1 },
+  fgroupDivider: { width: 1, height: 18, background: "var(--atr-outline)", margin: "0 4px" },
+  fchip: { background: "#fff", border: "1px solid var(--atr-outline)", borderRadius: 999, padding: "6px 12px", fontSize: 12, fontWeight: 600, color: "var(--atr-text)", cursor: "pointer", fontFamily: "var(--atr-font-sans)", display: "inline-flex", alignItems: "center", gap: 5 },
+  fchipOn: { background: "var(--atr-purple)", color: "#fff", border: "1px solid var(--atr-purple)" },
+  statusDot: { width: 6, height: 6, borderRadius: 999, display: "inline-block" },
+  resultMeta: { marginBottom: 14 },
+  resultText: { fontSize: 13, color: "var(--atr-text-muted)" },
+
+  /* ─── ATTRACTION GRID ─── */
+  atrGrid: { display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 16 },
+  atrCard: { background: "#fff", border: "1px solid var(--atr-outline)", borderRadius: 14, overflow: "hidden", textDecoration: "none", color: "inherit", transition: "transform .2s, box-shadow .2s", display: "flex", flexDirection: "column" },
+  atrImgWrap: { position: "relative", aspectRatio: "16 / 10", overflow: "hidden" },
+  atrImg: { width: "100%", height: "100%", objectFit: "cover", transition: "transform .4s", display: "block" },
+  atrCat: { position: "absolute", top: 10, left: 10, background: "rgba(255,255,255,0.92)", color: "var(--atr-text)", fontSize: 10, fontWeight: 700, padding: "3px 9px", borderRadius: 999, letterSpacing: "0.04em" },
+  atrSave: { position: "absolute", top: 10, right: 10, background: "rgba(255,255,255,0.92)", border: "none", width: 30, height: 30, borderRadius: 999, display: "inline-flex", alignItems: "center", justifyContent: "center", cursor: "pointer", fontSize: 16, color: "var(--atr-text)", transition: "all .2s", fontFamily: "var(--atr-font-sans)" },
+  atrBody: { padding: 14, display: "flex", flexDirection: "column", gap: 6, flex: 1 },
+  atrName: { fontSize: 15, fontWeight: 700, color: "var(--atr-text)", lineHeight: 1.3 },
+  atrDesc: { fontSize: 12, color: "var(--atr-text-muted)", lineHeight: 1.5, display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" },
+  atrMeta: { display: "flex", alignItems: "center", gap: 10, fontSize: 12, color: "var(--atr-text-muted)", marginTop: "auto", paddingTop: 8 },
+  atrRating: { color: "var(--atr-yellow)", fontWeight: 700 },
+  atrReviews: { color: "var(--atr-text-muted)" },
+  atrLoc: { display: "flex", alignItems: "center", gap: 4, marginLeft: "auto", fontSize: 11 },
+  atrFooter: { display: "flex", alignItems: "center", justifyContent: "space-between", padding: "12px 14px", borderTop: "1px solid var(--atr-outline)", gap: 8 },
+  atrPrice: { fontSize: 16, fontWeight: 700, color: "var(--atr-text)" },
+  atrCta: { background: "var(--atr-purple)", color: "#fff", border: "none", borderRadius: 8, padding: "8px 16px", fontSize: 12, fontWeight: 700, cursor: "pointer", fontFamily: "var(--atr-font-sans)", textDecoration: "none" },
+
+  /* ─── ATTRACTION LIST ─── */
+  atrList: { display: "flex", flexDirection: "column", gap: 12 },
+  atrListCard: { display: "flex", gap: 16, background: "#fff", border: "1px solid var(--atr-outline)", borderRadius: 14, overflow: "hidden", textDecoration: "none", color: "inherit", transition: "transform .2s, box-shadow .2s" },
+  atrListImgWrap: { width: 200, minHeight: 140, overflow: "hidden", flexShrink: 0, position: "relative" },
+  atrListImg: { width: "100%", height: "100%", objectFit: "cover", display: "block" },
+  atrListBody: { flex: 1, padding: "14px 14px 14px 0", display: "flex", flexDirection: "column", gap: 4, justifyContent: "center" },
+  atrListRight: { display: "flex", flexDirection: "column", gap: 8, alignItems: "flex-end", justifyContent: "center", padding: "14px 18px 14px 0", flexShrink: 0 },
+  atrSaveList: { background: "transparent", border: "none", fontSize: 18, color: "var(--atr-text-muted)", cursor: "pointer", padding: 4, fontFamily: "var(--atr-font-sans)" },
+  atrPriceList: { fontSize: 16, fontWeight: 700, color: "var(--atr-text)", textAlign: "right", whiteSpace: "nowrap" },
+  atrCtaList: { background: "var(--atr-purple)", color: "#fff", border: "none", borderRadius: 8, padding: "8px 16px", fontSize: 12, fontWeight: 700, cursor: "pointer", fontFamily: "var(--atr-font-sans)", width: "100%" },
+  atrCtaPesan: { background: "var(--atr-arti)", color: "#fff", border: "none", borderRadius: 8, padding: "8px 16px", fontSize: 12, fontWeight: 700, cursor: "pointer", fontFamily: "var(--atr-font-sans)", width: "100%", textDecoration: "none" },
+
+  /* ─── DESA GRID ─── */
+  desaGrid: { display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 16 },
+  desaCard: { background: "#fff", border: "1px solid var(--atr-outline)", borderRadius: 14, overflow: "hidden", textDecoration: "none", color: "inherit", transition: "transform .2s, box-shadow .2s", display: "flex", flexDirection: "column" },
+  desaStatus: { position: "absolute", top: 10, left: 10, fontSize: 10, fontWeight: 700, padding: "3px 10px", borderRadius: 999, background: "var(--atr-arti)", color: "#fff" },
+  desaTagRow: { display: "flex", gap: 4, flexWrap: "wrap", padding: "0 14px 10px" },
+  desaTag: { fontSize: 10, fontWeight: 600, color: "var(--atr-purple)", background: "#EDE9FF", padding: "2px 8px", borderRadius: 999 },
+  desaHighlight: { background: "var(--atr-yellow)", color: "#3D2900", fontSize: 10, fontWeight: 700, padding: "2px 8px", borderRadius: 999 },
+
+  /* ─── ITINERARY ─── */
+  itinDestGrid: { display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 16 },
+  itinCard: { background: "#fff", border: "1px solid var(--atr-outline)", borderRadius: 14, overflow: "hidden", textDecoration: "none", color: "inherit", transition: "transform .2s, box-shadow .2s", display: "flex", flexDirection: "column" },
+  itinDaysBadge: { position: "absolute", top: 10, left: 10, background: "rgba(255,255,255,0.92)", color: "var(--atr-text)", fontSize: 10, fontWeight: 700, padding: "3px 10px", borderRadius: 999 },
+  itinThemeBadge: { position: "absolute", top: 10, right: 10, background: "var(--atr-purple)", color: "#fff", fontSize: 10, fontWeight: 700, padding: "3px 10px", borderRadius: 999 },
+  itinInfoRow: { display: "flex", alignItems: "center", gap: 6, fontSize: 12, color: "var(--atr-text-muted)", padding: "0 14px", marginBottom: 8 },
+  itinDot: { width: 4, height: 4, borderRadius: 999, background: "var(--atr-outline)" },
+  itinBudget: { marginTop: "auto", padding: "10px 14px", borderTop: "1px solid var(--atr-outline)", display: "flex", alignItems: "baseline", gap: 4 },
+  itinBudgetLabel: { fontSize: 11, color: "var(--atr-text-muted)" },
+  itinBudgetVal: { fontSize: 15, fontWeight: 700, color: "var(--atr-text)" },
+  itinBudgetUnit: { fontSize: 11, color: "var(--atr-text-muted)" },
+  itinFooter: { display: "flex", alignItems: "center", justifyContent: "space-between", padding: "12px 14px", borderTop: "1px solid var(--atr-outline)", gap: 8 },
+  itinCreator: { display: "flex", alignItems: "center", gap: 8 },
+  itinCreatorAv: { width: 28, height: 28, borderRadius: 999, objectFit: "cover" },
+  itinCreatorName: { fontSize: 12, fontWeight: 700, color: "var(--atr-text)" },
+  itinCreatorRole: { fontSize: 10, color: "var(--atr-text-muted)" },
+  itinRatingBlock: { display: "flex", alignItems: "center", gap: 4, fontSize: 12, color: "var(--atr-yellow)", fontWeight: 700 },
+  itinSaves: { fontSize: 11, color: "var(--atr-text-muted)", marginLeft: 2 },
+
+  /* ─── GUIDE ─── */
+  guideGrid: { display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 16 },
+  guideCard: { background: "#fff", border: "1px solid var(--atr-outline)", borderRadius: 14, overflow: "hidden", textDecoration: "none", color: "inherit", transition: "transform .2s, box-shadow .2s", display: "flex", flexDirection: "column" },
+  guideImgWrap: { position: "relative", aspectRatio: "1", overflow: "hidden" },
+  guideImg: { width: "100%", height: "100%", objectFit: "cover", display: "block" },
+  guideVerified: { position: "absolute", top: 10, left: 10, background: "var(--atr-arti)", color: "#fff", fontSize: 10, fontWeight: 700, padding: "3px 10px", borderRadius: 999, display: "inline-flex", alignItems: "center", gap: 4 },
+  guideBody: { padding: 14, display: "flex", flexDirection: "column", gap: 6, flex: 1 },
+  guideName: { fontSize: 15, fontWeight: 700, color: "var(--atr-text)" },
+  guideSpecRow: { display: "flex", gap: 4, flexWrap: "wrap" },
+  guideSpec: { fontSize: 10, fontWeight: 600, color: "var(--atr-purple)", background: "#EDE9FF", padding: "2px 8px", borderRadius: 999 },
+  guideLangRow: { display: "flex", gap: 6, fontSize: 11, color: "var(--atr-text-muted)", flexWrap: "wrap" },
+  guideLang: { display: "inline-flex", alignItems: "center", gap: 4 },
+  guideMeta: { display: "flex", alignItems: "center", gap: 10, fontSize: 12, color: "var(--atr-text-muted)", marginTop: "auto", paddingTop: 6 },
+  guideBio: { fontSize: 12, color: "var(--atr-text-muted)", lineHeight: 1.5, display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" },
+  guidePriceRow: { padding: "10px 14px", borderTop: "1px solid var(--atr-outline)", display: "flex", alignItems: "center", justifyContent: "space-between" },
+  guidePrice: { fontSize: 16, fontWeight: 700, color: "var(--atr-text)" },
+  guideCerts: { display: "flex", gap: 4, padding: "0 14px 10px", flexWrap: "wrap" },
+  guideCert: { fontSize: 10, color: "var(--atr-arti)", background: "#EEF7EE", padding: "2px 8px", borderRadius: 999, fontWeight: 600 },
+  guideCtas: { display: "flex", gap: 8, padding: "0 14px 14px" },
+  guideCtaSec: { flex: 1, background: "#fff", border: "1px solid var(--atr-purple)", color: "var(--atr-purple)", borderRadius: 8, padding: "10px", fontSize: 12, fontWeight: 700, cursor: "pointer", fontFamily: "var(--atr-font-sans)", textDecoration: "none", textAlign: "center" },
+  guideCtaPri: { flex: 1, background: "var(--atr-purple)", color: "#fff", border: "none", borderRadius: 8, padding: "10px", fontSize: 12, fontWeight: 700, cursor: "pointer", fontFamily: "var(--atr-font-sans)", textDecoration: "none", textAlign: "center" },
+
+  /* ─── INFO TAB ─── */
+  infoGrid: { display: "grid", gridTemplateColumns: "1fr", gap: 24 },
+  infoCard: { background: "#fff", border: "1px solid var(--atr-outline)", borderRadius: 14, padding: 24, overflow: "hidden" },
+  infoTitle: { fontSize: 18, fontWeight: 700, color: "var(--atr-text)", marginBottom: 16, letterSpacing: "-0.01em" },
+  infoBody: { fontSize: 14, color: "var(--atr-text)", lineHeight: 1.7 },
+
+  /* ─── FACTS ─── */
+  factsGrid: { display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 12 },
+  factCell: { background: "var(--atr-bg-soft)", borderRadius: 8, padding: "12px 14px" },
+  factLabel: { fontSize: 10, fontWeight: 700, color: "var(--atr-text-muted)", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 4 },
+  factVal: { fontSize: 14, fontWeight: 600, color: "var(--atr-text)" },
+
+  /* ─── ACCESS ─── */
+  accessGrid: { display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 12 },
+  accessCard: { background: "var(--atr-bg-soft)", borderRadius: 12, padding: 16, display: "flex", gap: 12, alignItems: "flex-start" },
+  accessIcon: { fontSize: 24, flexShrink: 0, marginTop: 2 },
+  accessTitle: { fontSize: 14, fontWeight: 700, color: "var(--atr-text)", marginBottom: 4 },
+  accessBody: { fontSize: 12, color: "var(--atr-text-muted)", lineHeight: 1.5 },
+
+  /* ─── ROUTE ACCORDION ─── */
+  routeAccordion: { borderRadius: 10, overflow: "hidden", border: "1px solid var(--atr-outline)" },
+  routeRow: { display: "flex", alignItems: "center", gap: 12, padding: "10px 14px", background: "#fff", borderBottom: "1px solid var(--atr-outline)", fontSize: 13 },
+  routeFrom: { fontWeight: 600, color: "var(--atr-text)", minWidth: 80 },
+  routeMode: { fontSize: 11, color: "var(--atr-text-muted)", background: "var(--atr-bg-soft)", padding: "2px 8px", borderRadius: 999, minWidth: 60, textAlign: "center" },
+  routeDur: { color: "var(--atr-text-muted)", fontSize: 12 },
+  routePrice: { marginLeft: "auto", fontWeight: 700, color: "var(--atr-text)", fontSize: 13 },
+
+  /* ─── WEATHER CHART ─── */
+  weatherChart: { display: "flex", gap: 10, alignItems: "flex-end", justifyContent: "center", padding: "20px 0 10px", borderBottom: "1px solid var(--atr-outline)" },
+  wcCol: { display: "flex", flexDirection: "column", alignItems: "center", gap: 6, flex: 1 },
+  wcBar: { width: 20, borderRadius: "4px 4px 0 0", background: "var(--atr-purple)", minHeight: 4, transition: "height .4s" },
+  wcTemp: { fontSize: 10, fontWeight: 700, color: "var(--atr-text)" },
+  wcMonth: { fontSize: 10, color: "var(--atr-text-muted)", fontWeight: 600 },
+  wcMonthBest: { fontSize: 10, fontWeight: 700, color: "var(--atr-purple)" },
+  weatherLegend: { display: "flex", justifyContent: "center", gap: 20, fontSize: 12, color: "var(--atr-text-muted)", marginTop: 10 },
+  wlDot: { width: 8, height: 8, borderRadius: 999, display: "inline-block", marginRight: 6, verticalAlign: "middle" },
+
+  /* ─── EVENTS ─── */
+  eventList: { display: "flex", flexDirection: "column", gap: 0 },
+  eventTitle: { fontSize: 15, fontWeight: 700, color: "var(--atr-text)", marginBottom: 4 },
+  eventRow: { display: "flex", alignItems: "center", gap: 12, padding: "10px 0", borderBottom: "1px solid var(--atr-outline)", fontSize: 13, color: "var(--atr-text)" },
+
+  /* ─── FAQ ─── */
+  faqItem: { borderBottom: "1px solid var(--atr-outline)", padding: "16px 0" },
+  faqQ: { fontSize: 14, fontWeight: 700, color: "var(--atr-text)", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "space-between", userSelect: "none" },
+  faqA: { fontSize: 13, color: "var(--atr-text-muted)", lineHeight: 1.7, marginTop: 8, paddingRight: 24 },
+
+  /* ─── DOS & DONTS ─── */
+  dosDontsGrid: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 },
+  dosCol: { background: "#EEF7EE", borderRadius: 12, padding: 20 },
+  dontsCol: { background: "#FFF0F0", borderRadius: 12, padding: 20 },
+  dosTitle: { fontSize: 14, fontWeight: 700, color: "var(--atr-arti)", marginBottom: 12, display: "flex", alignItems: "center", gap: 8 },
+  dontsTitle: { fontSize: 14, fontWeight: 700, color: "var(--atr-red)", marginBottom: 12, display: "flex", alignItems: "center", gap: 8 },
+  dosList: { fontSize: 13, color: "var(--atr-text)", lineHeight: 2, listStyle: "none", padding: 0, margin: 0 },
+  dontsList: { fontSize: 13, color: "var(--atr-text)", lineHeight: 2, listStyle: "none", padding: 0, margin: 0 },
+
+  /* ─── CONTACT ─── */
+  contactTable: { border: "1px solid var(--atr-outline)", borderRadius: 12, overflow: "hidden", width: "100%" },
+  contactRow: { display: "grid", gridTemplateColumns: "1fr 1fr auto", gap: 12, padding: "10px 16px", borderBottom: "1px solid var(--atr-outline)", alignItems: "center", fontSize: 13 },
+  contactName: { fontWeight: 600, color: "var(--atr-text)" },
+  contactPhone: { color: "var(--atr-text)", fontFamily: "monospace", fontSize: 13 },
+  contactMap: { color: "var(--atr-purple)", fontWeight: 600, fontSize: 12, textDecoration: "none", whiteSpace: "nowrap" },
+
+  /* ─── RESPONSIVE LAYOUT (max-width 1080px) ─── */
+  responsiveLayout: `@media (max-width: 1080px) {
+    .pageBody { grid-template-columns: 1fr; }
+    .tabContent { order: 1; }
+    .sidebar { position: static; order: 2; }
+    .heroTitle { font-size: 48px; }
+  }`,
+};
+
+export default dh;
