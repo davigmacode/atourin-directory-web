@@ -468,7 +468,7 @@ const dh = {
     padding: 14,
     display: "flex",
     flexDirection: "column",
-    gap: 6,
+    gap: 8,
     flex: 1,
   },
   atrName: {
@@ -505,12 +505,12 @@ const dh = {
     fontSize: 11,
   },
   atrFooter: {
+    marginTop: "auto",
     display: "flex",
-    alignItems: "center",
     justifyContent: "space-between",
-    padding: "12px 14px",
-    borderTop: "1px solid var(--atr-outline)",
-    gap: 8,
+    alignItems: "center",
+    paddingTop: 10,
+    borderTop: "1px dashed var(--atr-outline)",
   },
   atrPrice: { fontSize: 13, fontWeight: 700, color: "var(--atr-purple)" },
   atrCta: {
