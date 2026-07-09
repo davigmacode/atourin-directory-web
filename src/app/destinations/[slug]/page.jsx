@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from "react";
-import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import TopNav from "@/components/TopNav";
 import SiteFooter from "@/components/SiteFooter";
@@ -12,77 +11,26 @@ import { ITIN_DATA } from "@/data/itineraries";
 import { GUIDE_DATA } from "@/data/guides";
 import { cat } from "@/lib/i18n";
 import dh from "@/styles/destination-detail";
-
-/* ── SafeImage: Next.js Image with broken-image fallback ── */
-function SafeImage({ src, alt, style = {}, ...props }) {
-  const [errored, setErrored] = useState(false);
-
-  if (errored || !src) {
-    return (
-      <div
-        style={{
-          position: "absolute",
-          inset: 0,
-          background: "var(--atr-bg-soft)",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
-          <rect
-            x="2"
-            y="2"
-            width="20"
-            height="20"
-            rx="2"
-            stroke="var(--atr-text-muted)"
-            strokeWidth="1.5"
-          />
-          <circle
-            cx="8.5"
-            cy="8.5"
-            r="2.5"
-            stroke="var(--atr-text-muted)"
-            strokeWidth="1.5"
-          />
-          <path
-            d="M3 19l5-6 4 5 3-4 6 7"
-            stroke="var(--atr-text-muted)"
-            strokeWidth="1.5"
-            strokeLinejoin="round"
-          />
-        </svg>
-      </div>
-    );
-  }
-
-  return (
-    <Image
-      src={src}
-      alt={alt}
-      fill
-      sizes="(max-width: 600px) 100vw, (max-width: 1080px) 50vw, 33vw"
-      style={{ ...style, objectFit: "cover" }}
-      onError={() => setErrored(true)}
-      unoptimized
-      {...props}
-    />
-  );
-}
+import SafeImage from "@/components/cards/SafeImage";
+import {
+  FChip,
+  FGroup,
+  FilterBar,
+  toggleArr,
+} from "@/components/cards/FilterChips";
+import {
+  AttractionCardGrid,
+  AttractionCardList,
+} from "@/components/cards/AttractionCard";
+import VillageCard from "@/components/cards/VillageCard";
+import ItineraryCard from "@/components/cards/ItineraryCard";
+import GuideCard from "@/components/cards/GuideCard";
 
 function slugify(text) {
   return text
     .toLowerCase()
     .replace(/[^a-z0-9\s]/g, "")
     .replace(/\s+/g, "-");
-}
-
-function formatPrice(price) {
-  if (price === 0 || price == null) return "Gratis";
-  if (price >= 1000000) return `Rp ${(price / 1000000).toFixed(1)}jt`;
-  if (price >= 1000) return `Rp ${(price / 1000).toFixed(0)}rb`;
-  return `Rp ${price}`;
 }
 
 /* ── Default cover images for hero slider ────────────── */
@@ -114,39 +62,9 @@ function getTabs(dest) {
 }
 
 /* ==========================================================
-   FILTER HELPERS
-   ========================================================== */
-function FChip({ active, onClick, children }) {
-  return (
-    <button
-      onClick={onClick}
-      style={{ ...dh.fchip, ...(active ? dh.fchipOn : {}) }}
-    >
-      {children}
-    </button>
-  );
-}
-
-function FGroup({ label, children }) {
-  return (
-    <div style={dh.fgroup}>
-      <div style={dh.fgroupLabel}>{label}</div>
-      <div style={dh.fgroupRow}>{children}</div>
-    </div>
-  );
-}
-
-function FilterBar({ children }) {
-  return <div style={dh.filterBar}>{children}</div>;
-}
-
-function toggleArr(arr, set, v) {
-  set(arr.includes(v) ? arr.filter((x) => x !== v) : [...arr, v]);
-}
-
-/* ==========================================================
-   HERO
-   ========================================================== */
+   /* ==========================================================
+      HERO
+      ========================================================== */
 function DestHero({ dest, covers }) {
   const [slide, setSlide] = useState(0);
   const [saved, setSaved] = useState(false);
@@ -641,163 +559,17 @@ function AtraksiTab({ dest }) {
       {view === "grid" ? (
         <div style={dh.atrGrid}>
           {filtered.map((a, i) => (
-            <AtrCardGrid key={i} a={a} />
+            <AttractionCardGrid key={i} a={a} />
           ))}
         </div>
       ) : (
         <div style={dh.atrList}>
           {filtered.map((a, i) => (
-            <AtrCardList key={i} a={a} />
+            <AttractionCardList key={i} a={a} />
           ))}
         </div>
       )}
     </div>
-  );
-}
-
-function AtrCardGrid({ a }) {
-  const [save, setSave] = useState(false);
-  const router = useRouter();
-  const slug = slugify(a.name);
-  return (
-    <article
-      onClick={() => router.push(`/attractions/${slug}`)}
-      style={{ ...dh.atrCard, textDecoration: "none", color: "inherit" }}
-    >
-      <div style={dh.atrImgWrap}>
-        <SafeImage src={a.img} alt="" style={{}} />
-        <span
-          style={{
-            ...dh.atrCat,
-            background: a.catBg || "var(--atr-bg-soft)",
-            color: a.catFg || "var(--atr-text)",
-          }}
-        >
-          {a.cat}
-        </span>
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            setSave(!save);
-          }}
-          style={dh.atrSave}
-        >
-          <svg
-            width="14"
-            height="14"
-            viewBox="0 0 24 24"
-            fill={save ? "var(--atr-purple)" : "none"}
-          >
-            <path
-              d="M6 3h12v18l-6-4-6 4V3z"
-              stroke={save ? "var(--atr-purple)" : "var(--atr-text)"}
-              strokeWidth="1.8"
-              strokeLinejoin="round"
-            />
-          </svg>
-        </button>
-      </div>
-      <div style={dh.atrBody}>
-        <h3 style={dh.atrName}>{a.name}</h3>
-        <div style={dh.atrMeta}>
-          <span style={dh.atrRating}>
-            ★ <strong>{a.rating}</strong>{" "}
-            <span style={dh.atrReviews}>({a.reviews})</span>
-          </span>
-          <span style={dh.atrLoc}>{a.region}</span>
-        </div>
-        <div style={dh.atrFooter}>
-          <span style={dh.atrPrice}>
-            {a.price === 0 ? "Gratis" : `Mulai ${formatPrice(a.price)}`}
-          </span>
-          <button
-            style={dh.atrCta}
-            onClick={(e) => {
-              e.stopPropagation();
-              router.push(`/attractions/${slug}`);
-            }}
-          >
-            Lihat detail →
-          </button>
-        </div>
-      </div>
-    </article>
-  );
-}
-
-function AtrCardList({ a }) {
-  const [save, setSave] = useState(false);
-  const router = useRouter();
-  const slug = slugify(a.name);
-  return (
-    <article
-      onClick={() => router.push(`/attractions/${slug}`)}
-      style={{
-        ...dh.atrListCard,
-        textDecoration: "none",
-        color: "inherit",
-      }}
-    >
-      <div style={dh.atrListImgWrap}>
-        <SafeImage src={a.img} alt="" style={dh.atrListImg} />
-        <span
-          style={{
-            ...dh.atrCat,
-            background: a.catBg || "var(--atr-bg-soft)",
-            color: a.catFg || "var(--atr-text)",
-          }}
-        >
-          {a.cat}
-        </span>
-      </div>
-      <div style={dh.atrListBody}>
-        <div style={{ flex: 1 }}>
-          <h3 style={dh.atrName}>{a.name}</h3>
-          <div style={dh.atrMeta}>
-            <span style={dh.atrRating}>
-              ★ <strong>{a.rating}</strong>{" "}
-              <span style={dh.atrReviews}>({a.reviews} ulasan)</span>
-            </span>
-            <span style={dh.atrLoc}>{a.region}</span>
-          </div>
-        </div>
-        <div style={dh.atrListRight}>
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              setSave(!save);
-            }}
-            style={dh.atrSaveList}
-          >
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill={save ? "var(--atr-purple)" : "none"}
-            >
-              <path
-                d="M6 3h12v18l-6-4-6 4V3z"
-                stroke={save ? "var(--atr-purple)" : "var(--atr-text)"}
-                strokeWidth="1.8"
-                strokeLinejoin="round"
-              />
-            </svg>
-          </button>
-          <div style={dh.atrPriceList}>
-            {a.price === 0 ? "Gratis" : formatPrice(a.price)}
-          </div>
-          <button
-            style={dh.atrCtaList}
-            onClick={(e) => {
-              e.stopPropagation();
-              router.push(`/attractions/${slug}`);
-            }}
-          >
-            Lihat detail
-          </button>
-        </div>
-      </div>
-    </article>
   );
 }
 
@@ -931,63 +703,9 @@ function DesaTab({ dest }) {
       )}
 
       <div style={dh.desaGrid}>
-        {filtered.map((d, i) => {
-          const sColor = DESA_STATUS_COLOR[d.adwi] || {
-            bg: "#F0F0F0",
-            fg: "#5C5C5C",
-          };
-          return (
-            <article
-              key={i}
-              style={{
-                ...dh.desaCard,
-                textDecoration: "none",
-                color: "inherit",
-              }}
-            >
-              <div style={dh.atrImgWrap}>
-                <SafeImage src={d.img} alt="" style={{}} />
-                <span
-                  style={{
-                    ...dh.desaStatus,
-                    background: sColor.bg,
-                    color: sColor.fg,
-                  }}
-                >
-                  <span
-                    style={{
-                      ...dh.statusDot,
-                      background: sColor.fg,
-                    }}
-                  />{" "}
-                  {d.adwi}
-                </span>
-              </div>
-              <div style={dh.atrBody}>
-                <h3 style={dh.atrName}>{d.name}</h3>
-                <div style={dh.atrLoc}>{d.region}</div>
-                <div style={dh.desaTagRow}>
-                  {d.activities &&
-                    d.activities.slice(0, 3).map((act) => (
-                      <span key={act} style={dh.desaTag}>
-                        {act}
-                      </span>
-                    ))}
-                </div>
-                <div style={dh.desaHighlight}>
-                  🌿 <strong>{d.activities?.length || 0}</strong> aktivitas
-                  {d.price > 0 &&
-                    ` · 🏡 Homestay mulai ${formatPrice(d.price)}`}
-                </div>
-                <div style={dh.atrFooter}>
-                  <span style={dh.atrRating}>
-                    ★ <strong>{d.rating}</strong>
-                  </span>
-                </div>
-              </div>
-            </article>
-          );
-        })}
+        {filtered.map((d, i) => (
+          <VillageCard key={i} d={d} />
+        ))}
       </div>
     </div>
   );
@@ -1084,50 +802,7 @@ function ItineraryTab({ dest }) {
 
       <div style={dh.itinDestGrid}>
         {filtered.map((it, i) => (
-          <article key={i} style={dh.itinCard}>
-            <div style={dh.atrImgWrap}>
-              <SafeImage src={it.img} alt="" style={{}} />
-              <span style={dh.itinDaysBadge}>{it.days}</span>
-              <span
-                style={{
-                  ...dh.itinThemeBadge,
-                  background: "var(--atr-purple-50)",
-                  color: "var(--atr-purple)",
-                }}
-              >
-                {it.tag}
-              </span>
-            </div>
-            <div style={dh.atrBody}>
-              <h3 style={dh.atrName}>{it.title}</h3>
-              <div style={dh.itinInfoRow}>
-                <span>📍 {it.city}</span>
-                <span style={dh.itinDot}>·</span>
-                <span>⭐ {it.rating}</span>
-              </div>
-              <div style={dh.itinBudget}>
-                <span style={dh.itinBudgetLabel}>Estimasi</span>
-                <span style={dh.itinBudgetVal}>
-                  {it.price}
-                  <span style={dh.itinBudgetUnit}>/orang</span>
-                </span>
-              </div>
-              <div style={dh.itinFooter}>
-                <div style={dh.itinCreator}>
-                  <div>
-                    <div style={dh.itinCreatorName}>{it.author}</div>
-                    <div style={dh.itinCreatorRole}>{it.role}</div>
-                  </div>
-                </div>
-                <div style={dh.itinRatingBlock}>
-                  <span style={dh.atrRating}>
-                    ★ <strong>{it.rating}</strong>
-                  </span>
-                  <span style={dh.itinSaves}>👁️ {it.views || it.reviews}</span>
-                </div>
-              </div>
-            </div>
-          </article>
+          <ItineraryCard key={i} it={it} />
         ))}
       </div>
     </div>
@@ -1251,76 +926,7 @@ function PemanduTab({ dest }) {
 
       <div style={dh.guideGrid}>
         {filtered.map((p, i) => (
-          <article
-            key={i}
-            style={{
-              ...dh.guideCard,
-              textDecoration: "none",
-              color: "inherit",
-            }}
-          >
-            <div style={dh.guideImgWrap}>
-              <SafeImage src={p.img} alt="" style={{}} />
-              {p.verified && (
-                <span style={dh.guideVerified}>
-                  <svg width="10" height="10" viewBox="0 0 24 24" fill="#fff">
-                    <path
-                      d="M5 12l5 5L20 7"
-                      stroke="#fff"
-                      strokeWidth="3"
-                      fill="none"
-                      strokeLinecap="round"
-                    />
-                  </svg>
-                  Verified
-                </span>
-              )}
-            </div>
-            <div style={dh.guideBody}>
-              <h3 style={dh.guideName}>{p.name}</h3>
-              <div style={dh.guideSpecRow}>
-                {p.spec.map((s) => (
-                  <span key={s} style={dh.guideSpec}>
-                    {s}
-                  </span>
-                ))}
-              </div>
-              <div style={dh.guideLangRow}>
-                {p.langs.map((l, j) => (
-                  <span key={j} style={dh.guideLang}>
-                    {l}
-                  </span>
-                ))}
-              </div>
-              <div style={dh.guideMeta}>
-                <span>
-                  ★ <strong>{p.rating}</strong>
-                </span>
-                <span style={dh.itinDot}>·</span>
-                <span>{p.trips} trip</span>
-              </div>
-              <div style={dh.guidePriceRow}>
-                <div>
-                  <div style={dh.itinBudgetLabel}>Mulai</div>
-                  <div style={dh.guidePrice}>
-                    {formatPrice(p.price)}
-                    <span style={dh.itinBudgetUnit}>/hari</span>
-                  </div>
-                </div>
-                <div style={dh.guideCerts}>
-                  {p.certs.slice(0, 2).map((c) => (
-                    <span key={c} style={dh.guideCert}>
-                      {c}
-                    </span>
-                  ))}
-                </div>
-              </div>
-              <div style={dh.guideCtas}>
-                <button style={dh.guideCtaSec}>Lihat profil</button>
-                <button style={dh.guideCtaPri}>Hubungi →</button>
-              </div>
-            </div>
-          </article>
+          <GuideCard key={i} p={p} />
         ))}
       </div>
     </div>
