@@ -38,12 +38,7 @@ export default function GuideCard({ p }) {
         <SafeImage src={p.img} alt="" />
         {p.verified && (
           <span style={dh.guideVerified}>
-            <svg
-              width="10"
-              height="10"
-              viewBox="0 0 24 24"
-              fill="#fff"
-            >
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="#fff">
               <path
                 d="M5 12l5 5L20 7"
                 stroke="#fff"
@@ -51,8 +46,8 @@ export default function GuideCard({ p }) {
                 fill="none"
                 strokeLinecap="round"
               />
-            </svg>
-            {" "}Verified
+            </svg>{" "}
+            Verified
           </span>
         )}
       </div>
@@ -79,9 +74,7 @@ export default function GuideCard({ p }) {
           <span style={dh.itinDot}>·</span>
           <span>{trips} trip</span>
         </div>
-        {bio && (
-          <p style={dh.guideBio}>"{bio}"</p>
-        )}
+        {bio && <p style={dh.guideBio}>"{bio}"</p>}
         <div style={dh.guidePriceRow}>
           <div>
             <div style={dh.itinBudgetLabel}>Mulai</div>

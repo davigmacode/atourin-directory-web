@@ -12,11 +12,13 @@ function slugify(text) {
     .replace(/\s+/g, "-");
 }
 
-function formatPrice(price) {
+function formatPrice(price, withPrefix = true) {
   if (price === 0 || price == null) return "Gratis";
-  if (price >= 1000000) return `Rp ${(price / 1000000).toFixed(1)}jt`;
-  if (price >= 1000) return `Rp ${(price / 1000).toFixed(0)}rb`;
-  return `Rp ${price}`;
+  let s;
+  if (price >= 1000000) s = `Rp ${(price / 1000000).toFixed(1)}jt`;
+  else if (price >= 1000) s = `Rp ${(price / 1000).toFixed(0)}rb`;
+  else s = `Rp ${price}`;
+  return withPrefix ? `Mulai ${s}` : s;
 }
 
 /* ── Grid Card ─────────────────────────────────────── */
@@ -28,7 +30,12 @@ export function AttractionCardGrid({ a }) {
   return (
     <article
       onClick={() => router.push(`/attractions/${slug}`)}
-      style={{ ...dh.atrCard, textDecoration: "none", color: "inherit", cursor: "pointer" }}
+      style={{
+        ...dh.atrCard,
+        textDecoration: "none",
+        color: "inherit",
+        cursor: "pointer",
+      }}
     >
       <div style={dh.atrImgWrap}>
         <SafeImage src={a.img} alt="" />
@@ -56,9 +63,7 @@ export function AttractionCardGrid({ a }) {
           >
             <path
               d="M6 3h12v18l-6-4-6 4V3z"
-              stroke={
-                save ? "var(--atr-purple)" : "var(--atr-text)"
-              }
+              stroke={save ? "var(--atr-purple)" : "var(--atr-text)"}
               strokeWidth="1.8"
               strokeLinejoin="round"
             />
@@ -67,24 +72,18 @@ export function AttractionCardGrid({ a }) {
       </div>
       <div style={dh.atrBody}>
         <h3 style={dh.atrName}>{a.name}</h3>
-        <p style={dh.atrDesc}>
-          {a.desc || a.description || ""}
-        </p>
+        <p style={dh.atrDesc}>{a.desc || a.description || ""}</p>
         <div style={dh.atrMeta}>
           <span style={dh.atrRating}>
             ★ <strong>{a.rating}</strong>{" "}
-            <span style={dh.atrReviews}>
-              ({a.reviews})
-            </span>
+            <span style={dh.atrReviews}>({a.reviews})</span>
           </span>
           <span style={dh.atrLoc}>
             📍 {a.kecamatan || a.region || a.location}
           </span>
         </div>
         <div style={dh.atrFooter}>
-          <span style={dh.atrPrice}>
-            {formatPrice(a.price)}
-          </span>
+          <span style={dh.atrPrice}>{formatPrice(a.price)}</span>
           <button
             style={dh.atrCta}
             onClick={(e) => {
@@ -117,11 +116,7 @@ export function AttractionCardList({ a }) {
       }}
     >
       <div style={dh.atrListImgWrap}>
-        <SafeImage
-          src={a.img}
-          alt=""
-          style={dh.atrListImg}
-        />
+        <SafeImage src={a.img} alt="" style={dh.atrListImg} />
         <span
           style={{
             ...dh.atrCat,
@@ -135,15 +130,11 @@ export function AttractionCardList({ a }) {
       <div style={dh.atrListBody}>
         <div style={{ flex: 1 }}>
           <h3 style={dh.atrName}>{a.name}</h3>
-          <p style={dh.atrDesc}>
-            {a.desc || a.description || ""}
-          </p>
+          <p style={dh.atrDesc}>{a.desc || a.description || ""}</p>
           <div style={dh.atrMeta}>
             <span style={dh.atrRating}>
               ★ <strong>{a.rating}</strong>{" "}
-              <span style={dh.atrReviews}>
-                ({a.reviews} ulasan)
-              </span>
+              <span style={dh.atrReviews}>({a.reviews} ulasan)</span>
             </span>
             <span style={dh.atrLoc}>
               📍 {a.kecamatan || a.region || a.location}
@@ -166,17 +157,13 @@ export function AttractionCardList({ a }) {
             >
               <path
                 d="M6 3h12v18l-6-4-6 4V3z"
-                stroke={
-                  save ? "var(--atr-purple)" : "var(--atr-text)"
-                }
+                stroke={save ? "var(--atr-purple)" : "var(--atr-text)"}
                 strokeWidth="1.8"
                 strokeLinejoin="round"
               />
             </svg>
           </button>
-          <div style={dh.atrPriceList}>
-            {formatPrice(a.price)}
-          </div>
+          <div style={dh.atrPriceList}>{formatPrice(a.price)}</div>
           <button
             style={dh.atrCtaList}
             onClick={(e) => {
@@ -185,6 +172,14 @@ export function AttractionCardList({ a }) {
             }}
           >
             Lihat detail
+          </button>
+          <button
+            style={dh.atrCtaPesan}
+            onClick={(e) => {
+              e.stopPropagation();
+            }}
+          >
+            Pesan
           </button>
         </div>
       </div>

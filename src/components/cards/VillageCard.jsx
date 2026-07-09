@@ -21,15 +21,29 @@ function formatPrice(price) {
 /**
  * VillageCard — card for desa wisata.
  *
- * Expected data shape (from VIL_DATA):
- * { img, name, region, adwi, adwiBg, adwiFg, theme, activities,
- *   price, rating, families, signature, featured }
+ * Supports two data shapes:
+ *   Prototype: { img, name, status, kecamatan, desc, tags, rating,
+ *                reviews, activities, homestay }
+ *   VIL_DATA: { img, name, adwi, region, activities, price, rating,
+ *               families, signature, theme }
  */
 export default function VillageCard({ d }) {
-  const sColor = DESA_STATUS_COLOR[d.adwi] || {
+  const statusKey = d.adwi || d.status || "";
+  const sColor = DESA_STATUS_COLOR[statusKey] || {
     bg: "#F0F0F0",
     fg: "#5C5C5C",
   };
+
+  const desc = d.desc || d.description || "";
+  const chips = d.tags || d.activities || [];
+  const activityCount =
+    typeof d.activities === "number"
+      ? d.activities
+      : Array.isArray(d.activities)
+        ? d.activities.length
+        : 0;
+  const hasHomestay = d.homestay != null ? d.homestay : d.price > 0;
+  const reviews = d.reviews || 0;
 
   return (
     <article
@@ -49,31 +63,30 @@ export default function VillageCard({ d }) {
             color: sColor.fg,
           }}
         >
-          <span
-            style={{ ...dh.statusDot, background: sColor.fg }}
-          />
-          {" "}{d.adwi}
+          <span style={{ ...dh.statusDot, background: sColor.fg }} />{" "}
+          {statusKey}
         </span>
       </div>
       <div style={dh.atrBody}>
         <h3 style={dh.atrName}>{d.name}</h3>
-        <div style={dh.atrLoc}>📍 {d.region}</div>
+        <div style={dh.atrLoc}>📍 {d.kecamatan || d.region || ""}</div>
+        {desc && <p style={dh.atrDesc}>{desc}</p>}
         <div style={dh.desaTagRow}>
-          {(d.activities || []).slice(0, 3).map((act) => (
-            <span key={act} style={dh.desaTag}>
-              {act}
+          {chips.slice(0, 3).map((t) => (
+            <span key={t} style={dh.desaTag}>
+              {t}
             </span>
           ))}
         </div>
         <div style={dh.desaHighlight}>
-          🌿{" "}
-          <strong>{d.activities?.length || 0}</strong> aktivitas
-          {d.price > 0 &&
-            ` · 🏡 Homestay mulai ${formatPrice(d.price)}`}
+          🌿 <strong>{activityCount}</strong> aktivitas
+          {hasHomestay && " · 🏡 Homestay tersedia"}
+          {!hasHomestay && d.price > 0 && ` · Mulai ${formatPrice(d.price)}`}
         </div>
         <div style={dh.atrFooter}>
           <span style={dh.atrRating}>
             ★ <strong>{d.rating}</strong>
+            {reviews > 0 && <span style={dh.atrReviews}> ({reviews})</span>}
           </span>
           <button style={dh.atrCta}>Lihat profil →</button>
         </div>
