@@ -1,57 +1,54 @@
 'use client';
 
+import React from 'react';
 import { useParams } from 'next/navigation';
-import { TopNav, SiteFooter } from '@/components/layout';
+import { TopNav, SiteFooter, Breadcrumb } from '@/components/layout';
+import { ds } from '@/styles/detail-styles';
 import { useVillage } from '@/lib/hooks/use-village';
+
+import DetailHero from './_components/DetailHero';
+import VillageHeader from './_components/VillageHeader';
+import VillageAbout from './_components/VillageAbout';
+import VillageActivities from './_components/VillageActivities';
+import VillagePackages from './_components/VillagePackages';
+import VillageAttractions from './_components/VillageAttractions';
+import VillageFacilities from './_components/VillageFacilities';
+import VillageAccess from './_components/VillageAccess';
+import VillageGallery from './_components/VillageGallery';
+import VillageReviews from './_components/VillageReviews';
+import SimilarVillages from './_components/SimilarVillages';
+import ContactCard from './_components/ContactCard';
+import CertsCard from './_components/CertsCard';
 
 function LoadingSkeleton() {
   return (
-    <div style={{ minHeight: '100vh', background: 'var(--atr-bg)' }}>
-      <TopNav active="Desa Wisata" />
-      <div
-        style={{
-          maxWidth: 960,
-          margin: '0 auto',
-          padding: 'var(--atr-space-6) var(--atr-space-4)',
-        }}
-      >
-        <div
-          style={{
-            height: 320,
-            borderRadius: 'var(--atr-radius-lg)',
-            background: 'var(--atr-outline)',
-            marginBottom: 'var(--atr-space-5)',
-            animation: 'pulse 1.5s ease-in-out infinite',
-          }}
-        />
-        <div
-          style={{
-            height: 32,
-            width: '60%',
-            borderRadius: 'var(--atr-radius-md)',
-            background: 'var(--atr-outline)',
-            marginBottom: 'var(--atr-space-3)',
-            animation: 'pulse 1.5s ease-in-out infinite',
-          }}
-        />
-        <div
-          style={{
-            height: 20,
-            width: '40%',
-            borderRadius: 'var(--atr-radius-md)',
-            background: 'var(--atr-outline)',
-            marginBottom: 'var(--atr-space-4)',
-            animation: 'pulse 1.5s ease-in-out infinite',
-          }}
-        />
-        <div
-          style={{
-            height: 80,
-            borderRadius: 'var(--atr-radius-md)',
-            background: 'var(--atr-outline)',
-            animation: 'pulse 1.5s ease-in-out infinite',
-          }}
-        />
+    <div style={{ minHeight: '100vh', background: 'var(--atr-bg-soft)' }}>
+      <TopNav active="Explore" />
+      <div style={ds.pageWrap}>
+        <div style={ds.crumbBar}>
+          <div style={{ height: 20, width: 240, background: 'var(--atr-outline)', borderRadius: 4, animation: 'pulse 1.5s infinite' }} />
+        </div>
+        <div style={ds.containerWide}>
+          <div
+            style={{
+              height: 440,
+              borderRadius: 16,
+              background: 'var(--atr-outline)',
+              marginBottom: 12,
+              animation: 'pulse 1.5s infinite',
+            }}
+          />
+        </div>
+        <div style={ds.twoCol}>
+          <div style={ds.mainCol}>
+            <div style={{ height: 180, borderRadius: 14, background: 'var(--atr-outline)', animation: 'pulse 1.5s infinite' }} />
+            <div style={{ height: 120, borderRadius: 14, background: 'var(--atr-outline)', animation: 'pulse 1.5s infinite' }} />
+            <div style={{ height: 280, borderRadius: 14, background: 'var(--atr-outline)', animation: 'pulse 1.5s infinite' }} />
+          </div>
+          <aside style={ds.sideCol}>
+            <div style={{ height: 320, borderRadius: 14, background: 'var(--atr-outline)', animation: 'pulse 1.5s infinite' }} />
+          </aside>
+        </div>
       </div>
       <SiteFooter />
       <style>{`
@@ -66,33 +63,33 @@ function LoadingSkeleton() {
 
 function ErrorState({ error, onRetry }) {
   return (
-    <div style={{ minHeight: '100vh', background: 'var(--atr-bg)' }}>
-      <TopNav active="Desa Wisata" />
+    <div style={{ minHeight: '100vh', background: 'var(--atr-bg-soft)' }}>
+      <TopNav active="Explore" />
       <div
         style={{
           maxWidth: 480,
           margin: '80px auto',
-          padding: 'var(--atr-space-6) var(--atr-space-4)',
+          padding: '24px 16px',
           textAlign: 'center',
         }}
       >
-        <div style={{ fontSize: 48, marginBottom: 'var(--atr-space-4)' }}>
+        <div style={{ fontSize: 48, marginBottom: 16 }}>
           &#x26A0;&#xFE0F;
         </div>
         <h1
           style={{
-            fontSize: 'var(--atr-fs-headline-md)',
+            fontSize: 24,
             color: 'var(--atr-text)',
-            margin: '0 0 var(--atr-space-2)',
+            margin: '0 0 8px',
           }}
         >
           Gagal memuat data
         </h1>
         <p
           style={{
-            fontSize: 'var(--atr-fs-body-md)',
+            fontSize: 15,
             color: 'var(--atr-text-muted)',
-            margin: '0 0 var(--atr-space-5)',
+            margin: '0 0 24px',
           }}
         >
           {error?.message || 'Terjadi kesalahan. Silakan coba lagi.'}
@@ -103,9 +100,9 @@ function ErrorState({ error, onRetry }) {
             background: 'var(--atr-purple)',
             color: '#fff',
             border: 'none',
-            borderRadius: 'var(--atr-radius-pill)',
+            borderRadius: 999,
             padding: '12px 32px',
-            fontSize: 'var(--atr-fs-title-sm)',
+            fontSize: 14,
             fontWeight: 700,
             cursor: 'pointer',
             fontFamily: 'var(--atr-font-sans)',
@@ -121,31 +118,31 @@ function ErrorState({ error, onRetry }) {
 
 function NotFound() {
   return (
-    <div style={{ minHeight: '100vh', background: 'var(--atr-bg)' }}>
-      <TopNav active="Desa Wisata" />
+    <div style={{ minHeight: '100vh', background: 'var(--atr-bg-soft)' }}>
+      <TopNav active="Explore" />
       <div
         style={{
           maxWidth: 480,
           margin: '80px auto',
-          padding: 'var(--atr-space-6) var(--atr-space-4)',
+          padding: '24px 16px',
           textAlign: 'center',
         }}
       >
-        <div style={{ fontSize: 48, marginBottom: 'var(--atr-space-4)' }}>
+        <div style={{ fontSize: 48, marginBottom: 16 }}>
           &#x1F50D;
         </div>
         <h1
           style={{
-            fontSize: 'var(--atr-fs-headline-md)',
+            fontSize: 24,
             color: 'var(--atr-text)',
-            margin: '0 0 var(--atr-space-2)',
+            margin: '0 0 8px',
           }}
         >
           Desa wisata tidak ditemukan
         </h1>
         <p
           style={{
-            fontSize: 'var(--atr-fs-body-md)',
+            fontSize: 15,
             color: 'var(--atr-text-muted)',
             margin: 0,
           }}
@@ -158,11 +155,6 @@ function NotFound() {
   );
 }
 
-function formatPrice(price) {
-  if (price === 0) return 'Gratis';
-  return `Rp${price.toLocaleString('id-ID')}`;
-}
-
 export default function VillageDetailPage() {
   const { slug } = useParams();
   const { village, isLoading, isError, error } = useVillage(slug);
@@ -171,224 +163,44 @@ export default function VillageDetailPage() {
   if (isError) return <ErrorState error={error} onRetry={() => window.location.reload()} />;
   if (!village) return <NotFound />;
 
+  const regionParts = village.region ? village.region.split(",") : [];
+  const kota = regionParts[0] ? regionParts[0].trim() : "Manggarai";
+  const provinsi = regionParts[1] ? regionParts[1].trim() : "Nusa Tenggara Timur";
+
   return (
-    <div style={{ minHeight: '100vh', background: 'var(--atr-bg)' }}>
-      <TopNav active="Desa Wisata" />
-      <main
-        style={{
-          maxWidth: 960,
-          margin: '0 auto',
-          padding: 'var(--atr-space-6) var(--atr-space-4)',
-        }}
-      >
-        {/* Hero Image */}
-        <div
-          style={{
-            borderRadius: 'var(--atr-radius-lg)',
-            overflow: 'hidden',
-            marginBottom: 'var(--atr-space-5)',
-            position: 'relative',
-          }}
-        >
-          <img
-            src={village.img}
-            alt={village.name}
-            style={{
-              width: '100%',
-              height: 360,
-              objectFit: 'cover',
-              display: 'block',
-            }}
-          />
-          {village.featured && (
-            <span
-              style={{
-                position: 'absolute',
-                top: 'var(--atr-space-3)',
-                left: 'var(--atr-space-3)',
-                background: 'var(--atr-yellow)',
-                color: 'var(--atr-text)',
-                fontSize: 'var(--atr-fs-label-sm)',
-                fontWeight: 700,
-                padding: '4px 10px',
-                borderRadius: 'var(--atr-radius-pill)',
-                textTransform: 'uppercase',
-                letterSpacing: 1,
-              }}
-            >
-              Featured
-            </span>
-          )}
-        </div>
-
-        {/* Header */}
-        <h1
-          style={{
-            fontSize: 'var(--atr-fs-display-md)',
-            fontWeight: 700,
-            color: 'var(--atr-text)',
-            margin: '0 0 var(--atr-space-1)',
-            lineHeight: 1.2,
-          }}
-        >
-          {village.name}
-        </h1>
-        <p
-          style={{
-            fontSize: 'var(--atr-fs-body-lg)',
-            color: 'var(--atr-text-muted)',
-            margin: '0 0 var(--atr-space-3)',
-          }}
-        >
-          {village.region}
-        </p>
-
-        {/* ADWI Status chip */}
-        {village.adwi && (
-          <span
-            style={{
-              display: 'inline-block',
-              background: village.adwiBg || 'var(--atr-bg-soft)',
-              color: village.adwiFg || 'var(--atr-text)',
-              fontSize: 'var(--atr-fs-label-sm)',
-              fontWeight: 700,
-              padding: '4px 10px',
-              borderRadius: 'var(--atr-radius-pill)',
-              textTransform: 'uppercase',
-              letterSpacing: 1,
-              marginBottom: 'var(--atr-space-5)',
-            }}
-          >
-            {village.adwi}
-          </span>
-        )}
-
-        {/* Info grid */}
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
-            gap: 'var(--atr-space-4)',
-            marginBottom: 'var(--atr-space-6)',
-          }}
-        >
-          <InfoCard label="Rating" value={`\u2605 ${village.rating}`} />
-          <InfoCard label="Harga homestay" value={formatPrice(village.price)} />
-          <InfoCard label="Keluarga" value={`${village.families} KK`} />
-          <InfoCard label="Tema" value={village.theme || '-'} />
-        </div>
-
-        {/* Signature */}
-        {village.signature && (
-          <div
-            style={{
-              background: 'var(--atr-bg-soft)',
-              borderRadius: 'var(--atr-radius-md)',
-              padding: 'var(--atr-space-4)',
-              marginBottom: 'var(--atr-space-4)',
-            }}
-          >
-            <div
-              style={{
-                fontSize: 'var(--atr-fs-label-sm)',
-                color: 'var(--atr-text-muted)',
-                textTransform: 'uppercase',
-                letterSpacing: 1,
-                fontWeight: 700,
-                marginBottom: 'var(--atr-space-1)',
-              }}
-            >
-              Ciri khas
-            </div>
-            <div
-              style={{
-                fontSize: 'var(--atr-fs-body-lg)',
-                fontWeight: 600,
-                color: 'var(--atr-text)',
-              }}
-            >
-              {village.signature}
-            </div>
+    <div data-screen-label="Tourism Village Detail" style={{ minHeight: '100vh', background: 'var(--atr-bg-soft)' }}>
+      <TopNav active="Explore" />
+      <div style={ds.pageWrap}>
+        <div style={ds.crumbBar}>
+          <div style={{ width: "100%" }}>
+            <Breadcrumb
+              items={["Jelajahi", provinsi, kota, "Desa Wisata", village.name]}
+            />
           </div>
-        )}
-
-        {/* Activities */}
-        {village.activities && village.activities.length > 0 && (
-          <div
-            style={{
-              background: 'var(--atr-bg-soft)',
-              borderRadius: 'var(--atr-radius-md)',
-              padding: 'var(--atr-space-4)',
-            }}
-          >
-            <div
-              style={{
-                fontSize: 'var(--atr-fs-label-sm)',
-                color: 'var(--atr-text-muted)',
-                textTransform: 'uppercase',
-                letterSpacing: 1,
-                fontWeight: 700,
-                marginBottom: 'var(--atr-space-2)',
-              }}
-            >
-              Aktivitas
-            </div>
-            <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-              {village.activities.map((a) => (
-                <span
-                  key={a}
-                  style={{
-                    background: 'var(--atr-bg)',
-                    border: '1px solid var(--atr-outline)',
-                    borderRadius: 'var(--atr-radius-pill)',
-                    padding: '4px 12px',
-                    fontSize: 'var(--atr-fs-body-sm)',
-                    fontWeight: 600,
-                    color: 'var(--atr-text)',
-                  }}
-                >
-                  {a}
-                </span>
-              ))}
-            </div>
+        </div>
+        <div style={ds.containerWide}>
+          <DetailHero village={village} />
+        </div>
+        <div style={ds.twoCol}>
+          <div style={ds.mainCol}>
+            <VillageHeader village={village} />
+            <VillageAbout village={village} />
+            <VillageActivities village={village} />
+            <VillagePackages village={village} />
+            <VillageAttractions village={village} />
+            <VillageFacilities village={village} />
+            <VillageAccess village={village} />
+            <VillageGallery village={village} />
+            <VillageReviews village={village} />
+            <SimilarVillages village={village} />
           </div>
-        )}
-      </main>
+          <aside style={ds.sideCol}>
+            <ContactCard village={village} />
+            <CertsCard village={village} />
+          </aside>
+        </div>
+      </div>
       <SiteFooter />
-    </div>
-  );
-}
-
-function InfoCard({ label, value }) {
-  return (
-    <div
-      style={{
-        background: 'var(--atr-bg-soft)',
-        borderRadius: 'var(--atr-radius-md)',
-        padding: 'var(--atr-space-4)',
-      }}
-    >
-      <div
-        style={{
-          fontSize: 'var(--atr-fs-label-sm)',
-          color: 'var(--atr-text-muted)',
-          textTransform: 'uppercase',
-          letterSpacing: 1,
-          fontWeight: 700,
-          marginBottom: 'var(--atr-space-1)',
-        }}
-      >
-        {label}
-      </div>
-      <div
-        style={{
-          fontSize: 'var(--atr-fs-title-lg)',
-          fontWeight: 700,
-          color: 'var(--atr-text)',
-        }}
-      >
-        {value}
-      </div>
     </div>
   );
 }
