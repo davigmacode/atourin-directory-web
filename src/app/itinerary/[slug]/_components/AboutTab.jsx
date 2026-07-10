@@ -34,22 +34,21 @@ function FaqItem({ question, answer }) {
   );
 }
 
-export default function AboutTab() {
+export default function AboutTab({ itinerary }) {
   return (
     <div style={detailStyles.aboutWrap}>
       {/* Overview */}
-      <AboutSection eyebrow="Tentang" title="Paket Liburan Lengkap Lombok">
+      <AboutSection eyebrow="Tentang" title={`Paket Perjalanan ${itinerary.city}`}>
         <div style={detailStyles.aboutBody}>
-          Nikmati pengalaman liburan 4 hari 3 malam yang mencakup destinasi
-          terbaik Lombok. Dari pantai eksotis Kuta Mandalika, Bukit Merese
-          dengan sunrise spektakuler, hingga kekayaan budaya Suku Sasak di Desa
-          Sade. Setiap aktivitas telah dirancang untuk memberikan kenyamanan dan
-          pengalaman otentik.
+          Nikmati pengalaman perjalanan terbaik {itinerary.days} di {itinerary.city}.
+          Rencana ini disusun dengan sangat cermat agar Anda dapat menikmati daya tarik
+          budaya lokal, keindahan alam, serta kuliner ikonik setempat secara maksimal
+          tanpa terburu-buru.
         </div>
         <div style={detailStyles.aboutBody}>
-          Paket ini cocok untuk pasangan, kelompok kecil, atau solo traveler
-          yang ingin menjelajahi Lombok tanpa repot mengatur transportasi dan
-          akomodasi. Pemandu lokal yang ramah akan menemani perjalanan Anda.
+          Sangat cocok untuk perjalanan keluarga, liburan bersama teman, atau petualangan
+          mandiri. Semua akomodasi pendukung, transportasi lokal, dan pemandu lokal
+          telah dikoordinasikan secara profesional.
         </div>
       </AboutSection>
 
@@ -59,23 +58,23 @@ export default function AboutTab() {
           {[
             {
               icon: "\u{1F3D6}",
-              title: "Pantai Eksotis",
-              desc: "Pasir putih & air jernih di Kuta, Tanjung Aan, dan pantai selatan Lombok.",
+              title: "Pantai & Pemandangan",
+              desc: `Jelajahi garis pantai eksotis dan bentang alam memukau khas ${itinerary.city}.`,
             },
             {
               icon: "\u{1F30B}",
-              title: "Budaya Sasak",
-              desc: "Kunjungan ke Desa Sade & proses menenun songket tradisional.",
+              title: "Kearifan Budaya",
+              desc: "Interaksi hangat dengan penduduk lokal Sasak dan melihat kerajinan tangan lokal.",
             },
             {
               icon: "\u{1F30A}",
-              title: "Snorkeling",
-              desc: "Jelajahi biota laut di perairan Gili Nanggu & Kedis.",
+              title: "Biota & Aktivitas Laut",
+              desc: "Berenang, snorkeling, atau sekadar berfoto ria di air laut jernih.",
             },
             {
               icon: "\u{1F373}",
-              title: "Kuliner Khas",
-              desc: "Ayam taliwang, plecing kangkung, dan seafood segar.",
+              title: "Kuliner Otentik",
+              desc: "Mencicipi masakan khas tradisional lokal dengan rasa otentik.",
             },
           ].map((h, i) => (
             <div key={i} style={detailStyles.highlightCard}>
@@ -134,49 +133,53 @@ export default function AboutTab() {
       <AboutSection eyebrow="FAQ" title="Pertanyaan Umum">
         <div style={detailStyles.faqList}>
           <FaqItem
-            question="Apakah tiket pesawat sudah termasuk?"
-            answer="Tiket pesawat belum termasuk dalam paket ini. Harga yang tercantum adalah untuk paket darat (akomodasi, transportasi lokal, makan, tiket masuk, dan pemandu)."
+            question="Apakah tiket penerbangan sudah termasuk?"
+            answer="Tiket pesawat belum termasuk. Biaya paket ini hanya mencakup akomodasi, transportasi darat lokal, tiket masuk tempat wisata, dan pemandu lokal."
           />
           <FaqItem
-            question="Bisakah saya meminta perubahan jadwal?"
-            answer="Tentu. Kamu bisa menyesuaikan jadwal, durasi, dan aktivitas melalui tombol 'Edit & Personalisasi'. Tim kami akan membantu mengatur ulang rencana sesuai keinginan."
+            question="Dapatkah itinerary ini disesuaikan lagi?"
+            answer="Tentu saja! Anda bisa dengan bebas mengedit rute perjalanan dan tanggal keberangkatan melalui tombol 'Edit & Personalisasi' setelah memesan."
           />
           <FaqItem
-            question="Apakah ada asuransi perjalanan?"
-            answer="Asuransi perjalanan belum termasuk secara default, namun dapat ditambahkan sebagai opsi tambahan saat proses pemesanan. Kami merekomendasikan untuk mengambil asuransi perjalanan untuk keamanan ekstra."
-          />
-          <FaqItem
-            question="Bagaimana jika cuaca buruk?"
-            answer="Rencana perjalanan bersifat fleksibel. Pemandu lokal akan menyesuaikan aktivitas berdasarkan kondisi cuaca untuk memastikan keselamatan dan kenyamanan Anda."
+            question="Bagaimana kebijakan pembatalan & refund?"
+            answer="Pembatalan H-7 mendapatkan refund 100%. Untuk pembatalan mendadak karena kendala cuaca buruk akan dikoordinasikan penundaan tanggal."
           />
         </div>
       </AboutSection>
 
       {/* Author card */}
-      <AboutSection eyebrow="Penulis" title="Tentang Pemandu">
+      <AboutSection eyebrow="Penulis" title="Tentang Kreator">
         <div style={detailStyles.authorBigCard}>
-          <img
-            src="https://i.pravatar.cc/200?img=11"
-            alt="Rizky Pratama"
-            style={detailStyles.authorBigImg}
-          />
+          <div
+            style={{
+              ...detailStyles.authorBigImg,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              background: "linear-gradient(135deg, #A49EE4, #7068D5)",
+              color: "#fff",
+              fontSize: 48,
+              fontWeight: 700,
+            }}
+          >
+            {itinerary.author?.[0]}
+          </div>
           <div>
             <div style={detailStyles.authorBigName}>
-              Rizky Pratama
+              {itinerary.author}
               <span style={detailStyles.verifiedBadge}>
-                <CheckBadge /> Travel Specialist
+                <CheckBadge /> {itinerary.role || "Local Guide"}
               </span>
             </div>
-            <div style={detailStyles.authorBigRole}>Pemandu Wisata Lombok</div>
+            <div style={detailStyles.authorBigRole}>Travel Creator & Specialist</div>
             <div style={detailStyles.authorBigBio}>
-              Berpengalaman lebih dari 5 tahun memandu wisatawan lokal dan
-              mancanegara menjelajahi keindahan Lombok. Menguasai bahasa
-              Indonesia, Inggris, dan bahasa Sasak.
+              Berpengalaman memandu perjalanan wisata lokal dan asing. Fokus
+              pada rute perjalanan berkelanjutan dan mengenalkan kebudayaan otentik.
             </div>
             <div style={detailStyles.authorBigStats}>
-              <span>{"\u{1F4CD}"} 18 Itinerary</span>
-              <span>{"\u{2B50}"} 4.9 Rating</span>
-              <span>{"\u{1F465}"} 200+ Wisatawan</span>
+              <span>{"\u{1F4CD}"} {itinerary.city}</span>
+              <span>{"\u{2B50}"} {itinerary.rating} Rating</span>
+              <span>{"\u{1F465}"} {itinerary.views} Dilihat</span>
             </div>
           </div>
         </div>

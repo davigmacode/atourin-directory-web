@@ -98,7 +98,7 @@ function Breakdown({ items }) {
   );
 }
 
-function PriceCard() {
+function PriceCard({ price }) {
   const [liked, setLiked] = useState(false);
   return (
     <div style={detailStyles.priceCard}>
@@ -106,7 +106,7 @@ function PriceCard() {
         <div>
           <div style={detailStyles.priceFromLabel}>Mulai dari</div>
           <div style={{ display: "flex", alignItems: "baseline" }}>
-            <span style={detailStyles.priceVal}>Rp 2.890.000</span>
+            <span style={detailStyles.priceVal}>{price || "Rp 1.500.000"}</span>
             <span style={detailStyles.priceUnit}>/pax</span>
           </div>
         </div>
@@ -123,11 +123,11 @@ function PriceCard() {
       </div>
       <Breakdown
         items={[
-          { label: "Akomodasi (3 malam)", value: "Rp 1.200.000" },
-          { label: "Transportasi", value: "Rp 850.000" },
-          { label: "Makanan (6x)", value: "Rp 480.000" },
-          { label: "Tiket masuk objek wisata", value: "Rp 280.000" },
-          { label: "Pemandu lokal", value: "Rp 80.000" },
+          { label: "Akomodasi & Fasilitas", value: "Termasuk paket" },
+          { label: "Transportasi Lokal", value: "Termasuk paket" },
+          { label: "Konsumsi Harian", value: "Termasuk paket" },
+          { label: "Tiket Masuk Objek Wisata", value: "Termasuk paket" },
+          { label: "Pemandu Lokal Berlisensi", value: "Termasuk paket" },
         ]}
       />
       <div style={detailStyles.ctaCol}>
@@ -147,15 +147,12 @@ function PriceCard() {
   );
 }
 
-export default function DetailHero() {
-  const coverUrl =
-    "https://images.unsplash.com/photo-1589394815804-964ed0be2eb5?w=1600&auto=format&fit=crop&q=70";
-
+export default function DetailHero({ itinerary }) {
   return (
     <section>
       {/* Cover image */}
       <div style={detailStyles.heroCover}>
-        <img src={coverUrl} alt="Lombok" style={detailStyles.heroImg} />
+        <img src={itinerary.img} alt={itinerary.title} style={detailStyles.heroImg} />
         <div style={detailStyles.heroOverlay} />
         <button style={detailStyles.heroGalleryBtn}>
           <GalleryIcon /> Lihat Galeri
@@ -170,21 +167,20 @@ export default function DetailHero() {
             <div style={detailStyles.heroChipsRow}>
               <span style={detailStyles.heroTagPurple}>ITINERARY</span>
               <span style={detailStyles.heroTagDot}>{"\u00B7"}</span>
-              <span style={detailStyles.heroTagLight}>Lombok, NTB</span>
+              <span style={detailStyles.heroTagLight}>{itinerary.city}</span>
               <span style={detailStyles.heroTagDot}>{"\u00B7"}</span>
-              <span style={detailStyles.heroTagLight}>4 Hari 3 Malam</span>
+              <span style={detailStyles.heroTagLight}>{itinerary.days}</span>
             </div>
-            <h1 style={detailStyles.heroTitle}>Liburan Lengkap Lombok</h1>
+            <h1 style={detailStyles.heroTitle}>{itinerary.title}</h1>
             <p style={detailStyles.heroSub}>
-              Jelajahi keindahan Lombok dari Pantai Kuta Mandalika, Bukit
-              Merese, hingga Desa Sade yang eksotis. Paket lengkap dengan
-              akomodasi, transportasi, dan pemandu lokal.
+              Eksplorasi menarik di {itinerary.city} dengan rute perjalanan terbaik.
+              Nikmati kenyamanan transportasi, penginapan terpilih, dan destinasi ikonik.
             </p>
             <div style={detailStyles.heroStatsRow}>
               <HeroStat
                 icon={<HeroStatGlyph kind="duration" />}
                 label="Durasi"
-                value="4 Hari 3 Malam"
+                value={itinerary.days}
               />
               <HeroStat
                 icon={<HeroStatGlyph kind="group" />}
@@ -206,7 +202,7 @@ export default function DetailHero() {
 
           {/* Right column — PriceCard */}
           <div style={detailStyles.heroRight}>
-            <PriceCard />
+            <PriceCard price={itinerary.price} />
           </div>
         </div>
       </div>
