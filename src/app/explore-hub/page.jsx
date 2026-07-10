@@ -2,15 +2,15 @@
 
 import React from "react";
 import { TopNav, SiteFooter } from "@/components/layout";
-import ExploreHero from "@/components/ExploreHero";
-import StatsBanner from "@/components/StatsBanner";
-import UntukmuSection from "@/components/UntukmuSection";
-import FeaturedCarousel from "@/components/FeaturedCarousel";
-import IslandTiles from "@/components/IslandTiles";
-import ProvinceGrid from "@/components/ProvinceGrid";
-import CategoryGrid from "@/components/CategoryGrid";
-import DesaWisataStrip from "@/components/DesaWisataStrip";
-import MarketplaceCTA from "@/components/MarketplaceCTA";
+import ExploreHero from "./_components/ExploreHero";
+import StatsBanner from "./_components/StatsBanner";
+import UntukmuSection from "./_components/UntukmuSection";
+import FeaturedCarousel from "./_components/FeaturedCarousel";
+import IslandTiles from "./_components/IslandTiles";
+import ProvinceGrid from "./_components/ProvinceGrid";
+import CategoryGrid from "./_components/CategoryGrid";
+import DesaWisataStrip from "./_components/DesaWisataStrip";
+import MarketplaceCTA from "./_components/MarketplaceCTA";
 import { useExploreHub } from "@/lib/hooks/use-explore-hub";
 
 export default function ExploreHubPage() {
