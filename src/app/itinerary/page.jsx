@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { TopNav, SiteFooter, Breadcrumb } from "@/components/layout";
+import { TopNav, SiteFooter, Breadcrumb, CategoryTabs } from "@/components/layout";
 import { useItineraries } from "@/lib/hooks/use-itineraries";
 import { dirStyles, cardStyles } from "@/styles/attraction-styles";
 
@@ -260,47 +260,6 @@ function Stat({ n, label }) {
     <div style={dirStyles.stat}>
       <div style={dirStyles.statN}>{n}</div>
       <div style={dirStyles.statL}>{label}</div>
-    </div>
-  );
-}
-
-/* ── CategoryTabs ── */
-const DIRECTORY_TABS = [
-  { label: "Itinerary", count: "2.4K", href: "/itinerary" },
-  { label: "Destinasi", count: "180", href: "/destinations" },
-  { label: "Atraksi", count: "1.2K", href: "/attractions" },
-  { label: "Tour Guide", count: "640", href: "/tour-guides" },
-  { label: "Desa Wisata", count: "320", href: "/tourism-villages" },
-];
-function CategoryTabs({ active = "Itinerary" }) {
-  return (
-    <div style={dirStyles.tabsBar}>
-      <div style={dirStyles.tabsInner}>
-        {DIRECTORY_TABS.map((t) => {
-          const isActive = active === t.label;
-          return (
-            <a
-              key={t.label}
-              href={t.href}
-              style={{
-                ...dirStyles.tab,
-                ...(isActive ? dirStyles.tabActive : {}),
-                textDecoration: "none",
-              }}
-            >
-              <span>{t.label}</span>
-              <span
-                style={{
-                  ...dirStyles.tabCount,
-                  ...(isActive ? dirStyles.tabCountActive : {}),
-                }}
-              >
-                {t.count}
-              </span>
-            </a>
-          );
-        })}
-      </div>
     </div>
   );
 }
