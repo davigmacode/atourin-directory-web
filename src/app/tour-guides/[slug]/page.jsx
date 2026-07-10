@@ -1,82 +1,38 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import { useParams } from "next/navigation";
-import { TopNav, SiteFooter } from "@/components/layout";
+import { TopNav, SiteFooter, Breadcrumb } from "@/components/layout";
 import { useGuide } from "@/lib/hooks/use-guide";
+import { ds } from "@/styles/detail-styles";
 
 import DetailHero from "./_components/DetailHero";
-import ActionBar from "./_components/ActionBar";
-import BiographyTab from "./_components/BiographyTab";
-import TripsTab from "./_components/TripsTab";
-import ReviewsTab from "./_components/ReviewsTab";
+import GuideAbout from "./_components/GuideAbout";
+import GuideSpecialties from "./_components/GuideSpecialties";
+import GuideExperience from "./_components/GuideExperience";
+import GuidePackages from "./_components/GuidePackages";
+import GuideGallery from "./_components/GuideGallery";
+import GuideReviews from "./_components/GuideReviews";
+import SimilarGuides from "./_components/SimilarGuides";
+import BookGuideCard from "./_components/BookGuideCard";
+import ResponseStatsCard from "./_components/ResponseStatsCard";
+import CertsCard from "./_components/CertsCard";
 
 function LoadingSkeleton() {
+  const s = { background: "var(--atr-outline)", borderRadius: 8 };
   return (
-    <div style={{ minHeight: "100vh", background: "var(--atr-bg)" }}>
-      <TopNav active="Tour Guide" />
-      <div
-        style={{
-          maxWidth: 960,
-          margin: "0 auto",
-          padding: "var(--atr-space-6) var(--atr-space-4)",
-        }}
-      >
+    <div style={{ minHeight: "100vh", background: "var(--atr-bg-soft)" }}>
+      <TopNav active="Explore" />
+      <div style={{ maxWidth: 1376, margin: "0 auto", padding: 32 }}>
+        <div style={{ ...s, height: 24, width: "40%", marginBottom: 24 }} />
         <div
-          style={{
-            display: "flex",
-            gap: "var(--atr-space-5)",
-            alignItems: "center",
-            marginBottom: "var(--atr-space-6)",
-          }}
-        >
-          <div
-            style={{
-              width: 120,
-              height: 120,
-              borderRadius: "50%",
-              background: "var(--atr-outline)",
-              animation: "pulse 1.5s ease-in-out infinite",
-            }}
-          />
-          <div style={{ flex: 1 }}>
-            <div
-              style={{
-                height: 28,
-                width: "50%",
-                borderRadius: "var(--atr-radius-md)",
-                background: "var(--atr-outline)",
-                marginBottom: "var(--atr-space-2)",
-                animation: "pulse 1.5s ease-in-out infinite",
-              }}
-            />
-            <div
-              style={{
-                height: 18,
-                width: "30%",
-                borderRadius: "var(--atr-radius-md)",
-                background: "var(--atr-outline)",
-                animation: "pulse 1.5s ease-in-out infinite",
-              }}
-            />
-          </div>
-        </div>
-        <div
-          style={{
-            height: 100,
-            borderRadius: "var(--atr-radius-md)",
-            background: "var(--atr-outline)",
-            animation: "pulse 1.5s ease-in-out infinite",
-          }}
+          style={{ ...s, height: 400, marginBottom: 24, borderRadius: 16 }}
         />
+        <div style={{ ...s, height: 32, width: "60%", marginBottom: 16 }} />
+        <div style={{ ...s, height: 16, width: "80%", marginBottom: 8 }} />
+        <div style={{ ...s, height: 16, width: "75%" }} />
       </div>
       <SiteFooter />
-      <style>{`
-        @keyframes pulse {
-          0%, 100% { opacity: 0.6; }
-          50% { opacity: 0.3; }
-        }
-      `}</style>
     </div>
   );
 }
@@ -84,32 +40,32 @@ function LoadingSkeleton() {
 function ErrorState({ error, onRetry }) {
   return (
     <div style={{ minHeight: "100vh", background: "var(--atr-bg)" }}>
-      <TopNav active="Tour Guide" />
+      <TopNav active="Explore" />
       <div
         style={{
           maxWidth: 480,
           margin: "80px auto",
-          padding: "var(--atr-space-6) var(--atr-space-4)",
+          padding: "24px 16px",
           textAlign: "center",
         }}
       >
-        <div style={{ fontSize: 48, marginBottom: "var(--atr-space-4)" }}>
+        <div style={{ fontSize: 48, marginBottom: 16 }}>
           &#x26A0;&#xFE0F;
         </div>
         <h1
           style={{
-            fontSize: "var(--atr-fs-headline-md)",
+            fontSize: 24,
             color: "var(--atr-text)",
-            margin: "0 0 var(--atr-space-2)",
+            margin: "0 0 8px",
           }}
         >
           Gagal memuat data
         </h1>
         <p
           style={{
-            fontSize: "var(--atr-fs-body-md)",
+            fontSize: 15,
             color: "var(--atr-text-muted)",
-            margin: "0 0 var(--atr-space-5)",
+            margin: "0 0 20px",
           }}
         >
           {error?.message || "Terjadi kesalahan. Silakan coba lagi."}
@@ -120,9 +76,9 @@ function ErrorState({ error, onRetry }) {
             background: "var(--atr-purple)",
             color: "#fff",
             border: "none",
-            borderRadius: "var(--atr-radius-pill)",
+            borderRadius: 999,
             padding: "12px 32px",
-            fontSize: "var(--atr-fs-title-sm)",
+            fontSize: 14,
             fontWeight: 700,
             cursor: "pointer",
             fontFamily: "var(--atr-font-sans)",
@@ -139,30 +95,30 @@ function ErrorState({ error, onRetry }) {
 function NotFound() {
   return (
     <div style={{ minHeight: "100vh", background: "var(--atr-bg)" }}>
-      <TopNav active="Tour Guide" />
+      <TopNav active="Explore" />
       <div
         style={{
           maxWidth: 480,
           margin: "80px auto",
-          padding: "var(--atr-space-6) var(--atr-space-4)",
+          padding: "24px 16px",
           textAlign: "center",
         }}
       >
-        <div style={{ fontSize: 48, marginBottom: "var(--atr-space-4)" }}>
+        <div style={{ fontSize: 48, marginBottom: 16 }}>
           &#x1F50D;
         </div>
         <h1
           style={{
-            fontSize: "var(--atr-fs-headline-md)",
+            fontSize: 24,
             color: "var(--atr-text)",
-            margin: "0 0 var(--atr-space-2)",
+            margin: "0 0 8px",
           }}
         >
           Pemandu tidak ditemukan
         </h1>
         <p
           style={{
-            fontSize: "var(--atr-fs-body-md)",
+            fontSize: 15,
             color: "var(--atr-text-muted)",
             margin: 0,
           }}
@@ -178,7 +134,6 @@ function NotFound() {
 export default function GuideDetailPage() {
   const { slug } = useParams();
   const { guide, isLoading, isError, error } = useGuide(slug);
-  const [activeTab, setActiveTab] = useState("biography");
 
   if (isLoading) return <LoadingSkeleton />;
   if (isError)
@@ -187,23 +142,40 @@ export default function GuideDetailPage() {
     );
   if (!guide) return <NotFound />;
 
+  const regionParts = guide.region ? guide.region.split(",") : [];
+  const kota = regionParts[0] ? regionParts[0].trim() : "Labuan Bajo";
+
   return (
-    <div style={{ minHeight: "100vh", background: "var(--atr-bg)" }}>
-      <TopNav active="Tour Guide" />
-      <main
-        style={{
-          maxWidth: 1376,
-          margin: "0 auto",
-          padding: "var(--atr-space-6) var(--atr-space-4)",
-        }}
-      >
-        <DetailHero guide={guide} />
-        <ActionBar activeTab={activeTab} setActiveTab={setActiveTab} />
-        
-        {activeTab === "biography" && <BiographyTab guide={guide} />}
-        {activeTab === "trips" && <TripsTab guide={guide} />}
-        {activeTab === "reviews" && <ReviewsTab guide={guide} />}
-      </main>
+    <div data-screen-label="Tour Guide Detail" style={{ minHeight: "100vh", background: "var(--atr-bg-soft)" }}>
+      <TopNav active="Explore" />
+      <div style={ds.pageWrap}>
+        <div style={ds.crumbBar}>
+          <div style={{ width: "100%" }}>
+            <Breadcrumb
+              items={["Jelajahi", "Pemandu Wisata", kota, guide.name]}
+            />
+          </div>
+        </div>
+        <div style={ds.containerWide}>
+          <DetailHero guide={guide} />
+        </div>
+        <div style={ds.twoCol}>
+          <div style={ds.mainCol}>
+            <GuideAbout guide={guide} />
+            <GuideSpecialties guide={guide} />
+            <GuideExperience guide={guide} />
+            <GuidePackages guide={guide} />
+            <GuideGallery guide={guide} />
+            <GuideReviews guide={guide} />
+            <SimilarGuides guide={guide} />
+          </div>
+          <aside style={ds.sideCol}>
+            <BookGuideCard guide={guide} />
+            <ResponseStatsCard guide={guide} />
+            <CertsCard guide={guide} />
+          </aside>
+        </div>
+      </div>
       <SiteFooter />
     </div>
   );

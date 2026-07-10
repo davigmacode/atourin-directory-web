@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { TopNav, SiteFooter, CategoryTabs } from "@/components/layout";
 import { useGuides } from "@/lib/hooks/use-guides";
 
@@ -10,6 +10,7 @@ import GuidesGrid from "./_components/GuidesGrid";
 import CTABand from "./_components/CTABand";
 
 export default function TourGuidesPage() {
+  const [view, setView] = useState("grid");
   const {
     data: guides,
     pagination,
@@ -31,6 +32,8 @@ export default function TourGuidesPage() {
         activeFilterValues={filters}
         onFilterChange={setFilters}
         totalResults={pagination?.total || 0}
+        view={view}
+        onViewChange={setView}
       />
       <GuidesGrid
         data={guides}

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { GridIcon, MapIcon } from "@/components/icons";
 import { dirStyles } from "@/styles/attraction-styles";
 import {
   GUIDE_FILTERS,
@@ -144,6 +145,8 @@ export default function FilterBar({
   totalResults = 638,
   activeFilterValues = {},
   onFilterChange,
+  view = "grid",
+  onViewChange,
 }) {
   const [openFilter, setOpenFilter] = useState(null);
   const [openSort, setOpenSort] = useState(false);
@@ -247,6 +250,26 @@ export default function FilterBar({
           })}
         </div>
         <div style={dirStyles.filterRight}>
+          <div style={dirStyles.viewToggle}>
+            <button
+              onClick={() => onViewChange?.("grid")}
+              style={{
+                ...dirStyles.viewBtn,
+                ...(view === "grid" ? dirStyles.viewBtnActive : {}),
+              }}
+            >
+              <GridIcon /> Grid
+            </button>
+            <button
+              onClick={() => onViewChange?.("map")}
+              style={{
+                ...dirStyles.viewBtn,
+                ...(view === "map" ? dirStyles.viewBtnActive : {}),
+              }}
+            >
+              <MapIcon /> Peta
+            </button>
+          </div>
           <div style={{ position: "relative" }}>
             <button
               onClick={() => {

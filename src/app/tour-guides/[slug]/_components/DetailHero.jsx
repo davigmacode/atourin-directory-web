@@ -12,7 +12,15 @@ const ghStyles = {
     overflow: "hidden",
     boxShadow: "0 4px 16px rgba(31,27,51,0.05)",
   },
-  cover: { position: "relative", height: 280, overflow: "hidden" },
+  heroTop: {
+    position: "relative",
+  },
+  cover: {
+    position: "absolute",
+    inset: 0,
+    overflow: "hidden",
+    zIndex: 1,
+  },
   coverImg: {
     width: "100%",
     height: "100%",
@@ -24,6 +32,7 @@ const ghStyles = {
     inset: 0,
     background:
       "linear-gradient(180deg, rgba(31,27,51,0) 30%, rgba(31,27,51,0.55) 100%)",
+    zIndex: 1,
   },
   coverEditBtn: {
     position: "absolute",
@@ -41,13 +50,13 @@ const ghStyles = {
     display: "inline-flex",
     alignItems: "center",
     gap: 6,
+    zIndex: 2,
   },
   heroBody: {
     display: "grid",
     gridTemplateColumns: "176px 1fr auto",
     gap: 28,
-    padding: "0 36px 28px",
-    marginTop: -88,
+    padding: "192px 36px 28px",
     alignItems: "flex-end",
     position: "relative",
     zIndex: 2,
@@ -245,84 +254,86 @@ export default function DetailHero({ guide }) {
 
   return (
     <div style={ghStyles.hero}>
-      {/* Cover image */}
-      <div style={ghStyles.cover}>
-        <img src={coverUrl} alt="Cover" style={ghStyles.coverImg} />
-        <div style={ghStyles.coverOverlay} />
-        <button style={ghStyles.coverEditBtn}>
-          <EditIcon /> Ubah Cover
-        </button>
-      </div>
+      <div style={ghStyles.heroTop}>
+        {/* Cover image */}
+        <div style={ghStyles.cover}>
+          <img src={coverUrl} alt="Cover" style={ghStyles.coverImg} />
+          <div style={ghStyles.coverOverlay} />
+          <button style={ghStyles.coverEditBtn}>
+            <EditIcon /> Ubah Cover
+          </button>
+        </div>
 
-      {/* Hero Body Info */}
-      <div style={ghStyles.heroBody}>
-        <div style={ghStyles.avatarWrap}>
-          <img src={guide.img} alt={guide.name} style={ghStyles.avatar} />
-          {guide.verified && (
-            <div style={ghStyles.avBadge}>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                <path
-                  d="M5 12l5 5L20 7"
-                  stroke="#fff"
-                  strokeWidth="3.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
+        {/* Hero Body Info */}
+        <div style={ghStyles.heroBody}>
+          <div style={ghStyles.avatarWrap}>
+            <img src={guide.img} alt={guide.name} style={ghStyles.avatar} />
+            {guide.verified && (
+              <div style={ghStyles.avBadge}>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                  <path
+                    d="M5 12l5 5L20 7"
+                    stroke="#fff"
+                    strokeWidth="3.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </div>
+            )}
+          </div>
+          <div style={ghStyles.identCol}>
+            <div style={ghStyles.identBadges}>
+              <span style={ghStyles.superhost}>{"\u2605"} SUPERHOST</span>
+              <span style={ghStyles.verifiedHero}>VERIFIED GUIDE</span>
+              <span style={ghStyles.arti}>HPI MEMBER</span>
             </div>
-          )}
-        </div>
-        <div style={ghStyles.identCol}>
-          <div style={ghStyles.identBadges}>
-            <span style={ghStyles.superhost}>{"\u2605"} SUPERHOST</span>
-            <span style={ghStyles.verifiedHero}>VERIFIED GUIDE</span>
-            <span style={ghStyles.arti}>HPI MEMBER</span>
+            <h1 style={ghStyles.name}>
+              {guide.name}
+              {guide.verified && <span style={ghStyles.nameCheck}>&#x2713;</span>}
+            </h1>
+            <p style={ghStyles.tagline}>
+              {guide.tagline || `Spesialis Pemandu Wisata di ${guide.region}`}
+            </p>
+            <div style={ghStyles.identMeta}>
+              <span style={ghStyles.identMetaItem}>
+                <PinIcon color="var(--atr-text-muted)" /> {guide.region}
+              </span>
+              <span style={ghStyles.identMetaDot}>{"\u00B7"}</span>
+              <span style={ghStyles.identMetaItem}>
+                {"\uD83D\uDCBC"} {guide.exp || "5+ tahun"} pengalaman
+              </span>
+              <span style={ghStyles.identMetaDot}>{"\u00B7"}</span>
+              <span style={ghStyles.langRow}>
+                <span style={ghStyles.langFlag}>🇮🇩</span>
+                <span style={ghStyles.langFlag}>🇬🇧</span>
+              </span>
+            </div>
           </div>
-          <h1 style={ghStyles.name}>
-            {guide.name}
-            {guide.verified && <span style={ghStyles.nameCheck}>&#x2713;</span>}
-          </h1>
-          <p style={ghStyles.tagline}>
-            {guide.tagline || `Spesialis Pemandu Wisata di ${guide.region}`}
-          </p>
-          <div style={ghStyles.identMeta}>
-            <span style={ghStyles.identMetaItem}>
-              <PinIcon color="var(--atr-text-muted)" /> {guide.region}
-            </span>
-            <span style={ghStyles.identMetaDot}>{"\u00B7"}</span>
-            <span style={ghStyles.identMetaItem}>
-              {"\uD83D\uDCBC"} {guide.exp || "5+ tahun"} pengalaman
-            </span>
-            <span style={ghStyles.identMetaDot}>{"\u00B7"}</span>
-            <span style={ghStyles.langRow}>
-              <span style={ghStyles.langFlag}>🇮🇩</span>
-              <span style={ghStyles.langFlag}>🇬🇧</span>
-            </span>
-          </div>
-        </div>
-        <div style={ghStyles.ctaCol}>
-          <button
-            style={{
-              ...ghStyles.followBtn,
-              ...(followed ? ghStyles.followBtnOn : {}),
-            }}
-            onClick={() => setFollowed(!followed)}
-          >
-            {followed ? "Mengikuti" : "Ikuti Pemandu"}
-          </button>
-          <button
-            style={ghStyles.msgBtn}
-            onClick={() => alert(`Mengirim pesan ke ${guide.name}...`)}
-          >
-            <ChatIcon /> Pesan
-          </button>
-          <div style={ghStyles.iconRow}>
-            <button style={ghStyles.iconSqBtn}>
-              <ShareIcon />
+          <div style={ghStyles.ctaCol}>
+            <button
+              style={{
+                ...ghStyles.followBtn,
+                ...(followed ? ghStyles.followBtnOn : {}),
+              }}
+              onClick={() => setFollowed(!followed)}
+            >
+              {followed ? "Mengikuti" : "Ikuti Pemandu"}
             </button>
-            <button style={ghStyles.iconSqBtn}>
-              <BookmarkIcon />
+            <button
+              style={ghStyles.msgBtn}
+              onClick={() => alert(`Mengirim pesan ke ${guide.name}...`)}
+            >
+              <ChatIcon /> Pesan
             </button>
+            <div style={ghStyles.iconRow}>
+              <button style={ghStyles.iconSqBtn}>
+                <ShareIcon />
+              </button>
+              <button style={ghStyles.iconSqBtn}>
+                <BookmarkIcon />
+              </button>
+            </div>
           </div>
         </div>
       </div>

@@ -160,3 +160,60 @@ export function PlayBadge() {
 export function AppleBadge() {
   return <svg width="20" height="20" viewBox="0 0 24 24" fill="#fff"><path d="M16 1c-1.5.1-3 1-3.8 2.2-.7 1-1.3 2.5-1.1 4 1.7.1 3.2-.9 4-2 .9-1.2 1.5-2.7.9-4.2zM20 17c-.5 1.2-1.1 2.4-2 3.5-1.2 1.4-2.5 2.5-4.2 2.5-1.6 0-2.1-1-4-1-1.9 0-2.5 1-4 1-1.7 0-3-1.3-4.2-2.7C-.7 17.4-1.5 11.6 2.5 8.6 4 7.5 5.7 7 7.4 7c1.6 0 3 1 4 1 .9 0 3-1.2 5.2-1 1 0 3.5.4 5.2 2.7-.1.1-3 1.8-3 5.4 0 4.2 3.7 5.6 3.8 5.7-.1.1-.6 2.1-1.6 3.2z"/></svg>;
 }
+
+export function GridIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+      <rect
+        x="4"
+        y="4"
+        width="7"
+        height="7"
+        rx="1.2"
+        stroke="currentColor"
+        strokeWidth="1.8"
+      />
+      <rect
+        x="13"
+        y="4"
+        width="7"
+        height="7"
+        rx="1.2"
+        stroke="currentColor"
+        strokeWidth="1.8"
+      />
+      <rect
+        x="4"
+        y="13"
+        width="7"
+        height="7"
+        rx="1.2"
+        stroke="currentColor"
+        strokeWidth="1.8"
+      />
+      <rect
+        x="13"
+        y="13"
+        width="7"
+        height="7"
+        rx="1.2"
+        stroke="currentColor"
+        strokeWidth="1.8"
+      />
+    </svg>
+  );
+}
+
+export function MapIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+      <path
+        d="M9 4l-6 2v14l6-2 6 2 6-2V4l-6 2-6-2zM9 4v14M15 6v14"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+

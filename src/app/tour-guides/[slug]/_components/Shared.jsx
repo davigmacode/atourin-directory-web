@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { ds } from "@/styles/detail-styles";
 
 /* ── SVG Icons ── */
 export function PinIcon({ color = "currentColor" }) {
@@ -197,3 +198,47 @@ export function PlanIcon() {
     </svg>
   );
 }
+
+export function SectionCard({
+  title,
+  eyebrow,
+  icon,
+  link,
+  linkLabel,
+  children,
+  style = {},
+}) {
+  return (
+    <section style={{ ...ds.section, ...style }}>
+      <div style={ds.sectionHeader}>
+        <div>
+          <h2 style={ds.sectionTitle}>
+            {icon && <span style={{ marginRight: 8 }}>{icon}</span>}
+            {title}
+          </h2>
+          {eyebrow && <div style={ds.sectionSub}>{eyebrow}</div>}
+        </div>
+        {link && (
+          <a href={link} style={ds.sectionLink}>
+            {linkLabel || "Lihat semua"} <span style={{ marginLeft: 4 }}>{"\u2192"}</span>
+          </a>
+        )}
+      </div>
+      {children}
+    </section>
+  );
+}
+
+export function ReadMore({ text, clamp = 4 }) {
+  const [open, setOpen] = useState(false);
+  const clamped = { ...ds.longTextClamped, WebkitLineClamp: clamp };
+  return (
+    <div>
+      <p style={open ? ds.longText : clamped}>{text}</p>
+      <button style={ds.readMoreBtn} onClick={() => setOpen(!open)}>
+        {open ? "Sembunyikan \u2191" : "Baca selengkapnya \u2193"}
+      </button>
+    </div>
+  );
+}
+
