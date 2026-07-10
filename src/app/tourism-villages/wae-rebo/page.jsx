@@ -1,9 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import TopNav from "@/components/TopNav";
-import Breadcrumb from "@/components/Breadcrumb";
-import SiteFooter from "@/components/SiteFooter";
+import { TopNav, SiteFooter, Breadcrumb } from "@/components/layout";
 import { ds } from "@/styles/detail-styles";
 
 /* ── Data ── */

@@ -1,8 +1,8 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { NavGlyph, NotifBell } from './icons';
-import chromeStyles from '@/styles/chrome-styles';
+import { NavGlyph, NotifBell } from '@/components/icons';
+import layoutStyles from '@/styles/layout-styles';
 import utilStyles from '@/styles/util-styles';
 import { t } from '@/lib/i18n';
 import LoginModal from './LoginModal';
@@ -27,7 +27,7 @@ export default function TopNav({ active = 'Jelajahi', isLoggedIn = false }) {
     { key: 'Jelajahi', label: t('nav.jelajahi'), icon: 'compass', href: '/explore-hub', aliases: ['Explore', 'Itinerary', 'Destinasi', 'Atraksi', 'Tour Guide', 'Desa Wisata'] },
   ];
   return (
-    <header style={chromeStyles.header}>
+    <header style={layoutStyles.header}>
       <style>{`.atr-bell:hover{background:var(--atr-purple-50);border-color:var(--atr-purple-light);color:var(--atr-purple)}
         .atr-burger{display:none;align-items:center;justify-content:center;width:42px;height:42px;border-radius:11px;border:1px solid var(--atr-outline);background:#fff;color:var(--atr-text);cursor:pointer;flex-shrink:0}
         .atr-drawer-scrim{position:fixed;inset:0;background:rgba(31,27,51,0.5);z-index:120;opacity:0;pointer-events:none;transition:opacity .25s}
@@ -44,14 +44,14 @@ export default function TopNav({ active = 'Jelajahi', isLoggedIn = false }) {
         @media (max-width:520px){
           .atr-hsearch{display:none !important}
         }`}</style>
-      <div style={chromeStyles.headerInner} className="atr-hinner">
-        <a href="/" style={chromeStyles.logo}>
-          <img src="/assets/atr/logo/atourin-wordmark.png" alt="Atourin" style={chromeStyles.logoImg} />
+      <div style={layoutStyles.headerInner} className="atr-hinner">
+        <a href="/" style={layoutStyles.logo}>
+          <img src="/assets/atr/logo/atourin-wordmark.png" alt="Atourin" style={layoutStyles.logoImg} />
         </a>
 
-        <div style={chromeStyles.searchWrap} className="atr-hsearch">
+        <div style={layoutStyles.searchWrap} className="atr-hsearch">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" strokeWidth="2"/><path d="M20 20l-3.5-3.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg>
-          <input style={chromeStyles.searchInput} placeholder="Cari rencana perjalanan, destinasi, atau tempat wisata" defaultValue="" />
+          <input style={layoutStyles.searchInput} placeholder="Cari rencana perjalanan, destinasi, atau tempat wisata" defaultValue="" />
         </div>
 
         <a href="/" title="Tanya AI Asisten" style={{ display: 'inline-flex', alignItems: 'center', gap: 7, height: 42, padding: '0 14px', borderRadius: 9999, background: 'linear-gradient(135deg,#7068D5,#A49EE4)', color: '#fff', textDecoration: 'none', fontWeight: 700, fontSize: 13.5, flexShrink: 0, boxShadow: '0 2px 8px rgba(112,104,213,.32)' }} className="atr-ai-btn">
@@ -59,11 +59,11 @@ export default function TopNav({ active = 'Jelajahi', isLoggedIn = false }) {
           <span className="atr-ai-label">Tanya AI</span>
         </a>
 
-        <nav style={chromeStyles.nav} className="atr-hnav">
+        <nav style={layoutStyles.nav} className="atr-hnav">
           {navItems.map((n) => {
             const isActive = n.key === active || (n.aliases && n.aliases.includes(active));
             return (
-              <a key={n.key} href={n.href} style={{ ...chromeStyles.navItem, ...(isActive ? chromeStyles.navItemActive : {}), gap: 4 }}>
+              <a key={n.key} href={n.href} style={{ ...layoutStyles.navItem, ...(isActive ? layoutStyles.navItemActive : {}), gap: 4 }}>
                 <NavGlyph kind={n.icon} active={isActive} />
                 <span>{n.label}</span>
               </a>
@@ -78,7 +78,7 @@ export default function TopNav({ active = 'Jelajahi', isLoggedIn = false }) {
             </a>
           </div>
         ) : (
-          <button style={chromeStyles.signInBtn} onClick={() => setShowLogin(true)}>
+          <button style={layoutStyles.signInBtn} onClick={() => setShowLogin(true)}>
             {t('nav.masuk')}
           </button>
         )}
@@ -90,15 +90,15 @@ export default function TopNav({ active = 'Jelajahi', isLoggedIn = false }) {
 
       <div className={'atr-drawer-scrim' + (mobileMenu ? ' open' : '')} onClick={() => setMobileMenu(false)} />
       <div className={'atr-drawer' + (mobileMenu ? ' open' : '')} role="dialog" aria-label="Menu navigasi">
-        <div style={chromeStyles.drawerHead}>
+        <div style={layoutStyles.drawerHead}>
           <img src="/assets/atr/logo/atourin-wordmark.png" alt="Atourin" style={{ height: 26 }} />
-          <button style={chromeStyles.drawerClose} aria-label="Tutup" onClick={() => setMobileMenu(false)}>
+          <button style={layoutStyles.drawerClose} aria-label="Tutup" onClick={() => setMobileMenu(false)}>
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"/></svg>
           </button>
         </div>
-        <nav style={chromeStyles.drawerNav}>
+        <nav style={layoutStyles.drawerNav}>
           {navItems.map((n) => (
-            <a key={n.key} href={n.href} style={chromeStyles.drawerLink}>
+            <a key={n.key} href={n.href} style={layoutStyles.drawerLink}>
               <NavGlyph kind={n.icon} active={false} /> {n.label}
             </a>
           ))}

@@ -1,8 +1,7 @@
 'use client';
 
 import { useParams } from 'next/navigation';
-import TopNav from '@/components/TopNav';
-import SiteFooter from '@/components/SiteFooter';
+import { TopNav, SiteFooter } from '@/components/layout';
 import { useGuide } from '@/lib/hooks/use-guide';
 
 function LoadingSkeleton() {

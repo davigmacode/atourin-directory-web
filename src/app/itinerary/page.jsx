@@ -2,9 +2,7 @@
 
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import TopNav from "@/components/TopNav";
-import Breadcrumb from "@/components/Breadcrumb";
-import SiteFooter from "@/components/SiteFooter";
+import { TopNav, SiteFooter, Breadcrumb } from "@/components/layout";
 import { useItineraries } from "@/lib/hooks/use-itineraries";
 import { dirStyles, cardStyles } from "@/styles/attraction-styles";
 

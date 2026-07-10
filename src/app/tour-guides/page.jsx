@@ -1,9 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import TopNav from "@/components/TopNav";
-import Breadcrumb from "@/components/Breadcrumb";
-import SiteFooter from "@/components/SiteFooter";
+import { TopNav, SiteFooter, Breadcrumb } from "@/components/layout";
 import { dirStyles, cardStyles } from "@/styles/attraction-styles";
 import { useGuides } from "@/lib/hooks/use-guides";
 import {

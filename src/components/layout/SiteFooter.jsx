@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { PartnerIcon, WaIcon, MailIcon, PlayIcon, AppleIcon, IgIcon, FbIcon, InIcon, YtIcon, TtIcon } from './icons';
+import { PartnerIcon, WaIcon, MailIcon, PlayIcon, AppleIcon, IgIcon, FbIcon, InIcon, YtIcon, TtIcon } from '@/components/icons';
 import F from '@/styles/footer-styles';
 import { t, cat } from '@/lib/i18n';
 
@@ -67,6 +67,7 @@ function KomdigiMark() {
     </div>
   );
 }
+
 const SOCIAL = [
   ['ig', <IgIcon key="ig" />], ['fb', <FbIcon key="fb" />], ['in', <InIcon key="in" />],
   ['yt', <YtIcon key="yt" />], ['tt', <TtIcon key="tt" />],
@@ -91,7 +92,7 @@ export default function SiteFooter() {
       <div style={F.news}>
         <div>
           <div style={F.newsT}>Inspirasi perjalanan, langsung ke inbox-mu</div>
-          <div style={F.newsS}>Promo, destinasi tersembunyi, & tips dari penjelajah, tiap minggu.</div>
+          <div style={F.newsS}>Promo, destinasi tersembunyi, &amp; tips dari penjelajah, tiap minggu.</div>
         </div>
         <div style={F.newsForm}>
           <input style={F.newsInput} placeholder="Masukkan email kamu" />
@@ -146,7 +147,7 @@ export default function SiteFooter() {
       <div style={F.bottom}>
         <span>© 2026 PT Atourin Teknologi Indonesia · All Rights Reserved</span>
         <span style={F.bottomLinks}>
-          <a href="/" style={F.bl}>Syarat & Ketentuan</a>
+          <a href="/" style={F.bl}>Syarat &amp; Ketentuan</a>
           <a href="/" style={F.bl}>Kebijakan privasi</a>
           <span>{'\uD83C\uDDF4'} ID · EN</span>
         </span>

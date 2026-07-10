@@ -1,8 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import TopNav from "@/components/TopNav";
-import SiteFooter from "@/components/SiteFooter";
+import { TopNav, SiteFooter } from "@/components/layout";
 import detailStyles from "@/styles/itinerary-detail-styles";
 
 /* ------------------------------------------------------------------ */

@@ -1,5 +1,5 @@
-/* TopNav & site chrome styles */
-const chromeStyles = {
+/* Layout component styles — TopNav, Breadcrumb, and site chrome */
+const layoutStyles = {
   header: {
     position: 'sticky',
     top: 0,
@@ -100,4 +100,4 @@ const chromeStyles = {
   crumbSep: { color: 'var(--atr-outline)', fontSize: 12 },
 };
 
-export default chromeStyles;
+export default layoutStyles;

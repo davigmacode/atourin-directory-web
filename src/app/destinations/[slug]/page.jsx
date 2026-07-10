@@ -2,8 +2,7 @@
 
 import React, { useState, useEffect, useCallback } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import TopNav from "@/components/TopNav";
-import SiteFooter from "@/components/SiteFooter";
+import { TopNav, SiteFooter } from "@/components/layout";
 import { DESTINATIONS } from "@/data/destinations";
 import { ATTR_DATA } from "@/data/attractions";
 import { VIL_DATA } from "@/data/villages";

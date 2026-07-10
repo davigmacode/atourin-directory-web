@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import TopNav from "@/components/TopNav";
+import { TopNav, SiteFooter } from "@/components/layout";
 import ExploreHero from "@/components/ExploreHero";
 import StatsBanner from "@/components/StatsBanner";
 import UntukmuSection from "@/components/UntukmuSection";
@@ -11,7 +11,6 @@ import ProvinceGrid from "@/components/ProvinceGrid";
 import CategoryGrid from "@/components/CategoryGrid";
 import DesaWisataStrip from "@/components/DesaWisataStrip";
 import MarketplaceCTA from "@/components/MarketplaceCTA";
-import SiteFooter from "@/components/SiteFooter";
 import { useExploreHub } from "@/lib/hooks/use-explore-hub";
 
 export default function ExploreHubPage() {

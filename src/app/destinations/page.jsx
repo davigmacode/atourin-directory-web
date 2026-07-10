@@ -2,9 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import TopNav from "@/components/TopNav";
-import Breadcrumb from "@/components/Breadcrumb";
-import SiteFooter from "@/components/SiteFooter";
+import { TopNav, SiteFooter, Breadcrumb } from "@/components/layout";
 import { PROVINCES } from "@/data/explore-data";
 import { useDestinations } from "@/lib/hooks/use-destinations";
 import rg from "@/styles/destination-styles";

@@ -1,9 +1,7 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import TopNav from "@/components/TopNav";
-import Breadcrumb from "@/components/Breadcrumb";
-import SiteFooter from "@/components/SiteFooter";
+import { TopNav, SiteFooter, Breadcrumb } from "@/components/layout";
 import { useAttraction } from "@/lib/hooks/use-attraction";
 
 export default function AttractionDetailPage() {
