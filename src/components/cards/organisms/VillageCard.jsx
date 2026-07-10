@@ -1,8 +1,10 @@
 "use client";
 
 import React from "react";
-import SafeImage from "./SafeImage";
-import dh from "@/styles/destination-detail";
+import cs from "@/styles/card-styles";
+import CardCover from "../molecules/CardCover";
+import CardBody from "../molecules/CardBody";
+import Rating from "../atoms/Rating";
 
 const DESA_STATUS_COLOR = {
   Rintisan: { bg: "#F0F0F0", fg: "#5C5C5C" },
@@ -19,13 +21,13 @@ function formatPrice(price) {
 }
 
 /**
- * VillageCard — card for desa wisata.
+ * VillageCard — card for desa wisata listings.
  *
  * Supports two data shapes:
  *   Prototype: { img, name, status, kecamatan, desc, tags, rating,
  *                reviews, activities, homestay }
- *   VIL_DATA: { img, name, adwi, region, activities, price, rating,
- *               families, signature, theme }
+ *   VIL_DATA:  { img, name, adwi, region, activities, price, rating,
+ *                families, signature, theme }
  */
 export default function VillageCard({ d }) {
   const statusKey = d.adwi || d.status || "";
@@ -45,52 +47,61 @@ export default function VillageCard({ d }) {
   const hasHomestay = d.homestay != null ? d.homestay : d.price > 0;
   const reviews = d.reviews || 0;
 
+  const badges = [
+    {
+      content: (
+        <>
+          <span style={{ ...cs.statusDot, background: sColor.fg }} /> {statusKey}
+        </>
+      ),
+      style: {
+        ...cs.desaStatus,
+        background: sColor.bg,
+        color: sColor.fg,
+      },
+    },
+  ];
+
   return (
     <article
       style={{
-        ...dh.desaCard,
+        ...cs.desaCard,
         textDecoration: "none",
         color: "inherit",
         cursor: "pointer",
       }}
     >
-      <div style={dh.atrImgWrap}>
-        <SafeImage src={d.img} alt="" />
-        <span
-          style={{
-            ...dh.desaStatus,
-            background: sColor.bg,
-            color: sColor.fg,
-          }}
-        >
-          <span style={{ ...dh.statusDot, background: sColor.fg }} />{" "}
-          {statusKey}
-        </span>
-      </div>
-      <div style={dh.atrBody}>
-        <h3 style={dh.atrName}>{d.name}</h3>
-        <div style={dh.atrLoc}>📍 {d.kecamatan || d.region || ""}</div>
-        {desc && <p style={dh.atrDesc}>{desc}</p>}
-        <div style={dh.desaTagRow}>
-          {chips.slice(0, 3).map((t) => (
-            <span key={t} style={dh.desaTag}>
-              {t}
-            </span>
-          ))}
-        </div>
-        <div style={dh.desaHighlight}>
+      <CardCover src={d.img} alt="" badges={badges} />
+      <CardBody
+        name={d.name}
+        desc={desc}
+        meta={
+          <span style={cs.atrLoc}>
+            📍 {d.kecamatan || d.region || ""}
+          </span>
+        }
+      >
+        {chips.length > 0 && (
+          <div style={cs.desaTagRow}>
+            {chips.slice(0, 3).map((t) => (
+              <span key={t} style={cs.desaTag}>
+                {t}
+              </span>
+            ))}
+          </div>
+        )}
+        <div style={cs.desaHighlight}>
           🌿 <strong>{activityCount}</strong> aktivitas
           {hasHomestay && " · 🏡 Homestay tersedia"}
-          {!hasHomestay && d.price > 0 && ` · Mulai ${formatPrice(d.price)}`}
+          {!hasHomestay &&
+            d.price > 0 &&
+            ` · Mulai ${formatPrice(d.price)}`}
         </div>
-        <div style={dh.atrFooter}>
-          <span style={dh.atrRating}>
-            ★ <strong>{d.rating}</strong>
-            {reviews > 0 && <span style={dh.atrReviews}> ({reviews})</span>}
-          </span>
-          <button style={dh.atrCta}>Lihat profil →</button>
+        <div style={cs.atrFooter}>
+          <Rating rating={d.rating} reviews={reviews} />
+          <button style={cs.atrCta}>Lihat profil →</button>
         </div>
-      </div>
+      </CardBody>
     </article>
   );
 }

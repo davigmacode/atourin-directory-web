@@ -11,20 +11,20 @@ import { ITIN_DATA } from "@/data/itineraries";
 import { GUIDE_DATA } from "@/data/guides";
 import { cat } from "@/lib/i18n";
 import dh from "@/styles/destination-detail";
-import SafeImage from "@/components/cards/SafeImage";
+import SafeImage from "@/components/cards/atoms/SafeImage";
+import {
+  AttractionCardGrid,
+  AttractionCardList,
+  VillageCard,
+  ItineraryCard,
+  GuideCard,
+} from "@/components/cards";
 import {
   FChip,
   FGroup,
   FilterBar,
   toggleArr,
 } from "@/components/cards/FilterChips";
-import {
-  AttractionCardGrid,
-  AttractionCardList,
-} from "@/components/cards/AttractionCard";
-import VillageCard from "@/components/cards/VillageCard";
-import ItineraryCard from "@/components/cards/ItineraryCard";
-import GuideCard from "@/components/cards/GuideCard";
 
 function slugify(text) {
   return text

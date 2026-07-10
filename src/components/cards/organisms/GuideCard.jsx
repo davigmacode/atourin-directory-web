@@ -1,8 +1,10 @@
 "use client";
 
 import React from "react";
-import SafeImage from "./SafeImage";
-import dh from "@/styles/destination-detail";
+import cs from "@/styles/card-styles";
+import SafeImage from "../atoms/SafeImage";
+import GuideMetaBar from "../molecules/GuideMetaBar";
+import PriceLabel from "../atoms/PriceLabel";
 
 function formatPrice(price) {
   if (price === 0 || price == null) return "Gratis";
@@ -17,8 +19,8 @@ function formatPrice(price) {
  * Supports two data shapes:
  *   Prototype: { name, img, verified, specs, langs, rating, trips,
  *                price, bio, cert }
- *   Existing GUIDE_DATA: { name, img, verified, spec, langs, rating,
- *                          trips, price, exp, certs, region, specBg, specFg }
+ *   GUIDE_DATA: { name, img, verified, spec, langs, rating,
+ *                 trips, price, exp, certs, region, specBg, specFg }
  */
 export default function GuideCard({ p }) {
   const specs = p.specs || p.spec || [];
@@ -29,15 +31,15 @@ export default function GuideCard({ p }) {
   return (
     <article
       style={{
-        ...dh.guideCard,
+        ...cs.guideCard,
         textDecoration: "none",
         color: "inherit",
       }}
     >
-      <div style={dh.guideImgWrap}>
+      <div style={cs.guideImgWrap}>
         <SafeImage src={p.img} alt="" />
         {p.verified && (
-          <span style={dh.guideVerified}>
+          <span style={cs.guideVerified}>
             <svg width="10" height="10" viewBox="0 0 24 24" fill="#fff">
               <path
                 d="M5 12l5 5L20 7"
@@ -51,49 +53,36 @@ export default function GuideCard({ p }) {
           </span>
         )}
       </div>
-      <div style={dh.guideBody}>
-        <h3 style={dh.guideName}>{p.name}</h3>
-        <div style={dh.guideSpecRow}>
-          {specs.map((s) => (
-            <span key={s} style={dh.guideSpec}>
-              {s}
-            </span>
-          ))}
-        </div>
-        <div style={dh.guideLangRow}>
-          {(p.langs || []).map((l, j) => (
-            <span key={j} style={dh.guideLang}>
-              {l}
-            </span>
-          ))}
-        </div>
-        <div style={dh.guideMeta}>
+      <div style={cs.guideBody}>
+        <h3 style={cs.guideName}>{p.name}</h3>
+        <GuideMetaBar specs={specs} langs={p.langs || []} />
+        <div style={cs.guideMeta}>
           <span>
             ★ <strong>{p.rating}</strong>
           </span>
-          <span style={dh.itinDot}>·</span>
+          <span style={cs.itinDot}>·</span>
           <span>{trips} trip</span>
         </div>
-        {bio && <p style={dh.guideBio}>"{bio}"</p>}
-        <div style={dh.guidePriceRow}>
+        {bio && <p style={cs.guideBio}>"{bio}"</p>}
+        <div style={cs.guidePriceRow}>
           <div>
-            <div style={dh.itinBudgetLabel}>Mulai</div>
-            <div style={dh.guidePrice}>
-              {formatPrice(p.price)}
-              <span style={dh.itinBudgetUnit}>/hari</span>
+            <div style={cs.itinBudgetLabel}>Mulai</div>
+            <div style={cs.guidePrice}>
+              <PriceLabel price={p.price} />
+              <span style={cs.itinBudgetUnit}>/hari</span>
             </div>
           </div>
-          <div style={dh.guideCerts}>
+          <div style={cs.guideCerts}>
             {certs.slice(0, 3).map((c) => (
-              <span key={c} style={dh.guideCert}>
+              <span key={c} style={cs.guideCert}>
                 {c}
               </span>
             ))}
           </div>
         </div>
-        <div style={dh.guideCtas}>
-          <button style={dh.guideCtaSec}>Lihat profil</button>
-          <button style={dh.guideCtaPri}>Hubungi →</button>
+        <div style={cs.guideCtas}>
+          <button style={cs.guideCtaSec}>Lihat profil</button>
+          <button style={cs.guideCtaPri}>Hubungi →</button>
         </div>
       </div>
     </article>

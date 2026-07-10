@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import dh from "@/styles/destination-detail";
+import cs from "@/styles/card-styles";
 
 /**
  * FChip — Filter chip (toggle button).
@@ -10,7 +10,7 @@ export function FChip({ active, onClick, children }) {
   return (
     <button
       onClick={onClick}
-      style={{ ...dh.fchip, ...(active ? dh.fchipOn : {}) }}
+      style={{ ...cs.fchip, ...(active ? cs.fchipOn : {}) }}
     >
       {children}
     </button>
@@ -22,9 +22,9 @@ export function FChip({ active, onClick, children }) {
  */
 export function FGroup({ label, children }) {
   return (
-    <div style={dh.fgroup}>
-      <div style={dh.fgroupLabel}>{label}</div>
-      <div style={dh.fgroupRow}>{children}</div>
+    <div style={cs.fgroup}>
+      <div style={cs.fgroupLabel}>{label}</div>
+      <div style={cs.fgroupRow}>{children}</div>
     </div>
   );
 }
@@ -33,7 +33,7 @@ export function FGroup({ label, children }) {
  * FilterBar — Wrapper for the entire filter section.
  */
 export function FilterBar({ children }) {
-  return <div style={dh.filterBar}>{children}</div>;
+  return <div style={cs.filterBar}>{children}</div>;
 }
 
 /**
