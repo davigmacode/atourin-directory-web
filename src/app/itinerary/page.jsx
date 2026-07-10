@@ -1,14 +1,13 @@
 "use client";
 
 import React, { useState, useCallback } from "react";
-import { TopNav, SiteFooter, CategoryTabs } from "@/components/layout";
+import { TopNav, SiteFooter, CategoryTabs, CTABand } from "@/components/layout";
 import { useItineraries } from "@/lib/hooks/use-itineraries";
 
 import ItineraryHero from "./_components/ItineraryHero";
 import FilterBar from "./_components/FilterBar";
 import FeaturedRail from "./_components/FeaturedRail";
 import ItineraryGrid from "./_components/ItineraryGrid";
-import CTABand from "./_components/CTABand";
 
 /* ── useDirectoryState hook ── */
 function useDirectoryState(

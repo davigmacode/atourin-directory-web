@@ -3,7 +3,7 @@
 ## Endpoint
 
 ```
-GET /api/villages/wae-rebo
+GET /api/villages/[slug]
 ```
 
 ## Response Shape

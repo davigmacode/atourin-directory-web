@@ -12,6 +12,7 @@ function PlusIcon({ color = "var(--atr-text)" }) {
         stroke={color}
         strokeWidth="2.2"
         strokeLinecap="round"
+        strokeLinejoin="round"
       />
     </svg>
   );

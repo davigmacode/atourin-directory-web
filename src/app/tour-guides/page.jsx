@@ -1,13 +1,12 @@
 "use client";
 
 import React, { useState } from "react";
-import { TopNav, SiteFooter, CategoryTabs } from "@/components/layout";
+import { TopNav, SiteFooter, CategoryTabs, CTABand } from "@/components/layout";
 import { useGuides } from "@/lib/hooks/use-guides";
 
 import GuidesHero from "./_components/GuidesHero";
 import FilterBar from "./_components/FilterBar";
 import GuidesGrid from "./_components/GuidesGrid";
-import CTABand from "./_components/CTABand";
 
 export default function TourGuidesPage() {
   const [view, setView] = useState("grid");

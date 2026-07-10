@@ -1,13 +1,12 @@
 "use client";
 
 import React, { useState } from "react";
-import { TopNav, SiteFooter, CategoryTabs } from "@/components/layout";
+import { TopNav, SiteFooter, CategoryTabs, CTABand } from "@/components/layout";
 import { useVillages } from "@/lib/hooks/use-villages";
 
 import VillagesHero from "./_components/VillagesHero";
 import FilterBar from "./_components/FilterBar";
 import VillagesGrid from "./_components/VillagesGrid";
-import CTABand from "./_components/CTABand";
 
 export default function TourismVillagesPage() {
   const [view, setView] = useState("grid");
