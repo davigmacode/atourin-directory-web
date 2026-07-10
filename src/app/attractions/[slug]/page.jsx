@@ -1,8 +1,22 @@
 "use client";
 
+import React from "react";
 import { useParams } from "next/navigation";
 import { TopNav, SiteFooter, Breadcrumb } from "@/components/layout";
 import { useAttraction } from "@/lib/hooks/use-attraction";
+import { ds } from "@/styles/detail-styles";
+
+import AtrGallery from "./_components/AtrGallery";
+import AtrHeader from "./_components/AtrHeader";
+import AtrDescription from "./_components/AtrDescription";
+import AtrFacilities from "./_components/AtrFacilities";
+import AtrLocation from "./_components/AtrLocation";
+import AtrTips from "./_components/AtrTips";
+import AtrNearby from "./_components/AtrNearby";
+import AtrItineraries from "./_components/AtrItineraries";
+import AtrReviews from "./_components/AtrReviews";
+import BookingBox from "./_components/BookingBox";
+import QuickInfoSide from "./_components/QuickInfoSide";
 
 export default function AttractionDetailPage() {
   const { slug } = useParams();
@@ -56,109 +70,41 @@ export default function AttractionDetailPage() {
     );
   }
 
+  const regionParts = attraction.region ? attraction.region.split(",") : [];
+  const kota = regionParts[0] ? regionParts[0].trim() : "Daerah";
+  const provinsi = regionParts[1] ? regionParts[1].trim() : "Indonesia";
+
   return (
-    <div>
-      <TopNav active="Atraksi" />
-      <div style={{ maxWidth: 1376, margin: "0 auto", padding: "24px 32px" }}>
-        <Breadcrumb
-          items={["Beranda", "Jelajahi", "Atraksi", attraction.name]}
-        />
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "1.2fr 1fr",
-            gap: 32,
-            marginTop: 20,
-          }}
-        >
-          <div>
-            <img
-              src={attraction.img}
-              alt={attraction.name}
-              style={{
-                width: "100%",
-                borderRadius: 16,
-                aspectRatio: "16/9",
-                objectFit: "cover",
-              }}
+    <div data-screen-label="Attraction Detail">
+      <TopNav active="Explore" />
+      <div style={ds.pageWrap}>
+        <div style={ds.crumbBar}>
+          <div style={{ width: "100%" }}>
+            <Breadcrumb
+              items={["Jelajahi", provinsi, kota, "Atraksi", attraction.name]}
             />
-            <h1 style={{ fontSize: 32, fontWeight: 700, marginTop: 20 }}>
-              {attraction.name}
-            </h1>
-            <p style={{ color: "var(--atr-text-muted)", marginTop: 8 }}>
-              {attraction.region}
-            </p>
-            <div
-              style={{
-                display: "flex",
-                gap: 12,
-                marginTop: 12,
-                flexWrap: "wrap",
-              }}
-            >
-              <span
-                style={{
-                  background: attraction.catBg,
-                  color: attraction.catFg,
-                  padding: "4px 12px",
-                  borderRadius: 999,
-                  fontSize: 12,
-                  fontWeight: 700,
-                }}
-              >
-                {attraction.cat}
-              </span>
-              <span style={{ color: "var(--atr-yellow)" }}>
-                {"\u2605"} {attraction.rating}
-              </span>
-              <span style={{ color: "var(--atr-text-muted)" }}>
-                ({attraction.reviews} ulasan)
-              </span>
-            </div>
           </div>
-          <div
-            style={{
-              background: "#fff",
-              border: "1px solid var(--atr-outline)",
-              borderRadius: 16,
-              padding: 24,
-              position: "sticky",
-              top: 100,
-            }}
-          >
-            <div
-              style={{
-                fontSize: 12,
-                color: "var(--atr-text-muted)",
-                textTransform: "uppercase",
-                letterSpacing: "0.06em",
-                fontWeight: 700,
-              }}
-            >
-              Tiket
-            </div>
-            <div
-              style={{
-                fontSize: 28,
-                fontWeight: 700,
-                color: "var(--atr-purple)",
-                marginTop: 4,
-              }}
-            >
-              {attraction.price === 0
-                ? "Gratis"
-                : `Rp ${(attraction.price / 1000).toLocaleString("id-ID")}rb`}
-            </div>
-            <div
-              style={{
-                marginTop: 8,
-                fontSize: 13,
-                color: "var(--atr-text-muted)",
-              }}
-            >
-              {attraction.hours}
-            </div>
+        </div>
+
+        <div style={ds.containerWide}>
+          <AtrGallery attraction={attraction} />
+        </div>
+
+        <div style={ds.twoCol}>
+          <div style={ds.mainCol}>
+            <AtrHeader attraction={attraction} />
+            <AtrDescription attraction={attraction} />
+            <AtrFacilities attraction={attraction} />
+            <AtrLocation attraction={attraction} />
+            <AtrTips attraction={attraction} />
+            <AtrNearby attraction={attraction} />
+            <AtrItineraries attraction={attraction} />
+            <AtrReviews attraction={attraction} />
           </div>
+          <aside style={ds.sideCol}>
+            <BookingBox attraction={attraction} />
+            <QuickInfoSide attraction={attraction} />
+          </aside>
         </div>
       </div>
       <SiteFooter />
