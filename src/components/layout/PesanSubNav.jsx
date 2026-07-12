@@ -6,7 +6,7 @@ import { pesanStyles } from "@/styles/pesan-styles";
 
 const PESAN_TABS = [
   { label: "Experience", href: "/market/experience", icon: "store" },
-  { label: "Attraction", href: "/market/attraction", icon: "ticket" },
+  { label: "Attraction", href: "/market/attractions", icon: "ticket" },
   { label: "Homestay", href: "/market/homestay", icon: "home" },
 ];
 

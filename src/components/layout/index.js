@@ -13,4 +13,6 @@ export { default as LocationModal } from "./LocationModal";
 export { default as FilterModal } from "./FilterModal";
 export { default as SkeletonCard } from "./SkeletonCard";
 export { default as LoadingPill } from "./LoadingPill";
+export { default as DateRangeModal } from "./DateRangeModal";
+export { default as GuestModal } from "./GuestModal";
 // LoginModal is intentionally not re-exported — internal to TopNav only

@@ -172,3 +172,54 @@ export const ATTR_PROMOS = [
   { eyebrow: "Bundle", title: "Paket hemat candi + transport", sub: "Bundling tiket masuk + jemput hotel + guide.", cta: "Lihat bundle", emoji: "🚐", bg: "#E9E4FF", fg: "#3A2F8C" },
   { eyebrow: "Trending", title: "Lokasi hits di TikTok", sub: "Spot foto viral yang bisa kamu kunjungi sekarang.", cta: "Cek spot", emoji: "📸", bg: "#FFD7D7", fg: "#7C2A2A" },
 ];
+
+export const HOMESTAY_IMG = {
+  harjiyanto: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=900&auto=format&fit=crop&q=70",
+  arenan: "https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=900&auto=format&fit=crop&q=70",
+  omahe: "https://images.unsplash.com/photo-1572120360610-d971b9d7767c?w=900&auto=format&fit=crop&q=70",
+  yoyok: "https://images.unsplash.com/photo-1576941089067-2de3c901e126?w=900&auto=format&fit=crop&q=70",
+  georium: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=900&auto=format&fit=crop&q=70",
+  haryono: "https://images.unsplash.com/photo-1554995207-c18c203602cb?w=900&auto=format&fit=crop&q=70",
+  virgi: "https://images.unsplash.com/photo-1505691938895-1758d7feb511?w=900&auto=format&fit=crop&q=70",
+  sri: "https://images.unsplash.com/photo-1571055107559-3e67626fa8be?w=900&auto=format&fit=crop&q=70",
+  lify: "https://images.unsplash.com/photo-1631049307290-bb947b114627?w=900&auto=format&fit=crop&q=70",
+  pulo: "https://images.unsplash.com/photo-1540518614846-7eded433c457?w=900&auto=format&fit=crop&q=70",
+  madesa: "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=900&auto=format&fit=crop&q=70",
+  djenni: "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=900&auto=format&fit=crop&q=70",
+  heroBg: "https://images.unsplash.com/photo-1542665952-14513db15293?w=1800&auto=format&fit=crop&q=70",
+};
+
+export const HOMESTAY_DATA = [
+  { img: HOMESTAY_IMG.harjiyanto, region: "Magelang",       name: "Homestay Harjiyanto",     price: 262500, operator: "Desa Wisata Candirejo", opAvatar: OP_AVATAR(11), facilities: ["Wi-Fi", "Parkir"] },
+  { img: HOMESTAY_IMG.arenan,     region: "Kendal",          name: "Arenan Homestay",          price: 500000, operator: "Desa Wisata Sriwulan",  opAvatar: OP_AVATAR(22), facilities: ["Dapur", "AC"] },
+  { img: HOMESTAY_IMG.omahe,      region: "Magelang",       name: "Omahe Biyung",             price: 420000, operator: "Desa Wisata Candirejo", opAvatar: OP_AVATAR(33), facilities: ["Wi-Fi", "Parkir"] },
+  { img: HOMESTAY_IMG.yoyok,      region: "Magelang",       name: "Homestay Yoyok",           price: 262500, operator: "Desa Wisata Candirejo", opAvatar: OP_AVATAR(44), facilities: ["Wi-Fi"] },
+  { img: HOMESTAY_IMG.georium,    region: "Klaten",          name: "Homestay Georium Dunia",   price: 210000, operator: "Homestay Georium Dunia", opAvatar: OP_AVATAR(55), facilities: ["AC", "Wi-Fi"] },
+  { img: HOMESTAY_IMG.haryono,    region: "Magelang",       name: "Homestay Haryono",          price: 262500, operator: "Desa Wisata Candirejo", opAvatar: OP_AVATAR(66), facilities: ["Wi-Fi", "Dapur"] },
+  { img: HOMESTAY_IMG.virgi,      region: "Minahasa Utara", name: "Virgi Homestay",            price: 250000, operator: "Desa Wisata Lihunu",    opAvatar: OP_AVATAR(13), facilities: ["AC"] },
+  { img: HOMESTAY_IMG.sri,        region: "Magelang",       name: "Homestay Sri Haryati",     price: 262500, operator: "Desa Wisata Candirejo", opAvatar: OP_AVATAR(24), facilities: ["Wi-Fi"] },
+  { img: HOMESTAY_IMG.lify,       region: "Minahasa Utara", name: "Lify Homestay",             price: 250000, operator: "Desa Wisata Lihunu",    opAvatar: OP_AVATAR(35), facilities: ["Parkir"] },
+  { img: HOMESTAY_IMG.pulo,       region: "Dairi",           name: "Homestay Pulo Silalahi",   price: 1800000, operator: "Desa Wisata Silalahi III", opAvatar: OP_AVATAR(46), tag: "Best Seller", facilities: ["Wi-Fi", "AC"] },
+  { img: HOMESTAY_IMG.madesa,     region: "Ciamis",          name: "Madesa Homestay",          price: 340000, operator: "Desa Wisata Jalatrang", opAvatar: OP_AVATAR(57), facilities: ["Wi-Fi"] },
+  { img: HOMESTAY_IMG.djenni,     region: "Minahasa Utara", name: "Djenni Homestay",           price: 250000, operator: "Desa Wisata Lihunu",    opAvatar: OP_AVATAR(68), facilities: ["AC"] },
+];
+
+export const HOMESTAY_FACILITIES = [
+  "Internet (Wi-Fi)",
+  "Parkir Area",
+  "Dapur",
+  "Ruang Tamu",
+  "Smoking Area",
+  "AC",
+  "Kamar Mandi Dalam",
+  "Air Panas",
+  "Sarapan Termasuk",
+  "Pemandangan Alam",
+];
+
+export const HOMESTAY_SUGGESTIONS = [
+  { title: "Homestay Candirejo", region: "Magelang, Jateng", img: HOMESTAY_IMG.harjiyanto },
+  { title: "Homestay Lihunu", region: "Minahasa Utara, Sulut", img: HOMESTAY_IMG.virgi },
+  { title: "Homestay Bugisan", region: "Klaten, Jateng", img: HOMESTAY_IMG.georium },
+  { title: "Homestay Bilebante", region: "Lombok Tengah, NTB", img: HOMESTAY_IMG.omahe },
+];

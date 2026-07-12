@@ -4,7 +4,7 @@ export const pesanStyles = {
     background: "#fff",
     borderBottom: "1px solid var(--atr-outline)",
     position: "sticky",
-    top: 64,
+    top: 76,
     zIndex: 40,
   },
   subNavInner: {
