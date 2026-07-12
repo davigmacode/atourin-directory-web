@@ -223,3 +223,161 @@ export const HOMESTAY_SUGGESTIONS = [
   { title: "Homestay Bugisan", region: "Klaten, Jateng", img: HOMESTAY_IMG.georium },
   { title: "Homestay Bilebante", region: "Lombok Tengah, NTB", img: HOMESTAY_IMG.omahe },
 ];
+
+export const HMS_DETAIL_DATA = {
+  name: "Homestay Harjiyanto",
+  shortName: "Homestay Harjiyanto",
+  badges: [
+    { label: "Homestay · Rumah Tradisional", bg: "#EDE9FF", fg: "#5C53C7", emoji: "🏡" },
+    { label: "Berbasis Komunitas", bg: "#D6F0E8", fg: "#1B7A5C", emoji: "🤝" },
+    { label: "Sertifikat Desa Wisata", bg: "#FFF4D9", fg: "#A06A00", emoji: "🏛" },
+  ],
+
+  hours: "Check-in 14:00 · Check-out 12:00",
+  isOpen: true,
+  location: "Candirejo, Magelang",
+  shortLocation: "Candirejo, Magelang",
+  address: "Dusun Tingal Wetan, Desa Candirejo, Kec. Borobudur, Kab. Magelang, Jawa Tengah 56553",
+  coords: { lat: -7.6243, lng: 110.1900 },
+
+  rating: 0,
+  reviewCount: 0,
+  soldCount: 7,
+  capacity: "Maks 6 tamu",
+  rooms: 3,
+  beds: 5,
+  bathrooms: 2,
+
+  tags: ["homestay", "rumah tradisional", "borobudur", "desa wisata", "candirejo", "keluarga"],
+  shortDesc: "Rumah Jawa tradisional milik Pak Harjiyanto di tengah Desa Wisata Candirejo, 3,5 km dari Candi Borobudur. Sarapan lokal, pemandu desa, dan sepeda gratis. Cocok untuk merasakan ritme desa yang lambat dan ramah.",
+  longDesc: "Homestay Harjiyanto bukan sekadar tempat menginap, tetapi gerbang menuju pengalaman tak terlupakan. Anda akan menginap di rumah Pak Harjiyanto dan istri, sepasang penduduk lokal Candirejo yang membuka pintunya bagi para tamu sejak 2018.\n\nRumah ini bergaya Jawa tradisional dengan halaman terbuka, dapur bersama, dan beranda kayu menghadap kebun. Tiga kamar tidur tersedia, masing-masing dengan kamar mandi dalam (air panas), AC, dan dekorasi etnik yang dibuat tangan pengrajin desa. Sarapan disiapkan Bu Sri, biasanya nasi liwet, telur, sayur lodeh, dan teh tubruk, disajikan di beranda menghadap sawah.\n\nLokasi Candirejo membuat homestay ini ideal sebagai basecamp untuk eksplorasi Borobudur (3,5 km), Punthuk Setumbu untuk sunrise (8 km), Candi Mendut & Pawon (3 km), dan tentu saja aktivitas-aktivitas Desa Wisata Candirejo sendiri: dokar tour, tracking sawah, dan workshop kerajinan bambu.",
+
+  images: [
+    "https://images.unsplash.com/photo-1582719508461-905c673771fd?w=1600&auto=format&fit=crop&q=80",
+    "https://images.unsplash.com/photo-1540518614846-7eded433c457?w=900&auto=format&fit=crop&q=70",
+    "https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=900&auto=format&fit=crop&q=70",
+    "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=900&auto=format&fit=crop&q=70",
+    "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=900&auto=format&fit=crop&q=70",
+  ],
+  totalPhotos: 22,
+
+  host: {
+    name: "Pak Harjiyanto",
+    role: "Tuan rumah · Bersama Bu Sri",
+    avatar: "https://i.pravatar.cc/200?img=68",
+    since: "Sejak 2018",
+    languages: ["Indonesia", "Jawa", "English (basic)"],
+    responseRate: "98%",
+    responseTime: "< 1 jam",
+    verified: true,
+    blurb: "Kami senang menerima tamu dari mana saja. Bu Sri menyiapkan sarapan setiap pagi, dan saya bisa antar ke Borobudur kalau ingin sunrise. Selamat datang di rumah kami!",
+  },
+
+  rooms_list: [
+    {
+      id: "single",
+      name: "Single Bed Room",
+      img: "https://images.unsplash.com/photo-1540518614846-7eded433c457?w=900&auto=format&fit=crop&q=70",
+      bed: "1× Single Bed",
+      capacity: "Maks 1 tamu",
+      size: "12 m²",
+      price: 262500,
+      stock: 2,
+      almost: true,
+      amenities: ["AC", "Kamar mandi dalam", "Air panas", "Sarapan"],
+    },
+    {
+      id: "double",
+      name: "Double Bed Room",
+      img: "https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=900&auto=format&fit=crop&q=70",
+      bed: "1× Double Bed",
+      capacity: "Maks 2 tamu",
+      size: "16 m²",
+      price: 262500,
+      stock: 2,
+      almost: true,
+      amenities: ["AC", "Kamar mandi dalam", "Air panas", "Sarapan"],
+    },
+    {
+      id: "family",
+      name: "Family Room",
+      img: "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=900&auto=format&fit=crop&q=70",
+      bed: "1× Double + 1× Single",
+      capacity: "Maks 3 tamu",
+      size: "22 m²",
+      price: 380000,
+      stock: 1,
+      almost: true,
+      amenities: ["AC", "Kamar mandi dalam", "Air panas", "Sarapan", "View sawah"],
+    },
+  ],
+
+  amenities: [
+    { icon: "📶", label: "WiFi gratis", on: true },
+    { icon: "❄️", label: "AC", on: true },
+    { icon: "🚿", label: "Air panas", on: true },
+    { icon: "🍳", label: "Sarapan termasuk", on: true },
+    { icon: "🅿️", label: "Parkir gratis", on: true },
+    { icon: "🚲", label: "Sepeda gratis", on: true },
+    { icon: "🍽", label: "Dapur bersama", on: true },
+    { icon: "🪴", label: "Halaman & beranda", on: true },
+    { icon: "🛏", label: "Linen disediakan", on: true },
+    { icon: "🧺", label: "Laundry (bayar)", on: true },
+    { icon: "🏊", label: "Kolam renang", on: false },
+    { icon: "🛗", label: "Lift / akses kursi roda", on: false },
+  ],
+
+  rules: [
+    { icon: "🕑", title: "Check-in", body: "14:00 – 21:00 WIB" },
+    { icon: "🕛", title: "Check-out", body: "Sebelum 12:00 WIB" },
+    { icon: "🚭", title: "Dilarang merokok", body: "Di dalam kamar & rumah utama" },
+    { icon: "🐾", title: "Tidak menerima hewan peliharaan", body: "Kecuali atas izin tertulis" },
+    { icon: "👨‍👩‍👧", title: "Ramah anak", body: "Anak < 5 tahun gratis (sharing bed)" },
+    { icon: "🎉", title: "Tidak ada pesta", body: "Hormati ketenangan dusun setelah 22:00" },
+  ],
+
+  tips: {
+    best: "Datang **Mei – Oktober** saat musim kering. Untuk sunrise Borobudur, minta Pak Harjiyanto antar jam **04.00 pagi** ke Punthuk Setumbu, pemandangan candi diselimuti kabut tak ada duanya.",
+    bring: ["Pakaian sopan (kunjungan ke candi)", "Sandal anti-slip", "Senter (lampu dusun mati 22:00)", "Uang tunai (ATM 3 km)"],
+    notes: ["Suhu malam bisa 18°C, bawa jaket", "Sinyal HP baik tapi internet pelan", "Hormati waktu sembahyang penduduk"],
+  },
+
+  reviews: [],
+  reviewBreakdown: [0, 0, 0, 0, 0],
+
+  terms: [
+    "Pembatalan dan H-1 dikenakan **Cancellation Charge 100%**. Pembatalan sebelumnya gratis hingga H-3.",
+    "Pembayaran penuh diperlukan saat pemesanan. Booking baru terkonfirmasi setelah pembayaran masuk.",
+    "Tamu wajib menunjukkan KTP/Paspor saat check-in. Anak di bawah 17 wajib didampingi orang tua.",
+    "Maksimal 2 tamu dewasa per kamar. Tamu tambahan dikenakan biaya Rp75.000/malam (extra bed).",
+    "Hormati aturan rumah Pak Harjiyanto, ini adalah kediaman keluarga yang dibuka untuk tamu.",
+  ],
+
+  partner: {
+    name: "Desa Wisata Candirejo",
+    type: "Tourism Village · Pengelola",
+    location: "Borobudur, Magelang, Jawa Tengah",
+    rating: 4.6,
+    productCount: 15,
+    totalSold: 124,
+    avatar: "https://images.unsplash.com/photo-1539367628448-4bc5c9d171c8?w=200&auto=format&fit=crop&q=70",
+    blurb: "Desa Wisata Candirejo adalah salah satu desa wisata tertua di Indonesia (resmi 2003), berjarak 3 km dari Candi Borobudur. Mengelola 15+ homestay, dokar tour, workshop kerajinan, dan pertunjukan budaya.",
+  },
+
+  nearby: [
+    { name: "Candi Borobudur", cat: "UNESCO · Sejarah", catFg: "#B85C00", rating: 4.95, price: 350000, img: "https://images.unsplash.com/photo-1597212624239-1ca4a4a06d09?w=600&auto=format&fit=crop&q=70" },
+    { name: "Punthuk Setumbu (Sunrise)", cat: "Viewpoint", catFg: "#7068D5", rating: 4.85, price: 60000, img: "https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=600&auto=format&fit=crop&q=70" },
+    { name: "Candi Mendut & Pawon", cat: "Sejarah", catFg: "#B85C00", rating: 4.6, price: 25000, img: "https://images.unsplash.com/photo-1555400038-63f5ba517a47?w=900&auto=format&fit=crop&q=70" },
+    { name: "Dokar Tour Candirejo", cat: "Aktivitas Desa", catFg: "#2D8838", rating: 4.8, price: 75000, img: "https://images.unsplash.com/photo-1546484959-f9a381d1330d?w=600&auto=format&fit=crop&q=70" },
+    { name: "Workshop Bambu Candirejo", cat: "Kerajinan", catFg: "#C44949", rating: 4.7, price: 100000, img: "https://images.unsplash.com/photo-1518684079-3c830dcef090?w=600&auto=format&fit=crop&q=70" },
+    { name: "Tracking Sawah & Sungai Progo", cat: "Trekking", catFg: "#1F6FB0", rating: 4.5, price: 50000, img: "https://images.unsplash.com/photo-1502082553048-f009c37129b9?w=600&auto=format&fit=crop&q=70" },
+  ],
+
+  related: [
+    { img: "https://images.unsplash.com/photo-1559339352-11d035aa65de?w=600&auto=format&fit=crop&q=70", tag: "Best Seller", region: "Jakarta Selatan", name: "Makna Fest", price: 89000, operator: "Makna Fest", opAvatar: OP_AVATAR(22) },
+    { img: "https://images.unsplash.com/photo-1539367628448-4bc5c9d171c8?w=600&auto=format&fit=crop&q=70", tag: "Best Seller", region: "Manggarai Barat, NTT", name: "Labuan Bajo Sailing, Padar & Komodo 4D3N", price: 5800000, operator: "Flores Komodo Liveaboard", opAvatar: OP_AVATAR(12) },
+    { img: "https://images.unsplash.com/photo-1582719508461-905c673771fd?w=600&auto=format&fit=crop&q=70", tag: "Berbasis Komunitas", region: "Borobudur", name: "Homestay Tradisional Candirejo", price: 280000, operator: "Desa Wisata Candirejo", opAvatar: OP_AVATAR(44) },
+    { img: "https://images.unsplash.com/photo-1605281317010-fe5ffe798166?w=600&auto=format&fit=crop&q=70", tag: "Best Seller", region: "Lombok Tengah", name: "ATV Experience di Bilebante", price: 150000, operator: "Bilebante Tour", opAvatar: OP_AVATAR(51) },
+    { img: "https://images.unsplash.com/photo-1597212624239-1ca4a4a06d09?w=600&auto=format&fit=crop&q=70", tag: "Best Seller", region: "Magelang", name: "Sunrise Borobudur dari Punthuk Setumbu", price: 175000, operator: "Magelang Sunrise Tour", opAvatar: OP_AVATAR(33) },
+  ],
+};
