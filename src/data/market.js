@@ -101,3 +101,74 @@ export const EXP_PROMOS = [
   { eyebrow: "Best seller", title: "Pengalaman favorit traveler", sub: "12 produk paling banyak dipesan minggu ini.", cta: "Lihat daftar", emoji: "⭐", bg: "#E9E4FF", fg: "#3A2F8C" },
   { eyebrow: "Untukmu", title: "Kurasi sesuai minatmu", sub: "Rekomendasi pengalaman berdasarkan riwayat pencarian.", cta: "Mulai jelajah", emoji: "✨", bg: "#D9F2DA", fg: "#1F5E2A" },
 ];
+
+export const ATTR_IMG = {
+  waterfall: "https://images.unsplash.com/photo-1542202229-7d93c33f5d07?w=900&auto=format&fit=crop&q=70",
+  mangrove: "https://images.unsplash.com/photo-1518684079-3c830dcef090?w=900&auto=format&fit=crop&q=70",
+  sumba: "https://images.unsplash.com/photo-1604999333679-b86d54738315?w=900&auto=format&fit=crop&q=70",
+  pasar: "https://images.unsplash.com/photo-1559339352-11d035aa65de?w=900&auto=format&fit=crop&q=70",
+  breksi: "https://images.unsplash.com/photo-1596402184320-417e7178b2cd?w=900&auto=format&fit=crop&q=70",
+  anoman: "https://images.unsplash.com/photo-1555400038-63f5ba517a47?w=900&auto=format&fit=crop&q=70",
+  prai: "https://images.unsplash.com/photo-1539367628448-4bc5c9d171c8?w=900&auto=format&fit=crop&q=70",
+  ohoi: "https://images.unsplash.com/photo-1542202229-7d93c33f5d07?w=900&auto=format&fit=crop&q=70",
+  tongkarayya: "https://images.unsplash.com/photo-1551632811-561732d1e306?w=900&auto=format&fit=crop&q=70",
+  palalangon: "https://images.unsplash.com/photo-1518684079-3c830dcef090?w=900&auto=format&fit=crop&q=70",
+  karodi: "https://images.unsplash.com/photo-1604999333679-b86d54738315?w=900&auto=format&fit=crop&q=70",
+  gejok: "https://images.unsplash.com/photo-1555400038-63f5ba517a47?w=900&auto=format&fit=crop&q=70",
+};
+
+export const ATTRACTION_DATA = [
+  { img: ATTR_IMG.waterfall,    tag: "Best Seller", category: "Air Terjun", hours: "06.00–18.00", region: "Gianyar",          name: "Manuaba Waterfall",                            price: 15000,  operator: "Desa Wisata Kenderan",        opAvatar: OP_AVATAR(11) },
+  { img: ATTR_IMG.mangrove,     tag: "Best Seller", category: "Alam",        hours: "07.00–17.00", region: "Minahasa Utara",   name: "Tiket Wisata Hutan Mangrove",                  price: 10000,  strike: 15000, discount: 33, operator: "Desa Wisata Budo",         opAvatar: OP_AVATAR(22) },
+  { img: ATTR_IMG.sumba,        tag: "Best Seller", category: "Seni & Budaya", hours: "08.00–17.00", region: "Sumba Barat",     name: "Tiket Masuk Kampung Adat Prai Ijing",          price: 5500,   operator: "Kampung Adat Prai Ijing",     opAvatar: OP_AVATAR(33) },
+  { img: ATTR_IMG.pasar,        tag: "Baru",        category: "Kuliner",     hours: "06.00–12.00", region: "Lombok Tengah",    name: "Pasar Pancingan",                              price: 7000,   operator: "Desa Wisata Hijau Bilebante", opAvatar: OP_AVATAR(44) },
+  { img: ATTR_IMG.breksi,       tag: "Best Seller", category: "Alam",        hours: "05.00–21.00", region: "Sleman",            name: "Taman Tebing Breksi",                          price: 10000,  operator: "Desa Wisata Sambi",           opAvatar: OP_AVATAR(55) },
+  { img: ATTR_IMG.anoman,                           category: "Seni & Budaya", hours: "19.30–21.30", region: "Klaten",            name: "Tari Anoman Obong",                           price: 150000, strike: 200000, discount: 25, operator: "Desa Wisata Bugisan",      opAvatar: OP_AVATAR(66) },
+  { img: ATTR_IMG.prai,         tag: "Best Seller", category: "Seni & Budaya", hours: "08.00–16.00", region: "Sumba Barat",     name: "Sewa Baju Adat Sumba",                         price: 55000,  operator: "Kampung Adat Prai Ijing",     opAvatar: OP_AVATAR(13) },
+  { img: ATTR_IMG.ohoi,         tag: "Best Seller", category: "Air Terjun", hours: "07.00–17.00", region: "Maluku Tenggara",   name: "Air Terjun Ai Moun Ni Ohoi",                   price: 10000,  operator: "Desa Wisata Soinrat",         opAvatar: OP_AVATAR(24) },
+  { img: ATTR_IMG.tongkarayya,                      category: "Gunung",      hours: "06.00–17.00", region: "Bulukumba",        name: "Batu Tongkarayya Cliff Climbing",              price: 99000, strike: 150000, discount: 34, operator: "Desa Wisata Andalan",         opAvatar: OP_AVATAR(35) },
+  { img: ATTR_IMG.palalangon,   tag: "Best Seller", category: "Taman",       hours: "07.00–17.30", region: "Bandung",           name: "Palalangon Park",                              price: 15000,  operator: "Palalangon Park",             opAvatar: OP_AVATAR(46) },
+  { img: ATTR_IMG.karodi,       tag: "Baru",        category: "Bahari",      hours: "06.00–17.00", region: "Maluku Tenggara",   name: "Pulau Karodi",                                 price: 20000,  operator: "Desa Wisata Soinrat",         opAvatar: OP_AVATAR(57) },
+  { img: ATTR_IMG.gejok,                            category: "Seni & Budaya", hours: "20.00–22.00", region: "Klaten",            name: "Kesenian Gejok Lesung",                         price: 200000, operator: "Desa Wisata Bugisan",         opAvatar: OP_AVATAR(68) },
+];
+
+export const ATTR_SUGGESTIONS = [
+  { title: "Manuaba Waterfall", region: "Gianyar, Bali", img: ATTR_IMG.waterfall },
+  { title: "Taman Tebing Breksi", region: "Sleman, DIY", img: ATTR_IMG.breksi },
+  { title: "Hutan Mangrove", region: "Minahasa Utara, Sulut", img: ATTR_IMG.mangrove },
+  { title: "Candi Borobudur", region: "Magelang, Jateng", img: ATTR_IMG.waterfall },
+  { title: "Pulau Karodi", region: "Maluku Tenggara, Maluku", img: ATTR_IMG.karodi },
+];
+
+export const ATTR_CATEGORIES = [
+  "Alam",
+  "Bahari",
+  "Edukasi",
+  "Ekowisata",
+  "Kuliner",
+  "Museum",
+  "Religi",
+  "Sejarah",
+  "Seni & Budaya",
+  "Olahraga",
+  "Air Terjun",
+  "Pantai",
+  "Gunung",
+];
+
+export const ATTR_CATEGORY_TILES = [
+  { label: "Pantai", icon: "🏖️", bg: "#CFE7F8", count: "94 tiket" },
+  { label: "Gunung", icon: "⛰️", bg: "#D9F2DA", count: "62 tiket" },
+  { label: "Air Terjun", icon: "💦", bg: "#CFE7F8", count: "38 tiket" },
+  { label: "Candi & Sejarah", icon: "🏛️", bg: "#FFF0BD", count: "45 tiket" },
+  { label: "Museum", icon: "🖼️", bg: "#F0D9F4", count: "28 tiket" },
+  { label: "Religi", icon: "🕌", bg: "#FFF0BD", count: "31 tiket" },
+  { label: "Taman", icon: "🌳", bg: "#D9F2DA", count: "52 tiket" },
+  { label: "Edukasi", icon: "📚", bg: "#E9E4FF", count: "22 tiket" },
+];
+
+export const ATTR_PROMOS = [
+  { eyebrow: "Hemat", title: "Tiket masuk mulai Rp 5rb", sub: "Beli langsung tanpa antre, scan QR di lokasi.", cta: "Cek tiket murah", emoji: "🎫", bg: "#FFF1D6", fg: "#5C4400" },
+  { eyebrow: "Bundle", title: "Paket hemat candi + transport", sub: "Bundling tiket masuk + jemput hotel + guide.", cta: "Lihat bundle", emoji: "🚐", bg: "#E9E4FF", fg: "#3A2F8C" },
+  { eyebrow: "Trending", title: "Lokasi hits di TikTok", sub: "Spot foto viral yang bisa kamu kunjungi sekarang.", cta: "Cek spot", emoji: "📸", bg: "#FFD7D7", fg: "#7C2A2A" },
+];
