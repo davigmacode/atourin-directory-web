@@ -6,17 +6,17 @@ import F from '@/styles/footer-styles';
 import { t, cat } from '@/lib/i18n';
 
 const PRODUK = [
-  [cat('itinerary'), '/'], [cat('experience'), '/'], [cat('attraction'), '/'],
-  [cat('homestay'), '/'], [cat('village'), '/'], [cat('guide'), '/'],
+  [cat('itinerary'), '/explore/itinerary'], [cat('experience'), '/market/experience'], [cat('attraction'), '/market/attractions'],
+  [cat('homestay'), '/market/homestay'], [cat('village'), '/explore/tourism-villages'], [cat('guide'), '/explore/tour-guides'],
 ];
 const INFO = [
-  ['Tentang kami', '/'], ['Pusat bantuan', '/'], ['Hubungi kami', '/'],
-  ['Kolaborasi', '/'], ['Karir', '/'],
+  ['Tentang kami', '/about'], ['Pusat bantuan', '/help-center'], ['Hubungi kami', '/contact'],
+  ['Kolaborasi', '/partnership'], ['Karir', '/career'],
 ];
 const LAIN = [
-  ['ARTI · Carbon Offset', '/'], ['Campaign', '/'],
-  ['Atourin for Business', '/'], ['Syarat & Ketentuan', '/'],
-  ['Kebijakan privasi', '/'], ['SDGs', '/'],
+  ['ARTI · Carbon Offset', '/arti'], ['Campaign', '/campaign'],
+  ['Atourin for Business', '/become-a-partner'], ['Syarat & Ketentuan', '/terms-and-conditions'],
+  ['Kebijakan privasi', '/privacy-policy'], ['SDGs', '/sdgs'],
 ];
 const PAY = ['OVO', 'ShopeePay', 'GoPay', 'BANK BRI', 'DANA', 'LinkAja', 'VISA', 'Mastercard', 'QRIS', 'BCA', 'BNI', 'Mandiri'];
 
@@ -104,7 +104,7 @@ export default function SiteFooter() {
         <div>
           <img src="/assets/atr/logo/atourin-wordmark.png" alt="Atourin" style={{ height: 30 }} />
           <p style={F.tagline}>One Stop Solution for Tourism Services. Jelajahi pengalaman lokal otentik di seluruh Indonesia.</p>
-          <a href="/" style={F.partnerBtn} className="atrf-partner"><PartnerIcon /> Bermitra dengan Atourin</a>
+          <a href="/become-a-partner" style={F.partnerBtn} className="atrf-partner"><PartnerIcon /> Bermitra dengan Atourin</a>
           <div style={F.contactRow}>
             <a href="#" style={F.contactItem}><span style={F.contactIcon}><WaIcon /></span> +62 812-2040-1113</a>
             <a href="mailto:info@atourin.com" style={F.contactItem}><span style={F.contactIcon}><MailIcon /></span> info@atourin.com</a>
@@ -147,8 +147,8 @@ export default function SiteFooter() {
       <div style={F.bottom}>
         <span>© 2026 PT Atourin Teknologi Indonesia · All Rights Reserved</span>
         <span style={F.bottomLinks}>
-          <a href="/" style={F.bl}>Syarat &amp; Ketentuan</a>
-          <a href="/" style={F.bl}>Kebijakan privasi</a>
+          <a href="/terms-and-conditions" style={F.bl}>Syarat &amp; Ketentuan</a>
+          <a href="/privacy-policy" style={F.bl}>Kebijakan privasi</a>
           <span>{'\uD83C\uDDF4'} ID · EN</span>
         </span>
       </div>

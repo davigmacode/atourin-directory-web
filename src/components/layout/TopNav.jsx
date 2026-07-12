@@ -24,7 +24,7 @@ export default function TopNav({ active = 'Jelajahi', isLoggedIn = false }) {
   function doLogout() { try { localStorage.setItem('atr_auth', '0'); } catch {} setLoggedIn(false); setShowUser(false); }
   const navItems = [
     { key: 'Pesan', label: t('nav.pesan'), icon: 'store', href: '/', aliases: ['Experience', 'Attraction', 'Homestay', 'Product', 'Marketplace', 'Homestay'] },
-    { key: 'Jelajahi', label: t('nav.jelajahi'), icon: 'compass', href: '/explore-hub', aliases: ['Explore', 'Itinerary', 'Destinasi', 'Atraksi', 'Tour Guide', 'Desa Wisata'] },
+    { key: 'Jelajahi', label: t('nav.jelajahi'), icon: 'compass', href: '/explore', aliases: ['Explore', 'Itinerary', 'Destinasi', 'Atraksi', 'Tour Guide', 'Desa Wisata'] },
   ];
   return (
     <header style={layoutStyles.header}>
@@ -54,7 +54,7 @@ export default function TopNav({ active = 'Jelajahi', isLoggedIn = false }) {
           <input style={layoutStyles.searchInput} placeholder="Cari rencana perjalanan, destinasi, atau tempat wisata" defaultValue="" />
         </div>
 
-        <a href="/" title="Tanya AI Asisten" style={{ display: 'inline-flex', alignItems: 'center', gap: 7, height: 42, padding: '0 14px', borderRadius: 9999, background: 'linear-gradient(135deg,#7068D5,#A49EE4)', color: '#fff', textDecoration: 'none', fontWeight: 700, fontSize: 13.5, flexShrink: 0, boxShadow: '0 2px 8px rgba(112,104,213,.32)' }} className="atr-ai-btn">
+        <a href="/assistant" title="Tanya AI Asisten" style={{ display: 'inline-flex', alignItems: 'center', gap: 7, height: 42, padding: '0 14px', borderRadius: 9999, background: 'linear-gradient(135deg,#7068D5,#A49EE4)', color: '#fff', textDecoration: 'none', fontWeight: 700, fontSize: 13.5, flexShrink: 0, boxShadow: '0 2px 8px rgba(112,104,213,.32)' }} className="atr-ai-btn">
           <img src="/assets/atr/assistant.png" alt="" style={{ width: 26, height: 26, objectFit: 'contain' }} />
           <span className="atr-ai-label">Tanya AI</span>
         </a>
@@ -73,7 +73,7 @@ export default function TopNav({ active = 'Jelajahi', isLoggedIn = false }) {
 
         {loggedIn ? (
           <div style={{ position: 'relative' }}>
-            <a href="/" style={utilStyles.bellBtn} className="atr-bell">
+            <a href="/notification" style={utilStyles.bellBtn} className="atr-bell">
               <NotifBell />
             </a>
           </div>
