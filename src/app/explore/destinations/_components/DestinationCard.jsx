@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
+import { SafeImage } from "@/components/cards";
 import rg from "@/styles/destination-styles";
 
 export function ChevDownSm({ rotated }) {
@@ -45,7 +46,7 @@ export function DestinationCard({ d }) {
       }}
     >
       <div style={rg.destImgWrap}>
-        <img src={d.img} alt="" style={rg.destImg} />
+        <SafeImage src={d.img} alt="" style={rg.destImg} />
         <span style={rg.destTypeBadge}>{d.type}</span>
         {d.marketProducts > 0 && (
           <span style={rg.destMarketBadge}>

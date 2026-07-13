@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { SafeImage } from "@/components/cards";
 import PrefQuizModal from "./PrefQuizModal";
 
 export default function UntukmuSection({ untukmu = [], isLoading = false }) {
@@ -140,10 +141,10 @@ export default function UntukmuSection({ untukmu = [], isLoading = false }) {
                 <div
                   style={{
                     aspectRatio: "4/3",
-                    background: `url(${r.img}) center/cover`,
                     position: "relative",
                   }}
                 >
+                  <SafeImage src={r.img} alt="" />
                   <span
                     style={{
                       position: "absolute",

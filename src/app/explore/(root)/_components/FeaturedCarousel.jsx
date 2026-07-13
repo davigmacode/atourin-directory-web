@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { SafeImage } from "@/components/cards";
 import ex from "@/styles/explore-styles";
 
 export default function FeaturedCarousel({ featured = [], isLoading = false }) {
@@ -98,7 +99,7 @@ export default function FeaturedCarousel({ featured = [], isLoading = false }) {
             : featured.map((f, i) => (
                 <article key={i} style={ex.featCard}>
                   <div style={ex.featImgWrap}>
-                    <img src={f.img} alt="" style={ex.featImg} />
+                    <SafeImage src={f.img} alt="" style={ex.featImg} />
                     <span style={{ ...ex.featBadge, background: f.typeColor }}>
                       {f.type}
                     </span>

@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { SafeImage } from "@/components/cards";
 import ex from "@/styles/explore-styles";
 
 export default function DesaWisataStrip({
@@ -63,7 +64,9 @@ export default function DesaWisataStrip({
             ))
           : desaFeatured.map((d) => (
               <article key={d.name} style={ex.desaCard}>
-                <img src={d.img} alt="" style={ex.desaImg} />
+                <div style={{ position: "relative", width: "100%", aspectRatio: "16 / 10" }}>
+                  <SafeImage src={d.img} alt="" />
+                </div>
                 <div style={ex.desaBody}>
                   <span style={ex.desaTag}>{d.tag}</span>
                   <div style={ex.desaName}>{d.name}</div>

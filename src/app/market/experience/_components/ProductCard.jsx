@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { SafeImage } from "@/components/cards";
 import { pesanStyles } from "@/styles/pesan-styles";
 
 /* ── Hash Helpers for deterministic values ── */
@@ -92,7 +93,7 @@ export default function ProductCard({ d, onClick }) {
       onClick={onClick}
     >
       <div style={pesanStyles.cardImgWrap}>
-        <img src={d.img} alt="" style={pesanStyles.cardImg} />
+        <SafeImage src={d.img} alt="" style={pesanStyles.cardImg} />
 
         {/* Top-left: tag (Best Seller / Baru) */}
         {d.tag && (

@@ -2,6 +2,7 @@
 
 import React from "react";
 import { useRouter } from "next/navigation";
+import { SafeImage } from "@/components/cards";
 import ex from "@/styles/explore-styles";
 
 export default function IslandTiles({ islands = [], isLoading = false }) {
@@ -42,7 +43,7 @@ export default function IslandTiles({ islands = [], isLoading = false }) {
                   cursor: "pointer",
                 }}
               >
-                <img src={isl.img} alt="" style={ex.islandImg} />
+                <SafeImage src={isl.img} alt="" style={ex.islandImg} />
                 <div style={ex.islandOverlay} />
                 <div style={ex.islandBody}>
                   <div style={ex.islandName}>{isl.name}</div>

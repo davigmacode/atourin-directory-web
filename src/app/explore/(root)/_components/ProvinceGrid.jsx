@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
+import { SafeImage } from "@/components/cards";
 import ex from "@/styles/explore-styles";
 
 export default function ProvinceGrid({
@@ -161,7 +162,7 @@ export default function ProvinceGrid({
                   style={{ ...ex.provCard, cursor: "pointer" }}
                 >
                   <div style={ex.provImgWrap}>
-                    <img src={p.img} alt="" style={ex.provImg} />
+                    <SafeImage src={p.img} alt="" style={ex.provImg} />
                     <span style={ex.provIslandBadge}>{p.island}</span>
                   </div>
                   <div style={ex.provBody}>

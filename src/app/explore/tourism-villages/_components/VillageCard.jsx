@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
+import { SafeImage } from "@/components/cards";
 import { cardStyles } from "@/styles/attraction-styles";
 
 function PinSm() {
@@ -64,7 +65,7 @@ export default function VillageCard({
       onClick={() => router.push(`/tourism-villages/${slug}`)}
     >
       <div style={cardStyles.cardImgWrap}>
-        <img src={img} alt="" style={cardStyles.cardImg} />
+        <SafeImage src={img} alt="" style={cardStyles.cardImg} />
         <span
           style={{ ...cardStyles.cardTag, background: adwiBg, color: adwiFg }}
         >

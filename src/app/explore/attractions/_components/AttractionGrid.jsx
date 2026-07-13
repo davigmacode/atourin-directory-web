@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
+import { SafeImage } from "@/components/cards";
 import { cardStyles } from "@/styles/attraction-styles";
 import { HeartIcon, ClockSm, PinSm, StarFill } from "./FilterBar";
 
@@ -76,7 +77,7 @@ export function AttrCard({
       onClick={() => router.push(`/attractions/${slug}`)}
     >
       <div style={cardStyles.cardImgWrap}>
-        <img src={img} alt="" style={cardStyles.cardImg} />
+        <SafeImage src={img} alt="" style={cardStyles.cardImg} />
         <span
           style={{ ...cardStyles.cardTag, background: catBg, color: catFg }}
         >
