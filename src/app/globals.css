@@ -110,9 +110,12 @@
     --atr-radius-xs: 4px;
     --atr-radius-sm: 5px;
     --atr-radius-md: 8px;
-    --atr-radius-lg: 12px;
     --atr-radius-xl: 16px;
     --atr-radius-pill: 9999px;
+
+    /* Shadows */
+    --atr-shadow-1: 0 4px 18px rgba(31, 27, 51, 0.05);
+    --atr-shadow-2: 0 8px 30px rgba(31, 27, 51, 0.08);
 }
 
 html,
