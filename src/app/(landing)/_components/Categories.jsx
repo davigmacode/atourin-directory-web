@@ -14,7 +14,7 @@ export default function Categories({ categories = [] }) {
             <div style={hm.launcherTitle}>Mau jelajah apa hari ini?</div>
             <div style={hm.launcherSub}>Akses cepat ke semua layanan Atourin</div>
           </div>
-          <Link href="/explore-hub" style={{ ...hm.secLink, textDecoration: "none" }}>
+          <Link href="/explore" style={{ ...hm.secLink, textDecoration: "none" }}>
             Lihat semua {HI.arrowR}
           </Link>
         </div>
@@ -27,7 +27,7 @@ export default function Categories({ categories = [] }) {
           ))}
         </div>
         <Link
-          href="#"
+          href="/assistant"
           style={{
             display: "flex",
             alignItems: "center",

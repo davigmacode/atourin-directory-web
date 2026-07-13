@@ -2,12 +2,12 @@ export const HOME_CATS = [
   { id: "experience", label: "Experience", icon: "sparkle", tint: "#7068D5", href: "/market/experience" },
   { id: "attraction", label: "Attraction", icon: "camera", tint: "#2F8A5B", href: "/market/attractions" },
   { id: "homestay", label: "Homestay", icon: "home", tint: "#2F6FA5", href: "/market/homestay" },
-  { id: "village", label: "Desa Wisata", icon: "village", tint: "#9B6AAB", href: "/tourism-villages" },
-  { id: "guide", label: "Tour Guide", icon: "guide", tint: "#C99500", href: "/tour-guides" },
-  { id: "promo", label: "Promo", icon: "tag", tint: "#F46263", href: "#" },
-  { id: "itinerary", label: "Itinerary", icon: "route", tint: "#3FA7B5", href: "/itinerary" },
-  { id: "artikel", label: "Artikel", icon: "doc", tint: "#6C7B9C", href: "/explore-hub" },
-  { id: "bantuan", label: "Bantuan", icon: "help", tint: "#51B054", href: "#" },
+  { id: "village", label: "Desa Wisata", icon: "village", tint: "#9B6AAB", href: "/explore/tourism-villages" },
+  { id: "guide", label: "Tour Guide", icon: "guide", tint: "#C99500", href: "/explore/tour-guides" },
+  { id: "promo", label: "Promo", icon: "tag", tint: "#F46263", href: "/promo" },
+  { id: "itinerary", label: "Itinerary", icon: "route", tint: "#3FA7B5", href: "/explore/itinerary" },
+  { id: "artikel", label: "Artikel", icon: "doc", tint: "#6C7B9C", href: "/explore" },
+  { id: "bantuan", label: "Bantuan", icon: "help", tint: "#51B054", href: "/help-center" },
 ];
 
 export const HOME_STATS = [

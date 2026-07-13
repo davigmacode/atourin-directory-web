@@ -34,7 +34,7 @@ export function SecHead({ kicker, title, sub, link, linkHref }) {
 export function PromoSection({ promos = [] }) {
   return (
     <section style={{ ...hm.section, ...hm.sectionPad }}>
-      <SecHead kicker="Promo & Penawaran" title="Diskon spesial buat liburanmu" link="Lihat semua promo" linkHref="#" />
+      <SecHead kicker="Promo & Penawaran" title="Diskon spesial buat liburanmu" link="Lihat semua promo" linkHref="/promo" />
       <div style={hm.promoGrid}>
         {promos.map((p) => (
           <PromoCardH key={p.id} p={p} />
@@ -48,7 +48,7 @@ export function PromoSection({ promos = [] }) {
 export function VoucherSection({ vouchers = [] }) {
   return (
     <section style={{ ...hm.section, paddingBottom: 56 }}>
-      <SecHead kicker="Kode Voucher" title="Cek dulu diskonnya!" sub="Salin kode voucher ini & pakai saat checkout perjalanan impianmu." link="Lihat semua promo" linkHref="#" />
+      <SecHead kicker="Kode Voucher" title="Cek dulu diskonnya!" sub="Salin kode voucher ini & pakai saat checkout perjalanan impianmu." link="Lihat semua promo" linkHref="/promo" />
       <Carousel>
         {vouchers.map((v) => (
           <VoucherCardH key={v.id} v={v} />
@@ -94,7 +94,7 @@ export function PopularSection({ accent, products = [], filters = [], onSave }) 
 export function DestinationSection({ destinations = [] }) {
   return (
     <section style={{ ...hm.section, paddingBottom: 56 }}>
-      <SecHead kicker="Destinasi Populer" title="Mau ke mana selanjutnya?" sub="Destinasi paling dicari penjelajah Atourin minggu ini." link="Lihat semua destinasi" linkHref="/destinations" />
+      <SecHead kicker="Destinasi Populer" title="Mau ke mana selanjutnya?" sub="Destinasi paling dicari penjelajah Atourin minggu ini." link="Lihat semua destinasi" linkHref="/explore/destinations" />
       <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 16 }} className="hm-dest-grid">
         {destinations.map((d) => (
           <Link
@@ -173,7 +173,7 @@ export function JelajahiSection({ accent, products = [], tabs = [], onSave }) {
 export function VillageSection({ villages = [] }) {
   return (
     <section style={{ ...hm.section, paddingBottom: 56 }}>
-      <SecHead kicker="Wisata Otentik" title="Rasakan Indonesia di Desa Wisata" sub="Menginap dan beraktivitas langsung bersama masyarakat lokal." link="Lihat semua desa" linkHref="/tourism-villages" />
+      <SecHead kicker="Wisata Otentik" title="Rasakan Indonesia di Desa Wisata" sub="Menginap dan beraktivitas langsung bersama masyarakat lokal." link="Lihat semua desa" linkHref="/explore/tourism-villages" />
       <div style={hm.villageGrid}>
         {villages.map((v) => (
           <VillageCardH key={v.id} v={v} />
@@ -207,7 +207,7 @@ export function WhySection({ why = [] }) {
 export function InspirasiSection({ articles = [] }) {
   return (
     <section style={{ ...hm.section, ...hm.sectionPad }}>
-      <SecHead kicker="Inspirasi Perjalanan" title="Cerita & tips dari para penjelajah" link="Lihat semua artikel" linkHref="/explore-hub" />
+      <SecHead kicker="Inspirasi Perjalanan" title="Cerita & tips dari para penjelajah" link="Lihat semua artikel" linkHref="/explore" />
       <div style={hm.articleGrid}>
         {articles.map((a) => (
           <ArticleCardH key={a.id} a={a} />

@@ -152,8 +152,8 @@ export const pesanStyles = {
   },
   collageImg3: {
     position: "absolute",
-    top: "45%",
-    right: "55%",
+    top: "30%",
+    right: "60%",
     width: "30%",
     height: "30%",
     objectFit: "cover",
@@ -176,8 +176,8 @@ export const pesanStyles = {
   },
   collageDealPill: {
     position: "absolute",
-    bottom: 12,
-    right: 0,
+    bottom: 40,
+    right: 20,
     background: "#fff",
     borderRadius: 14,
     padding: "12px 14px",
