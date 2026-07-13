@@ -1,13 +1,14 @@
 "use client";
 
 import React from "react";
+import Link from "next/link";
 
 const DIRECTORY_TABS = [
-  { label: "Itinerary", count: "2.4K", href: "/itinerary" },
-  { label: "Destinasi", count: "180", href: "/destinations" },
-  { label: "Atraksi", count: "1.2K", href: "/attractions" },
-  { label: "Tour Guide", count: "640", href: "/tour-guides" },
-  { label: "Desa Wisata", count: "320", href: "/tourism-villages" },
+  { label: "Itinerary", count: "2.4K", href: "/explore/itinerary" },
+  { label: "Destinasi", count: "180", href: "/explore/destinations" },
+  { label: "Atraksi", count: "1.2K", href: "/explore/attractions" },
+  { label: "Tour Guide", count: "640", href: "/explore/tour-guides" },
+  { label: "Desa Wisata", count: "320", href: "/explore/tourism-villages" },
 ];
 
 export default function CategoryTabs({ active = "Destinasi" }) {
@@ -34,7 +35,7 @@ export default function CategoryTabs({ active = "Destinasi" }) {
         {DIRECTORY_TABS.map((t) => {
           const isActive = active === t.label;
           return (
-            <a
+            <Link
               key={t.label}
               href={t.href}
               style={{
@@ -71,7 +72,7 @@ export default function CategoryTabs({ active = "Destinasi" }) {
               >
                 {t.count}
               </span>
-            </a>
+            </Link>
           );
         })}
       </div>

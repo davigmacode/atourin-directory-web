@@ -1,12 +1,25 @@
 "use client";
 
 import React, { useState } from "react";
+import Link from "next/link";
 import { SafeImage } from "@/components/cards";
 import PrefQuizModal from "./PrefQuizModal";
 
 export default function UntukmuSection({ untukmu = [], isLoading = false }) {
   const [quiz, setQuiz] = useState(false);
   const [why, setWhy] = useState(null);
+
+  const getRecommendationRoute = (item) => {
+    const titleLower = item.title.toLowerCase();
+    let slug = titleLower.replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+    if (titleLower.includes("penglipuran")) slug = "penglipuran";
+    if (titleLower.includes("rinjani")) slug = "trekking-gunung-rinjani";
+    if (titleLower.includes("semarang")) slug = "kuliner-tua-semarang";
+    if (titleLower.includes("padar")) slug = "pulau-padar-sunrise";
+
+    if (item.tag === "Desa Wisata") return `/explore/tourism-villages/${slug}`;
+    return `/explore/attractions/${slug}`;
+  };
 
   return (
     <section
@@ -138,37 +151,41 @@ export default function UntukmuSection({ untukmu = [], isLoading = false }) {
                   transition: "transform .15s, box-shadow .15s",
                 }}
               >
-                <div
-                  style={{
-                    aspectRatio: "4/3",
-                    position: "relative",
-                  }}
-                >
-                  <SafeImage src={r.img} alt="" />
-                  <span
+                <Link href={getRecommendationRoute(r)} style={{ textDecoration: "none", color: "inherit" }}>
+                  <div
                     style={{
-                      position: "absolute",
-                      top: 10,
-                      left: 10,
-                      fontSize: 10.5,
-                      fontWeight: 700,
-                      color: "#fff",
-                      background: "rgba(27,26,46,0.78)",
-                      padding: "4px 9px",
-                      borderRadius: 999,
-                      textTransform: "uppercase",
-                      letterSpacing: "0.04em",
+                      aspectRatio: "4/3",
+                      position: "relative",
                     }}
                   >
-                    {r.tag}
-                  </span>
-                </div>
-                <div style={{ padding: 14 }}>
-                  <div
-                    style={{ fontSize: 14.5, fontWeight: 700, lineHeight: 1.3 }}
-                  >
-                    {r.title}
+                    <SafeImage src={r.img} alt="" />
+                    <span
+                      style={{
+                        position: "absolute",
+                        top: 10,
+                        left: 10,
+                        fontSize: 10.5,
+                        fontWeight: 700,
+                        color: "#fff",
+                        background: "rgba(27,26,46,0.78)",
+                        padding: "4px 9px",
+                        borderRadius: 999,
+                        textTransform: "uppercase",
+                        letterSpacing: "0.04em",
+                      }}
+                    >
+                      {r.tag}
+                    </span>
                   </div>
+                </Link>
+                <div style={{ padding: 14 }}>
+                  <Link href={getRecommendationRoute(r)} style={{ textDecoration: "none", color: "inherit" }}>
+                    <div
+                      style={{ fontSize: 14.5, fontWeight: 700, lineHeight: 1.3 }}
+                    >
+                      {r.title}
+                    </div>
+                  </Link>
                   <div
                     style={{
                       fontSize: 11.5,

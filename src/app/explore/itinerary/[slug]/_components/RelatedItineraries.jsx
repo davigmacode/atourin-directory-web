@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { useRouter } from "next/navigation";
 import detailStyles from "@/styles/itinerary-detail-styles";
 
 const IMG = {
@@ -11,6 +12,7 @@ const IMG = {
 };
 
 export default function RelatedItineraries() {
+  const router = useRouter();
   const items = [
     {
       img: IMG.bali,
@@ -59,15 +61,15 @@ export default function RelatedItineraries() {
           </div>
         </div>
         <button
+          onClick={() => router.push("/explore/itinerary")}
           style={detailStyles.relatedLink}
-          onClick={() => (window.location.href = "/itinerary")}
         >
           Lihat Semua
         </button>
       </div>
       <div style={detailStyles.relatedGrid}>
         {items.map((item, i) => (
-          <div key={i} style={detailStyles.relCard}>
+          <div key={i} style={{...detailStyles.relCard, cursor: "pointer"}} onClick={() => router.push(`/explore/itinerary/${item.title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "")}`)} >
             <img src={item.img} alt={item.title} style={detailStyles.relImg} />
             <div style={detailStyles.relBody}>
               <div style={detailStyles.relMeta}>{item.meta}</div>

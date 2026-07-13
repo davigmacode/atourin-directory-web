@@ -70,7 +70,7 @@ export default function SimilarVillages({ village }) {
     <SectionCard
       title={"Desa Wisata Lainnya di " + kotaMain}
       icon={"\uD83C\uDFE0"}
-      link="/tourism-villages"
+      link="/explore/tourism-villages"
       linkLabel="Lihat semua desa wisata"
     >
       <div style={relVlgStyles.grid}>
@@ -82,7 +82,7 @@ export default function SimilarVillages({ village }) {
           return (
             <div
               key={i}
-              onClick={() => router.push(`/tourism-villages/${slug}`)}
+              onClick={() => router.push(`/explore/tourism-villages/${slug}`)}
               style={relVlgStyles.card}
             >
               <img src={v.img} alt={v.name} style={relVlgStyles.img} />

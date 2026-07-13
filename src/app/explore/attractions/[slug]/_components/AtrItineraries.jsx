@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Link from "next/link";
 import { adStyles } from "@/styles/detail-styles";
 import { SectionCard } from "./Shared";
 
@@ -39,55 +40,58 @@ export default function AtrItineraries({ attraction }) {
       title="Itinerary yang Melewati Sini"
       icon={"📓"}
       eyebrow={`Itinerary mencakup ${attraction.name}`}
-      link="/itinerary"
+      link="/explore/itinerary"
       linkLabel="Lihat semua itinerary"
     >
       <div style={adStyles.itinList}>
-        {RELATED_ITIN.map((it, i) => (
-          <a key={i} href="/" style={adStyles.itinRow}>
-            <img src={it.img} alt="" style={adStyles.itinImg} />
-            <div style={adStyles.itinBody}>
-              <div style={adStyles.itinBadgeRow}>
-                <span style={adStyles.itinDayBadge}>{it.days}</span>
-                <span
-                  style={{
-                    ...adStyles.itinThemeBadge,
-                    background: it.themeBg,
-                    color: it.themeFg,
-                  }}
-                >
-                  {it.theme}
+        {RELATED_ITIN.map((it, i) => {
+          const slug = it.title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+          return (
+            <Link key={i} href={`/explore/itinerary/${slug}`} style={{ ...adStyles.itinRow, textDecoration: "none", color: "inherit" }}>
+              <img src={it.img} alt="" style={adStyles.itinImg} />
+              <div style={adStyles.itinBody}>
+                <div style={adStyles.itinBadgeRow}>
+                  <span style={adStyles.itinDayBadge}>{it.days}</span>
+                  <span
+                    style={{
+                      ...adStyles.itinThemeBadge,
+                      background: it.themeBg,
+                      color: it.themeFg,
+                    }}
+                  >
+                    {it.theme}
+                  </span>
+                </div>
+                <div style={adStyles.itinTitle}>{it.title}</div>
+                <div style={adStyles.itinMetaRow}>
+                  <span>{"📍"} {it.stops} tempat</span>
+                  <span>{"\u00B7"}</span>
+                  <span style={{ color: "var(--atr-text)" }}>
+                    {"\u2B50"} <strong>{it.rating}</strong>
+                  </span>
+                  <span>{"\u00B7"}</span>
+                  <span style={adStyles.itinCreator}>
+                    <img
+                      src={it.creatorAv}
+                      alt=""
+                      style={adStyles.itinCreatorAv}
+                    />{" "}
+                    {it.creator}
+                  </span>
+                </div>
+              </div>
+              <div style={adStyles.itinRight}>
+                <span style={adStyles.itinPriceLabel}>Mulai dari</span>
+                <span style={adStyles.itinPrice}>
+                  Rp {(it.budget / 1000000).toFixed(1)}jt
+                </span>
+                <span style={{ fontSize: 11, color: "var(--atr-text-muted)" }}>
+                  /orang
                 </span>
               </div>
-              <div style={adStyles.itinTitle}>{it.title}</div>
-              <div style={adStyles.itinMetaRow}>
-                <span>{"📍"} {it.stops} tempat</span>
-                <span>{"\u00B7"}</span>
-                <span style={{ color: "var(--atr-text)" }}>
-                  {"\u2B50"} <strong>{it.rating}</strong>
-                </span>
-                <span>{"\u00B7"}</span>
-                <span style={adStyles.itinCreator}>
-                  <img
-                    src={it.creatorAv}
-                    alt=""
-                    style={adStyles.itinCreatorAv}
-                  />{" "}
-                  {it.creator}
-                </span>
-              </div>
-            </div>
-            <div style={adStyles.itinRight}>
-              <span style={adStyles.itinPriceLabel}>Mulai dari</span>
-              <span style={adStyles.itinPrice}>
-                Rp {(it.budget / 1000000).toFixed(1)}jt
-              </span>
-              <span style={{ fontSize: 11, color: "var(--atr-text-muted)" }}>
-                /orang
-              </span>
-            </div>
-          </a>
-        ))}
+            </Link>
+          );
+        })}
       </div>
     </SectionCard>
   );

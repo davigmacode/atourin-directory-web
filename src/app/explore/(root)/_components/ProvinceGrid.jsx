@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { SafeImage } from "@/components/cards";
 import ex from "@/styles/explore-styles";
 
@@ -10,7 +10,6 @@ export default function ProvinceGrid({
   islands = [],
   isLoading = false,
 }) {
-  const router = useRouter();
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState("alpha");
   const [island, setIsland] = useState("Semua");
@@ -24,14 +23,6 @@ export default function ProvinceGrid({
     .sort((a, b) =>
       sort === "alpha" ? a.name.localeCompare(b.name) : b.popular - a.popular,
     );
-
-  function goToProvince(name) {
-    const slug = name
-      .toLowerCase()
-      .replace(/[^a-z0-9\s]/g, "")
-      .replace(/\s+/g, "-");
-    router.push(`/destinations?province=${slug}`);
-  }
 
   return (
     <section style={ex.section} id="provinces">
@@ -156,10 +147,10 @@ export default function ProvinceGrid({
                 .replace(/[^a-z0-9\s]/g, "")
                 .replace(/\s+/g, "-");
               return (
-                <div
+                <Link
                   key={p.name}
-                  onClick={() => goToProvince(p.name)}
-                  style={{ ...ex.provCard, cursor: "pointer" }}
+                  href={`/explore/destinations?province=${slug}`}
+                  style={{ ...ex.provCard, textDecoration: "none", color: "inherit" }}
                 >
                   <div style={ex.provImgWrap}>
                     <SafeImage src={p.img} alt="" style={ex.provImg} />
@@ -169,19 +160,19 @@ export default function ProvinceGrid({
                     <div style={ex.provName}>{p.name}</div>
                     <div style={ex.provStats}>
                       <span>
-                        <strong>{p.dest}</strong> destinasi
+                        <strong>{p.dest ?? 0}</strong> destinasi
                       </span>
                       <span style={ex.provDot}>·</span>
                       <span>
-                        <strong>{p.attr}</strong> atraksi
+                        <strong>{p.attr ?? 0}</strong> atraksi
                       </span>
                       <span style={ex.provDot}>·</span>
                       <span>
-                        <strong>{p.desa}</strong> desa
+                        <strong>{p.desa ?? 0}</strong> desa
                       </span>
                     </div>
                   </div>
-                </div>
+                </Link>
               );
             })}
       </div>

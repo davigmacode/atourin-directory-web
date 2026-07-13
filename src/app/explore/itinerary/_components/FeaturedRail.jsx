@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Link from "next/link";
 import { cardStyles } from "@/styles/attraction-styles";
 
 /* ── Icons ── */
@@ -100,21 +101,24 @@ function FeatureBig() {
 }
 
 function FeatureSmall({ img, tag, days, title, author, budget }) {
+  const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
   return (
-    <article style={cardStyles.featSmall}>
-      <div style={cardStyles.featSmallImgWrap}>
-        <img src={img} alt="" style={cardStyles.featSmallImg} />
-        <span style={cardStyles.featSmallTag}>{tag}</span>
-      </div>
-      <div style={cardStyles.featSmallBody}>
-        <div style={cardStyles.featSmallDays}>{days}</div>
-        <h4 style={cardStyles.featSmallTitle}>{title}</h4>
-        <div style={cardStyles.featSmallFooter}>
-          <span style={cardStyles.featSmallAuthor}>{author}</span>
-          <span style={cardStyles.featSmallBudget}>{budget}</span>
+    <Link href={`/explore/itinerary/${slug}`} style={{ textDecoration: "none", color: "inherit" }}>
+      <article style={cardStyles.featSmall}>
+        <div style={cardStyles.featSmallImgWrap}>
+          <img src={img} alt="" style={cardStyles.featSmallImg} />
+          <span style={cardStyles.featSmallTag}>{tag}</span>
         </div>
-      </div>
-    </article>
+        <div style={cardStyles.featSmallBody}>
+          <div style={cardStyles.featSmallDays}>{days}</div>
+          <h4 style={cardStyles.featSmallTitle}>{title}</h4>
+          <div style={cardStyles.featSmallFooter}>
+            <span style={cardStyles.featSmallAuthor}>{author}</span>
+            <span style={cardStyles.featSmallBudget}>{budget}</span>
+          </div>
+        </div>
+      </article>
+    </Link>
   );
 }
 
@@ -126,12 +130,14 @@ export default function FeaturedRail() {
           <div style={cardStyles.eyebrow}>{"\u2728"} Pilihan kurator</div>
           <h2 style={cardStyles.railTitle}>Rute terbaik minggu ini</h2>
         </div>
-        <a href="#" style={cardStyles.railLink}>
+        <Link href="/explore/itinerary" style={cardStyles.railLink}>
           Lihat semua kurasi <ArrowRight />
-        </a>
+        </Link>
       </div>
       <div style={cardStyles.railGrid}>
-        <FeatureBig />
+        <Link href="/explore/itinerary/bali-slow-travel-7d" style={{ textDecoration: "none", color: "inherit" }}>
+          <FeatureBig />
+        </Link>
         <div style={cardStyles.railSide}>
           <FeatureSmall
             img="https://images.unsplash.com/photo-1604999333679-b86d54738315?w=1200&auto=format&fit=crop&q=70"

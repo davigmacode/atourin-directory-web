@@ -55,11 +55,11 @@ export default function DestHero({ dest, covers }) {
       <div style={dh.heroContent}>
         <div style={dh.heroCrumb}>
           <a
-            href="/explore-hub"
+            href="/explore"
             style={dh.heroCrumbLink}
             onClick={(e) => {
               e.preventDefault();
-              router.push("/explore-hub");
+              router.push("/explore");
             }}
           >
             Jelajahi

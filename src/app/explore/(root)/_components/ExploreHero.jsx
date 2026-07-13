@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import Link from "next/link";
 import ex from "@/styles/explore-styles";
 
 export default function ExploreHero({ heroBgs = [], isLoading = false }) {
@@ -25,6 +26,18 @@ export default function ExploreHero({ heroBgs = [], isLoading = false }) {
     "Heritage",
     "Bahari",
   ];
+
+  const getItemRoute = (cat, item) => {
+    const slug = item.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+    if (cat === "Destinasi") return `/explore/destinations/${slug}`;
+    if (cat === "Desa Wisata") return `/explore/tourism-villages/${slug}`;
+    if (cat === "Itinerary") return `/explore/itinerary/${slug}`;
+    return "/explore";
+  };
+
+  const getChipRoute = (chip) => {
+    return `/explore/attractions?category=${encodeURIComponent(chip)}`;
+  };
 
   if (isLoading) {
     return (
@@ -129,7 +142,7 @@ export default function ExploreHero({ heroBgs = [], isLoading = false }) {
                       x.toLowerCase().includes(query.toLowerCase()),
                     )
                     .map((it) => (
-                      <a key={it} href="/" style={ex.acItem}>
+                      <Link key={it} href={getItemRoute(g.cat, it)} style={{ ...ex.acItem, textDecoration: "none" }}>
                         <svg
                           width="14"
                           height="14"
@@ -143,7 +156,7 @@ export default function ExploreHero({ heroBgs = [], isLoading = false }) {
                           />
                         </svg>
                         {it}
-                      </a>
+                      </Link>
                     ))}
                 </div>
               ))}
@@ -152,9 +165,9 @@ export default function ExploreHero({ heroBgs = [], isLoading = false }) {
         </div>
         <div style={ex.heroChips}>
           {chips.map((c) => (
-            <a key={c} href="/" style={ex.heroChip}>
+            <Link key={c} href={getChipRoute(c)} style={{ ...ex.heroChip, textDecoration: "none" }}>
               {c}
-            </a>
+            </Link>
           ))}
         </div>
       </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import Link from "next/link";
 import { SafeImage } from "@/components/cards";
 import ex from "@/styles/explore-styles";
 
@@ -17,9 +17,9 @@ export default function DesaWisataStrip({
           </div>
           <h2 style={ex.secTitle}>Desa wisata unggulan</h2>
         </div>
-        <a href="/" style={ex.viewAll}>
+        <Link href="/explore/tourism-villages" style={ex.viewAll}>
           Lihat semua desa wisata {"\u2192"}
-        </a>
+        </Link>
       </div>
       <div style={ex.desaGrid}>
         {isLoading
@@ -27,9 +27,9 @@ export default function DesaWisataStrip({
               <div key={i} style={ex.desaCard}>
                 <div
                   style={{
-                    width: "100%",
-                    aspectRatio: "16 / 10",
-                    background: "var(--atr-outline)",
+                     width: "100%",
+                     aspectRatio: "16 / 10",
+                     background: "var(--atr-outline)",
                   }}
                 />
                 <div style={ex.desaBody}>
@@ -63,18 +63,20 @@ export default function DesaWisataStrip({
               </div>
             ))
           : desaFeatured.map((d) => (
-              <article key={d.name} style={ex.desaCard}>
-                <div style={{ position: "relative", width: "100%", aspectRatio: "16 / 10" }}>
-                  <SafeImage src={d.img} alt="" />
-                </div>
-                <div style={ex.desaBody}>
-                  <span style={ex.desaTag}>{d.tag}</span>
-                  <div style={ex.desaName}>{d.name}</div>
-                  <div style={ex.desaMeta}>
-                    {d.province} · {d.reviews} reviews
+              <Link href={`/explore/tourism-villages/${d.name.toLowerCase()}`} key={d.name} style={{ textDecoration: "none", color: "inherit" }}>
+                <article style={ex.desaCard}>
+                  <div style={{ position: "relative", width: "100%", aspectRatio: "16 / 10" }}>
+                    <SafeImage src={d.img} alt="" />
                   </div>
-                </div>
-              </article>
+                  <div style={ex.desaBody}>
+                    <span style={ex.desaTag}>{d.tag}</span>
+                    <div style={ex.desaName}>{d.name}</div>
+                    <div style={ex.desaMeta}>
+                      {d.province} · {d.reviews} reviews
+                    </div>
+                  </div>
+                </article>
+              </Link>
             ))}
       </div>
     </section>

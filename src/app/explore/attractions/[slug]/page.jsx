@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Link from "next/link";
 import { useParams } from "next/navigation";
 import { TopNav, SiteFooter, Breadcrumb } from "@/components/layout";
 import { useAttraction } from "@/lib/hooks/use-attraction";
@@ -49,8 +50,8 @@ export default function AttractionDetailPage() {
         <div style={{ textAlign: "center", padding: "80px 20px" }}>
           <div style={{ fontSize: 48, marginBottom: 16 }}>{"\u26A0\uFE0F"}</div>
           <h2>Atraksi tidak ditemukan</h2>
-          <a
-            href="/attractions"
+          <Link
+            href="/explore/attractions"
             style={{
               display: "inline-block",
               marginTop: 20,
@@ -63,7 +64,7 @@ export default function AttractionDetailPage() {
             }}
           >
             Kembali
-          </a>
+          </Link>
         </div>
         <SiteFooter />
       </div>

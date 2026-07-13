@@ -36,7 +36,7 @@ export function DestinationCard({ d }) {
     .replace(/\s+/g, "-");
   return (
     <div
-      onClick={() => router.push(`/destinations/${slug}`)}
+      onClick={() => router.push(`/explore/destinations/${slug}`)}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
       style={{

@@ -74,7 +74,7 @@ export function AttrCard({
       }}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
-      onClick={() => router.push(`/attractions/${slug}`)}
+      onClick={() => router.push(`/explore/attractions/${slug}`)}
     >
       <div style={cardStyles.cardImgWrap}>
         <SafeImage src={img} alt="" style={cardStyles.cardImg} />

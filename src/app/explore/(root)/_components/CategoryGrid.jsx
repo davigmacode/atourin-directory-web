@@ -1,9 +1,20 @@
 "use client";
 
 import React from "react";
+import Link from "next/link";
 import ex from "@/styles/explore-styles";
 
 export default function CategoryGrid({ categories = [], isLoading = false }) {
+  const getCategoryRoute = (c) => {
+    if (c.id === "desa-wisata") return "/explore/tourism-villages";
+    if (c.id === "itinerary") return "/explore/itinerary";
+    if (c.id === "tour-guide") return "/explore/tour-guides";
+    if (c.id === "destinasi") return "/explore/destinations";
+    if (c.id === "atraksi") return "/explore/attractions";
+    // Otherwise, filter attractions by category
+    return `/explore/attractions?category=${encodeURIComponent(c.name)}`;
+  };
+
   return (
     <section style={ex.section}>
       <div style={ex.secHeader}>
@@ -35,12 +46,12 @@ export default function CategoryGrid({ categories = [], isLoading = false }) {
               </div>
             ))
           : categories.map((c) => (
-              <a key={c.name} href="/" style={ex.catCard}>
+              <Link key={c.name} href={getCategoryRoute(c)} style={{ ...ex.catCard, textDecoration: "none" }}>
                 <div style={{ ...ex.catIcon, background: c.color }}>
                   {c.icon}
                 </div>
                 <div style={ex.catName}>{c.name}</div>
-              </a>
+              </Link>
             ))}
       </div>
     </section>

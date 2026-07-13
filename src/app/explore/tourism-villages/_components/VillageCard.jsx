@@ -62,7 +62,7 @@ export default function VillageCard({
       }}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
-      onClick={() => router.push(`/tourism-villages/${slug}`)}
+      onClick={() => router.push(`/explore/tourism-villages/${slug}`)}
     >
       <div style={cardStyles.cardImgWrap}>
         <SafeImage src={img} alt="" style={cardStyles.cardImg} />

@@ -174,7 +174,7 @@ export function GuideCard({
       }}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
-      onClick={() => router.push(`/tour-guides/${slug}`)}
+      onClick={() => router.push(`/explore/tour-guides/${slug}`)}
     >
       <div style={gc.topRow}>
         <div style={gc.avatarWrap}>

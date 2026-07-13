@@ -1,12 +1,11 @@
 "use client";
 
 import React from "react";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { SafeImage } from "@/components/cards";
 import ex from "@/styles/explore-styles";
 
 export default function IslandTiles({ islands = [], isLoading = false }) {
-  const router = useRouter();
   return (
     <section style={ex.section}>
       <div style={ex.secHeader}>
@@ -27,32 +26,32 @@ export default function IslandTiles({ islands = [], isLoading = false }) {
                 }}
               />
             ))
-          : islands.map((isl, i) => (
-              <div
-                key={isl.name}
-                onClick={() => {
-                  const slug = isl.name
-                    .toLowerCase()
-                    .replace(/[^a-z0-9\s]/g, "")
-                    .replace(/\s+/g, "-");
-                  router.push(`/destinations?island=${slug}`);
-                }}
-                style={{
-                  ...ex.islandTile,
-                  ...(i === 0 ? ex.islandTileBig : {}),
-                  cursor: "pointer",
-                }}
-              >
-                <SafeImage src={isl.img} alt="" style={ex.islandImg} />
-                <div style={ex.islandOverlay} />
-                <div style={ex.islandBody}>
-                  <div style={ex.islandName}>{isl.name}</div>
-                  <div style={ex.islandMeta}>
-                    {isl.provinces} provinsi {"\u2192"}
+          : islands.map((isl, i) => {
+              const slug = isl.name
+                .toLowerCase()
+                .replace(/[^a-z0-9\s]/g, "")
+                .replace(/\s+/g, "-");
+              return (
+                <Link
+                  key={isl.name}
+                  href={`/explore/destinations?island=${slug}`}
+                  style={{
+                    ...ex.islandTile,
+                    ...(i === 0 ? ex.islandTileBig : {}),
+                    textDecoration: "none",
+                  }}
+                >
+                  <SafeImage src={isl.img} alt="" style={ex.islandImg} />
+                  <div style={ex.islandOverlay} />
+                  <div style={ex.islandBody}>
+                    <div style={ex.islandName}>{isl.name}</div>
+                    <div style={ex.islandMeta}>
+                      {isl.provinces} provinsi {"→"}
+                    </div>
                   </div>
-                </div>
-              </div>
-            ))}
+                </Link>
+              );
+            })}
       </div>
     </section>
   );

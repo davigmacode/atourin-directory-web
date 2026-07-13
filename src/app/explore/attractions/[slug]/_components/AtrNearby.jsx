@@ -39,7 +39,7 @@ export default function AtrNearby({ attraction }) {
     <SectionCard
       title={"Atraksi Lain di " + kota}
       icon={"🗺️"}
-      link="/attractions"
+      link="/explore/attractions"
       linkLabel={"Lihat semua atraksi di " + kota}
     >
       <div style={ds.hScroll}>

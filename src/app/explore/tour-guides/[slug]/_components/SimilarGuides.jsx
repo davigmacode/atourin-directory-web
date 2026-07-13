@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { useRouter } from "next/navigation";
 import { SectionCard } from "./Shared";
 
 const sgStyles = {
@@ -87,30 +88,38 @@ const SIMILAR_GUIDES = [
 ];
 
 export default function SimilarGuides({ guide }) {
+  const router = useRouter();
   const regionName = guide.region ? guide.region.split(",")[0] : "Labuan Bajo";
 
   return (
     <SectionCard
       title={`Pemandu Serupa di ${regionName}`}
       icon={"\uD83D\uDC65"}
-      link="#"
+      link="/explore/tour-guides"
       linkLabel="Lihat semua pemandu"
     >
       <div style={sgStyles.hScroll}>
-        {SIMILAR_GUIDES.map((g, i) => (
-          <div key={i} style={sgStyles.card} onClick={() => alert(`Navigasi ke profil ${g.name}`)}>
-            <img src={g.av} alt="" style={sgStyles.av} />
-            <div style={sgStyles.name}>{g.name}</div>
-            <div style={sgStyles.specs}>{g.specs.join(" \u00B7 ")}</div>
-            <div style={sgStyles.meta}>
-              ★ <strong>{g.rating}</strong> {"\u00B7"} {g.trips} trip
+        {SIMILAR_GUIDES.map((g, i) => {
+          const slug = g.name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+          return (
+            <div
+              key={i}
+              style={sgStyles.card}
+              onClick={() => router.push(`/explore/tour-guides/${slug}`)}
+            >
+              <img src={g.av} alt="" style={sgStyles.av} />
+              <div style={sgStyles.name}>{g.name}</div>
+              <div style={sgStyles.specs}>{g.specs.join(" \u00B7 ")}</div>
+              <div style={sgStyles.meta}>
+                ★ <strong>{g.rating}</strong> {"\u00B7"} {g.trips} trip
+              </div>
+              <div style={sgStyles.price}>
+                mulai Rp {(g.price / 1000).toFixed(0)}rb/hari
+              </div>
+              <button style={sgStyles.btn}>Lihat profil</button>
             </div>
-            <div style={sgStyles.price}>
-              mulai Rp {(g.price / 1000).toFixed(0)}rb/hari
-            </div>
-            <button style={sgStyles.btn}>Lihat profil</button>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </SectionCard>
   );
