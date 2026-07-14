@@ -1,14 +1,74 @@
-/* Explore Hub data — islands, provinces, categories, featured items */
+import type { IslandData } from '@/types/island';
 
-export const ISLANDS = [
-  { name: 'Sumatera',               provinces: 10, img: 'https://images.unsplash.com/photo-1604999333679-b86d54738315?w=900&auto=format&fit=crop&q=70', color: '#E76F51' },
-  { name: 'Jawa',                   provinces: 6,  img: 'https://images.unsplash.com/photo-1555400038-63f5ba517a47?w=900&auto=format&fit=crop&q=70', color: '#7068D5' },
-  { name: 'Kalimantan',             provinces: 5,  img: 'https://images.unsplash.com/photo-1604999333679-b86d54738315?w=900&auto=format&fit=crop&q=70', color: '#2A9D8F' },
-  { name: 'Sulawesi',               provinces: 6,  img: 'https://images.unsplash.com/photo-1518684079-3c830dcef090?w=900&auto=format&fit=crop&q=70', color: '#F4A261' },
-  { name: 'Bali & Nusa Tenggara',   provinces: 3,  img: 'https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=900&auto=format&fit=crop&q=70', color: '#264653' },
-  { name: 'Maluku',                 provinces: 2,  img: 'https://images.unsplash.com/photo-1596402184320-417e7178b2cd?w=900&auto=format&fit=crop&q=70', color: '#E9C46A' },
-  { name: 'Papua',                  provinces: 2,  img: 'https://images.unsplash.com/photo-1604999333679-b86d54738315?w=900&auto=format&fit=crop&q=70', color: '#06A77D' },
+/* ─── Islands ─── */
+
+export const ISLANDS: IslandData[] = [
+  {
+    name: 'Sumatera',
+    provincesCount: 10,
+    coverImage: {
+      url: 'https://images.unsplash.com/photo-1604999333679-b86d54738315?w=900&auto=format&fit=crop&q=70',
+      blurhash: 'LGF5]+Yk^6#M@-5c,1J5@[or[Q6.',
+      base64: null,
+    },
+  },
+  {
+    name: 'Jawa',
+    provincesCount: 6,
+    coverImage: {
+      url: 'https://images.unsplash.com/photo-1555400038-63f5ba517a47?w=900&auto=format&fit=crop&q=70',
+      blurhash: 'LNH_s_xt4nxu_4RjIUj[~qxut7of',
+      base64: null,
+    },
+  },
+  {
+    name: 'Kalimantan',
+    provincesCount: 5,
+    coverImage: {
+      url: 'https://images.unsplash.com/photo-1604999333679-b86d54738315?w=900&auto=format&fit=crop&q=70',
+      blurhash: 'LGF5]+Yk^6#M@-5c,1J5@[or[Q6.',
+      base64: null,
+    },
+  },
+  {
+    name: 'Sulawesi',
+    provincesCount: 6,
+    coverImage: {
+      url: 'https://images.unsplash.com/photo-1518684079-3c830dcef090?w=900&auto=format&fit=crop&q=70',
+      blurhash: 'LPG[tRxu4nM{_4WBIUj[~qt7t7of',
+      base64: null,
+    },
+  },
+  {
+    name: 'Bali & Nusa Tenggara',
+    provincesCount: 3,
+    coverImage: {
+      url: 'https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=900&auto=format&fit=crop&q=70',
+      blurhash: 'LdHyqKxu4nt7~qofM{j[D%ofxaWB',
+      base64: null,
+    },
+  },
+  {
+    name: 'Maluku',
+    provincesCount: 2,
+    coverImage: {
+      url: 'https://images.unsplash.com/photo-1596402184320-417e7178b2cd?w=900&auto=format&fit=crop&q=70',
+      blurhash: 'LBHxne~q9FxuD%WBIUWBxuofM{ay',
+      base64: null,
+    },
+  },
+  {
+    name: 'Papua',
+    provincesCount: 2,
+    coverImage: {
+      url: 'https://images.unsplash.com/photo-1604999333679-b86d54738315?w=900&auto=format&fit=crop&q=70',
+      blurhash: 'LGF5]+Yk^6#M@-5c,1J5@[or[Q6.',
+      base64: null,
+    },
+  },
 ];
+
+/* ─── Provinces ─── */
 
 export const PROVINCES = [
   { name: 'Aceh', island: 'Sumatera', img: 'https://images.unsplash.com/photo-1604608672516-f1b9b1d1a0fe?w=600&auto=format&fit=crop&q=60', dest: 23, attr: 145, desa: 32, popular: 80 },
@@ -47,6 +107,8 @@ export const PROVINCES = [
   { name: 'Papua Barat', island: 'Papua', img: 'https://images.unsplash.com/photo-1570214476695-19bd467e6f7a?w=600&auto=format&fit=crop&q=60', dest: 13, attr: 78, desa: 22, popular: 80 },
 ];
 
+/* ─── Categories ─── */
+
 export const CATEGORIES = [
   { name: 'Alam', icon: '\uD83C\uDF3F', color: '#E6F7E6' },
   { name: 'Budaya', icon: '\uD83C\uDFAD', color: '#EDE9FF' },
@@ -60,6 +122,8 @@ export const CATEGORIES = [
   { name: 'Ecotourism', icon: '\uD83C\uDF31', color: '#E6F7E6' },
 ];
 
+/* ─── Featured ─── */
+
 export const FEATURED = [
   { type: 'Itinerary', typeColor: 'var(--atr-purple)', img: 'https://images.unsplash.com/photo-1589394815804-964ed0be2eb5?w=800&auto=format&fit=crop&q=70', title: 'Lombok Lengkap, Mandalika, Gili & Air Terjun', loc: 'Lombok, NTB', rating: 4.92 },
   { type: 'Desa Wisata', typeColor: '#51B054', img: 'https://images.unsplash.com/photo-1570214476695-19bd467e6f7a?w=800&auto=format&fit=crop&q=70', title: 'Desa Wisata Pentingsari', loc: 'Sleman, DIY', rating: 4.81 },
@@ -68,6 +132,8 @@ export const FEATURED = [
   { type: 'Atraksi', typeColor: '#1F6FB0', img: 'https://images.unsplash.com/photo-1604999333679-b86d54738315?w=800&auto=format&fit=crop&q=70', title: 'Danau Toba & Pulau Samosir', loc: 'Sumatera Utara', rating: 4.7 },
 ];
 
+/* ─── Desa Featured ─── */
+
 export const DESA_FEATURED = [
   { name: 'Pentingsari', province: 'DIY', img: 'https://images.unsplash.com/photo-1570214476695-19bd467e6f7a?w=600&auto=format&fit=crop&q=60', tag: 'Agrowisata', reviews: 128 },
   { name: 'Penglipuran', province: 'Bali', img: 'https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=600&auto=format&fit=crop&q=60', tag: 'Adat', reviews: 240 },
@@ -75,11 +141,15 @@ export const DESA_FEATURED = [
   { name: 'Wae Rebo', province: 'NTT', img: 'https://images.unsplash.com/photo-1518684079-3c830dcef090?w=600&auto=format&fit=crop&q=60', tag: 'Pegunungan', reviews: 76 },
 ];
 
-export const HERO_BGS = [
+/* ─── Hero Backgrounds ─── */
+
+export const HERO_BGS: string[] = [
   'https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=2000&auto=format&fit=crop&q=70',
   'https://images.unsplash.com/photo-1555400038-63f5ba517a47?w=2000&auto=format&fit=crop&q=70',
   'https://images.unsplash.com/photo-1604999333679-b86d54738315?w=2000&auto=format&fit=crop&q=70',
 ];
+
+/* ─── Untukmu (recommendations) ─── */
 
 export const UNTUKMU = [
   { img: 'https://images.unsplash.com/photo-1604999565976-8913ad2ddb7c?w=500&auto=format&fit=crop&q=70', title: 'Desa Penglipuran', loc: 'Bangli, Bali', why: 'Karena kamu simpan Wae Rebo', tag: 'Desa Wisata' },

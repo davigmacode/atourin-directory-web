@@ -41,12 +41,12 @@ export default function IslandTiles({ islands = [], isLoading = false }) {
                     textDecoration: "none",
                   }}
                 >
-                  <SafeImage src={isl.img} alt="" style={ex.islandImg} />
+                  <SafeImage src={isl.coverImage?.url} alt="" style={ex.islandImg} />
                   <div style={ex.islandOverlay} />
                   <div style={ex.islandBody}>
                     <div style={ex.islandName}>{isl.name}</div>
                     <div style={ex.islandMeta}>
-                      {isl.provinces} provinsi {"→"}
+                      {isl.provincesCount} provinsi {"→"}
                     </div>
                   </div>
                 </Link>
