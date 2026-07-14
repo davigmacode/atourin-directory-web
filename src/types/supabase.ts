@@ -9,6 +9,121 @@ export type Json =
 export type Database = {
   directory: {
     Tables: {
+      categories: {
+        Row: {
+          created_at: string
+          id: string
+          metadata: Json
+          name: Json
+          slug: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          metadata?: Json
+          name?: Json
+          slug: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          metadata?: Json
+          name?: Json
+          slug?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      category_assignments: {
+        Row: {
+          category_id: string
+          created_at: string
+          entity_id: string
+          entity_type: string
+        }
+        Insert: {
+          category_id: string
+          created_at?: string
+          entity_id: string
+          entity_type: string
+        }
+        Update: {
+          category_id?: string
+          created_at?: string
+          entity_id?: string
+          entity_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "category_assignments_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      facilities: {
+        Row: {
+          created_at: string
+          id: string
+          metadata: Json
+          name: Json
+          slug: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          metadata?: Json
+          name?: Json
+          slug: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          metadata?: Json
+          name?: Json
+          slug?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      facility_assignments: {
+        Row: {
+          available: boolean
+          created_at: string
+          entity_id: string
+          entity_type: string
+          facility_id: string
+        }
+        Insert: {
+          available?: boolean
+          created_at?: string
+          entity_id: string
+          entity_type: string
+          facility_id: string
+        }
+        Update: {
+          available?: boolean
+          created_at?: string
+          entity_id?: string
+          entity_type?: string
+          facility_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "facility_assignments_facility_id_fkey"
+            columns: ["facility_id"]
+            isOneToOne: false
+            referencedRelation: "facilities"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       islands: {
         Row: {
           cover_image: Json | null

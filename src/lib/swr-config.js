@@ -1,11 +1,17 @@
 'use client';
 
 import { SWRConfig } from 'swr';
+import { getLang } from './i18n';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || '/api';
 
 export const swrFetcher = async (url) => {
-  const res = await fetch(`${API_BASE}${url}`);
+  const lang = getLang();
+  const res = await fetch(`${API_BASE}${url}`, {
+    headers: {
+      'Accept-Language': lang,
+    },
+  });
   if (!res.ok) {
     const error = new Error('Gagal memuat data');
     error.status = res.status;
