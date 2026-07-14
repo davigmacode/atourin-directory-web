@@ -149,7 +149,12 @@ export default function ProvinceGrid({
                   style={{ ...ex.provCard, textDecoration: "none", color: "inherit" }}
                 >
                   <div style={ex.provImgWrap}>
-                    <SafeImage src={p.coverImage?.url} alt="" style={ex.provImg} />
+                    <SafeImage
+                      src={p.coverImage?.url}
+                      alt=""
+                      style={ex.provImg}
+                      blurDataURL={p.coverImage?.base64}
+                    />
                     <span style={ex.provIslandBadge}>{p.island?.name}</span>
                   </div>
                   <div style={ex.provBody}>

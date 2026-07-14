@@ -9,7 +9,7 @@ import Image from "next/image";
  * Uses `fill` so the parent element MUST have `position: relative`
  * and an explicit or aspect-ratio-driven size.
  */
-export default function SafeImage({ src, alt, style = {}, ...props }) {
+export default function SafeImage({ src, alt, style = {}, placeholder, blurDataURL, ...props }) {
   const [errored, setErrored] = useState(false);
 
   if (errored || !src) {
@@ -61,6 +61,8 @@ export default function SafeImage({ src, alt, style = {}, ...props }) {
       style={{ ...style, objectFit: "cover" }}
       onError={() => setErrored(true)}
       unoptimized
+      placeholder={placeholder || (blurDataURL ? "blur" : undefined)}
+      blurDataURL={blurDataURL || undefined}
       {...props}
     />
   );

@@ -41,7 +41,12 @@ export default function IslandTiles({ islands = [], isLoading = false }) {
                     textDecoration: "none",
                   }}
                 >
-                  <SafeImage src={isl.coverImage?.url} alt="" style={ex.islandImg} />
+                  <SafeImage
+                    src={isl.coverImage?.url}
+                    alt=""
+                    style={ex.islandImg}
+                    blurDataURL={isl.coverImage?.base64}
+                  />
                   <div style={ex.islandOverlay} />
                   <div style={ex.islandBody}>
                     <div style={ex.islandName}>{isl.name}</div>
