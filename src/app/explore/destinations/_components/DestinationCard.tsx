@@ -3,9 +3,16 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { SafeImage } from "@/components/cards";
-import rg from "@/styles/destination-styles";
+import rgRaw from "@/styles/destination-styles";
 
-export function ChevDownSm({ rotated }) {
+const rg = rgRaw as Record<string, React.CSSProperties>;
+import type { Destination } from "@/types/destination";
+
+interface ChevDownSmProps {
+  rotated: boolean;
+}
+
+export function ChevDownSm({ rotated }: ChevDownSmProps) {
   return (
     <svg
       width="12"
@@ -20,23 +27,24 @@ export function ChevDownSm({ rotated }) {
       <path
         d="M6 9l6 6 6-6"
         stroke="var(--atr-text-muted)"
-        strokeWidth="2"
+        strokeWidth={2}
         strokeLinecap="round"
       />
     </svg>
   );
 }
 
-export function DestinationCard({ d }) {
+interface DestinationCardProps {
+  d: Destination;
+}
+
+export function DestinationCard({ d }: DestinationCardProps) {
   const [hover, setHover] = useState(false);
   const router = useRouter();
-  const slug = d.name
-    .toLowerCase()
-    .replace(/[^a-z0-9\s]/g, "")
-    .replace(/\s+/g, "-");
+
   return (
     <div
-      onClick={() => router.push(`/explore/destinations/${slug}`)}
+      onClick={() => router.push(`/explore/destinations/${d.slug}`)}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
       style={{
@@ -46,11 +54,11 @@ export function DestinationCard({ d }) {
       }}
     >
       <div style={rg.destImgWrap}>
-        <SafeImage src={d.img} alt="" style={rg.destImg} />
-        <span style={rg.destTypeBadge}>{d.type}</span>
-        {d.marketProducts > 0 && (
+        <SafeImage src={d.coverImage?.url ?? ""} alt={d.name} style={rg.destImg} />
+        <span style={rg.destTypeBadge}>{d.type === "regency" ? "Kabupaten" : "Kota"}</span>
+        {d.marketProductsCount > 0 && (
           <span style={rg.destMarketBadge}>
-            {"\uD83D\uDED2"} {d.marketProducts} produk
+            {"\uD83D\uDED2"} {d.marketProductsCount} produk
           </span>
         )}
         {hover && (
@@ -66,38 +74,38 @@ export function DestinationCard({ d }) {
           <div style={{ flex: 1 }}>
             <h3 style={rg.destName}>{d.name}</h3>
             <div style={rg.destProvRow}>
-              <span style={rg.destProv}>{d.province}</span>
-              <span style={rg.destIslandPill}>{d.island}</span>
+              <span style={rg.destProv}>{d.province?.name}</span>
+              <span style={rg.destIslandPill}>{d.province?.island?.name}</span>
             </div>
           </div>
           <div style={rg.destRating}>
             <span style={rg.destStar}>{"\u2605"}</span>
-            <strong>{d.rating}</strong>
+            <strong>{d.ratingAverage}</strong>
           </div>
         </div>
 
         <div style={rg.destStatsBar}>
           <div style={rg.destStat}>
-            <strong>{d.attr}</strong> <span>Atraksi</span>
+            <strong>{d.attractionsCount}</strong> <span>Atraksi</span>
           </div>
           <div style={rg.destStatDiv} />
           <div style={rg.destStat}>
-            <strong>{d.desa}</strong> <span>Desa</span>
+            <strong>{d.villagesCount}</strong> <span>Desa</span>
           </div>
           <div style={rg.destStatDiv} />
           <div style={rg.destStat}>
-            <strong>{d.itin}</strong> <span>Itinerary</span>
+            <strong>{d.itinerariesCount}</strong> <span>Itinerary</span>
           </div>
           <div style={rg.destStatDiv} />
           <div style={rg.destStat}>
-            <strong>{d.guide}</strong> <span>Pemandu</span>
+            <strong>{d.tourGuidesCount}</strong> <span>Pemandu</span>
           </div>
         </div>
 
         <div style={rg.destTagRow}>
-          {d.tags.slice(0, 3).map((t) => (
-            <span key={t} style={rg.destTag}>
-              {t}
+          {d.tags?.slice(0, 3).map((t) => (
+            <span key={t.slug} style={rg.destTag}>
+              {t.name}
             </span>
           ))}
         </div>

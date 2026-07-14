@@ -1,15 +1,18 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
 import { TopNav, SiteFooter, Breadcrumb, CategoryTabs } from "@/components/layout";
 import { PROVINCES } from "@/data/explore-data";
 import { useDestinations } from "@/lib/hooks/use-destinations";
-import rg from "@/styles/destination-styles";
+import rgRaw from "@/styles/destination-styles";
+
+const rg = rgRaw as Record<string, React.CSSProperties>;
+import { DestinationCard, SkeletonCard, ErrorBanner, ChevDownSm } from "./_components/DestinationCard";
+import type { Destination } from "@/types/destination";
 
 const SORT_OPTIONS = [
   { id: "alpha", label: "A\u2013Z" },
-  { id: "alpha-rev", label: "Z\u2013A" },
+  { id: "alpha-desc", label: "Z\u2013A" },
   { id: "popular", label: "Terpopuler" },
   { id: "content", label: "Terbanyak konten" },
 ];
@@ -24,16 +27,27 @@ const ISLAND_LIST = [
   "Papua",
 ];
 
-import { DestinationCard, SkeletonCard, ErrorBanner, ChevDownSm } from "./_components/DestinationCard";
+interface FiltersState {
+  island: string;
+  province: string;
+  search: string;
+  sort: string;
+}
+
+interface AvailState {
+  attr: boolean;
+  desa: boolean;
+  guide: boolean;
+}
 
 export default function DestinationsPage() {
   /* ─── Read URL params for initial filter ─── */
-  const getInitialFilters = () => {
-    if (typeof window === "undefined") return undefined;
+  const getInitialFilters = (): FiltersState => {
+    const f: FiltersState = { island: "", province: "", search: "", sort: "alpha" };
+    if (typeof window === "undefined") return f;
     const sp = new URLSearchParams(window.location.search);
     const urlIsland = sp.get("island");
     const urlProvince = sp.get("province");
-    const f = { island: "", province: "", search: "", sort: "alpha" };
     if (urlIsland) {
       const name = ISLAND_LIST.find(
         (i) => i.toLowerCase().replace(/[^a-z0-9]+/g, "-") === urlIsland,
@@ -61,14 +75,24 @@ export default function DestinationsPage() {
     setFilters,
     loadMore,
     hasMore,
-  } = useDestinations(initFilters);
+  } = useDestinations(initFilters) as {
+    data: Destination[];
+    pagination?: { page: number; limit: number; total: number; totalPages: number };
+    isLoading: boolean;
+    isValidating: boolean;
+    isError: boolean;
+    filters: FiltersState;
+    setFilters: (f: FiltersState) => void;
+    loadMore: () => void;
+    hasMore: boolean;
+  };
 
   /* Multi-select and availability filters — kept client-side
      since the hook/API supports single-string island/province only. */
-  const [selectedIslands, setSelectedIslands] = useState([]);
-  const [selectedProvinces, setSelectedProvinces] = useState([]);
-  const [selectedCategories, setSelectedCategories] = useState([]);
-  const [avail, setAvail] = useState({
+  const [selectedIslands, setSelectedIslands] = useState<string[]>([]);
+  const [selectedProvinces, setSelectedProvinces] = useState<string[]>([]);
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [avail, setAvail] = useState<AvailState>({
     attr: false,
     desa: false,
     guide: false,
@@ -85,28 +109,32 @@ export default function DestinationsPage() {
   }, []);
 
   /* Sync search and sort to the hook — drives server-side filtering */
-  const handleSearchChange = (e) => {
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFilters({ ...filters, search: e.target.value });
   };
 
-  const handleSortChange = (e) => {
+  const handleSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setFilters({ ...filters, sort: e.target.value });
   };
 
   /* Client-side post-filter for values the hook doesn't support natively */
-  const filtered = data.filter((d) => {
-    if (selectedIslands.length > 0 && !selectedIslands.includes(d.island))
-      return false;
-    if (selectedProvinces.length > 0 && !selectedProvinces.includes(d.province))
-      return false;
-    if (
-      selectedCategories.length > 0 &&
-      !selectedCategories.some((c) => d.tags.includes(c))
-    )
-      return false;
-    if (avail.attr && d.attr <= 0) return false;
-    if (avail.desa && d.desa <= 0) return false;
-    if (avail.guide && d.guide <= 0) return false;
+  const filtered = (data || []).filter((d) => {
+    if (selectedIslands.length > 0) {
+      const dIsland = d.province?.island?.name;
+      if (!dIsland || !selectedIslands.includes(dIsland)) return false;
+    }
+    if (selectedProvinces.length > 0) {
+      const dProv = d.province?.name;
+      if (!dProv || !selectedProvinces.includes(dProv)) return false;
+    }
+    if (selectedCategories.length > 0) {
+      if (!d.tags || !selectedCategories.some((c) => d.tags?.some((t) => t.slug === c || t.name === c))) {
+        return false;
+      }
+    }
+    if (avail.attr && d.attractionsCount <= 0) return false;
+    if (avail.desa && d.villagesCount <= 0) return false;
+    if (avail.guide && d.tourGuidesCount <= 0) return false;
     return true;
   });
 
@@ -130,30 +158,30 @@ export default function DestinationsPage() {
     })),
     ...(avail.attr
       ? [
-          {
-            k: "avail",
-            v: "Tersedia Atraksi",
-            remove: () => setAvail((prev) => ({ ...prev, attr: false })),
-          },
-        ]
+        {
+          k: "avail",
+          v: "Tersedia Atraksi",
+          remove: () => setAvail((prev) => ({ ...prev, attr: false })),
+        },
+      ]
       : []),
     ...(avail.desa
       ? [
-          {
-            k: "avail",
-            v: "Tersedia Desa Wisata",
-            remove: () => setAvail((prev) => ({ ...prev, desa: false })),
-          },
-        ]
+        {
+          k: "avail",
+          v: "Tersedia Desa Wisata",
+          remove: () => setAvail((prev) => ({ ...prev, desa: false })),
+        },
+      ]
       : []),
     ...(avail.guide
       ? [
-          {
-            k: "avail",
-            v: "Tersedia Pemandu",
-            remove: () => setAvail((prev) => ({ ...prev, guide: false })),
-          },
-        ]
+        {
+          k: "avail",
+          v: "Tersedia Pemandu",
+          remove: () => setAvail((prev) => ({ ...prev, guide: false })),
+        },
+      ]
       : []),
   ];
 
@@ -245,8 +273,8 @@ export default function DestinationsPage() {
               <span style={rg.provHeroIcon}>{"\uD83D\uDCCD"}</span>
               <span>
                 <strong>{selectedProvinces[0]}</strong>, Provinsi dengan{" "}
-                {filtered.reduce((a, b) => a + b.attr, 0)} atraksi dan{" "}
-                {filtered.reduce((a, b) => a + b.desa, 0)} desa wisata terdaftar
+                {filtered.reduce((a, b) => a + b.attractionsCount, 0)} atraksi dan{" "}
+                {filtered.reduce((a, b) => a + b.villagesCount, 0)} desa wisata terdaftar
                 di Atourin.
               </span>
             </div>
@@ -384,7 +412,7 @@ export default function DestinationsPage() {
               <label key={a.k} style={rg.availLabel}>
                 <input
                   type="checkbox"
-                  checked={avail[a.k]}
+                  checked={avail[a.k as keyof AvailState]}
                   onChange={(e) =>
                     setAvail((prev) => ({ ...prev, [a.k]: e.target.checked }))
                   }
@@ -393,10 +421,10 @@ export default function DestinationsPage() {
                 <span
                   style={{
                     ...rg.availCheck,
-                    ...(avail[a.k] ? rg.availCheckOn : {}),
+                    ...(avail[a.k as keyof AvailState] ? rg.availCheckOn : {}),
                   }}
                 >
-                  {avail[a.k] && (
+                  {avail[a.k as keyof AvailState] && (
                     <svg width="10" height="10" viewBox="0 0 24 24" fill="none">
                       <path
                         d="M5 12l5 5L20 7"

@@ -9,7 +9,7 @@ import Image from "next/image";
  * Uses `fill` so the parent element MUST have `position: relative`
  * and an explicit or aspect-ratio-driven size.
  */
-export default function SafeImage({ src, alt, style = {}, placeholder, blurDataURL, ...props }) {
+export default function SafeImage({ src, alt, style = {}, placeholder = undefined, blurDataURL = undefined, ...props }) {
   const [errored, setErrored] = useState(false);
 
   if (errored || !src) {
