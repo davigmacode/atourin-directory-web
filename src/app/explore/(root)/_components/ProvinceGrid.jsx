@@ -19,9 +19,9 @@ export default function ProvinceGrid({
 
   const filtered = provinces
     .filter((p) => p.name.toLowerCase().includes(search.toLowerCase()))
-    .filter((p) => island === "Semua" || p.island === island)
+    .filter((p) => island === "Semua" || p.island?.name === island)
     .sort((a, b) =>
-      sort === "alpha" ? a.name.localeCompare(b.name) : b.popular - a.popular,
+      sort === "alpha" ? a.name.localeCompare(b.name) : b.popularityScore - a.popularityScore,
     );
 
   return (
@@ -142,33 +142,29 @@ export default function ProvinceGrid({
               </div>
             ))
           : filtered.map((p) => {
-              const slug = p.name
-                .toLowerCase()
-                .replace(/[^a-z0-9\s]/g, "")
-                .replace(/\s+/g, "-");
               return (
                 <Link
                   key={p.name}
-                  href={`/explore/destinations?province=${slug}`}
+                  href={`/explore/destinations?province=${p.slug}`}
                   style={{ ...ex.provCard, textDecoration: "none", color: "inherit" }}
                 >
                   <div style={ex.provImgWrap}>
-                    <SafeImage src={p.img} alt="" style={ex.provImg} />
-                    <span style={ex.provIslandBadge}>{p.island}</span>
+                    <SafeImage src={p.coverImage?.url} alt="" style={ex.provImg} />
+                    <span style={ex.provIslandBadge}>{p.island?.name}</span>
                   </div>
                   <div style={ex.provBody}>
                     <div style={ex.provName}>{p.name}</div>
                     <div style={ex.provStats}>
                       <span>
-                        <strong>{p.dest ?? 0}</strong> destinasi
+                        <strong>{p.destinationsCount ?? 0}</strong> destinasi
                       </span>
                       <span style={ex.provDot}>·</span>
                       <span>
-                        <strong>{p.attr ?? 0}</strong> atraksi
+                        <strong>{p.attractionsCount ?? 0}</strong> atraksi
                       </span>
                       <span style={ex.provDot}>·</span>
                       <span>
-                        <strong>{p.desa ?? 0}</strong> desa
+                        <strong>{p.villagesCount ?? 0}</strong> desa
                       </span>
                     </div>
                   </div>
