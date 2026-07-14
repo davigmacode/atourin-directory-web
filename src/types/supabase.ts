@@ -65,6 +65,71 @@ export type Database = {
           },
         ]
       }
+      destinations: {
+        Row: {
+          attractions_count: number
+          cover_image: Json
+          created_at: string
+          descriptions: Json
+          id: string
+          itineraries_count: number
+          market_products_count: number
+          name: string
+          popular_score: number
+          province_id: string
+          rating_average: number
+          slug: string
+          tour_guides_count: number
+          type: string
+          updated_at: string
+          villages_count: number
+        }
+        Insert: {
+          attractions_count?: number
+          cover_image: Json
+          created_at?: string
+          descriptions?: Json
+          id: string
+          itineraries_count?: number
+          market_products_count?: number
+          name: string
+          popular_score?: number
+          province_id: string
+          rating_average?: number
+          slug: string
+          tour_guides_count?: number
+          type: string
+          updated_at?: string
+          villages_count?: number
+        }
+        Update: {
+          attractions_count?: number
+          cover_image?: Json
+          created_at?: string
+          descriptions?: Json
+          id?: string
+          itineraries_count?: number
+          market_products_count?: number
+          name?: string
+          popular_score?: number
+          province_id?: string
+          rating_average?: number
+          slug?: string
+          tour_guides_count?: number
+          type?: string
+          updated_at?: string
+          villages_count?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "destinations_province_id_fkey"
+            columns: ["province_id"]
+            isOneToOne: false
+            referencedRelation: "provinces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       facilities: {
         Row: {
           created_at: string
@@ -148,6 +213,42 @@ export type Database = {
           name?: string
           provinces_count?: number
           updated_at?: string
+        }
+        Relationships: []
+      }
+      media: {
+        Row: {
+          created_at: string
+          entity_id: string
+          entity_type: string
+          id: string
+          metadata: Json
+          sort_order: number
+          type: string
+          updated_at: string
+          url: string
+        }
+        Insert: {
+          created_at?: string
+          entity_id: string
+          entity_type: string
+          id?: string
+          metadata?: Json
+          sort_order?: number
+          type: string
+          updated_at?: string
+          url: string
+        }
+        Update: {
+          created_at?: string
+          entity_id?: string
+          entity_type?: string
+          id?: string
+          metadata?: Json
+          sort_order?: number
+          type?: string
+          updated_at?: string
+          url?: string
         }
         Relationships: []
       }

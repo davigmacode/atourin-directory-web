@@ -26,33 +26,33 @@ export default function CategoryGrid({ categories = [], isLoading = false }) {
       <div style={ex.catGrid}>
         {isLoading
           ? Array.from({ length: 5 }).map((_, i) => (
-              <div key={i} style={ex.catCard}>
-                <div
-                  style={{
-                    width: 60,
-                    height: 60,
-                    borderRadius: 14,
-                    background: "var(--atr-outline)",
-                  }}
-                />
-                <div
-                  style={{
-                    height: 13,
-                    background: "var(--atr-outline)",
-                    borderRadius: 6,
-                    width: "60%",
-                  }}
-                />
-              </div>
-            ))
+            <div key={i} style={ex.catCard}>
+              <div
+                style={{
+                  width: 60,
+                  height: 60,
+                  borderRadius: 14,
+                  background: "var(--atr-outline)",
+                }}
+              />
+              <div
+                style={{
+                  height: 13,
+                  background: "var(--atr-outline)",
+                  borderRadius: 6,
+                  width: "60%",
+                }}
+              />
+            </div>
+          ))
           : categories.map((c) => (
-              <Link key={c.name} href={getCategoryRoute(c)} style={{ ...ex.catCard, textDecoration: "none" }}>
-                <div style={{ ...ex.catIcon, background: c.color }}>
-                  {c.icon}
-                </div>
-                <div style={ex.catName}>{c.name}</div>
-              </Link>
-            ))}
+            <Link key={c.name} href={getCategoryRoute(c)} style={{ ...ex.catCard, textDecoration: "none" }}>
+              <div style={{ ...ex.catIcon, background: c.metadata.color }}>
+                {c.metadata.icon}
+              </div>
+              <div style={ex.catName}>{c.name}</div>
+            </Link>
+          ))}
       </div>
     </section>
   );
