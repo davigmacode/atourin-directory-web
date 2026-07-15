@@ -2,20 +2,30 @@
 
 import useSWR from "swr";
 import { useState, useCallback, useEffect } from "react";
+import type { Attraction } from "@/types/attraction";
 
 const PER_PAGE = 12;
 
+export interface AttractionsFilters {
+  province?: string;
+  category?: string;
+  priceRange?: string;
+  facilities?: string;
+  rating?: string;
+  sort?: string;
+}
+
 export function useAttractions() {
   const [page, setPage] = useState(1);
-  const [filters, setFilters] = useState({
-    provinsi: "",
-    kategori: "",
-    tiket_masuk: "",
-    fasilitas: "",
+  const [filters, setFilters] = useState<AttractionsFilters>({
+    province: "",
+    category: "",
+    priceRange: "",
+    facilities: "",
     rating: "",
-    sort: "alpha",
+    sort: "popularity",
   });
-  const [allData, setAllData] = useState([]);
+  const [allData, setAllData] = useState<Attraction[]>([]);
 
   const params = new URLSearchParams();
   params.set("page", String(page));
@@ -25,21 +35,21 @@ export function useAttractions() {
   });
 
   const { data, error, isLoading, isValidating } = useSWR(
-    `/attractions?${params}`,
+    `/attractions?${params}`
   );
 
   useEffect(() => {
     if (data?.data) {
       setAllData((prev) => (page === 1 ? data.data : [...prev, ...data.data]));
     }
-  }, [data]);
+  }, [data, page]);
 
   const loadMore = useCallback(() => {
     if (data?.pagination?.page < data?.pagination?.totalPages)
       setPage((p) => p + 1);
   }, [data]);
 
-  const updateFilters = useCallback((newFilters) => {
+  const updateFilters = useCallback((newFilters: AttractionsFilters) => {
     setFilters(newFilters);
     setPage(1);
     setAllData([]);

@@ -1,20 +1,23 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { TopNav, SiteFooter, CategoryTabs, CTABand } from "@/components/layout";
-import { cardStyles } from "@/styles/attraction-styles";
-import { useAttractions } from "@/lib/hooks/use-attractions";
+import { TopNav, SiteFooter, CategoryTabs } from "@/components/layout";
+import { cardStyles as cardStylesRaw } from "@/styles/attraction-styles";
+import { useAttractions, type AttractionsFilters } from "@/lib/hooks/use-attractions";
 import { ATTR_FILTER_OPTIONS } from "@/data/attractions";
+import type { Attraction } from "@/types/attraction";
 
-import FilterBar, { PlusIcon, SparkleIcon } from "./_components/FilterBar";
+import FilterBar from "./_components/FilterBar";
 import AttractionHero from "./_components/AttractionHero";
 import AttractionGrid, { SkeletonCard } from "./_components/AttractionGrid";
+
+const cardStyles = cardStylesRaw as Record<string, React.CSSProperties>;
 
 /* ── useDirectoryState hook ── */
 function useDirectoryState(defaultChips = ["Bali", "Pantai", "< Rp25rb"]) {
   const [view, setView] = useState("grid");
   const [activeChips, setActiveChips] = useState(defaultChips);
-  const [openFilter, setOpenFilter] = useState(null);
+  const [openFilter, setOpenFilter] = useState<string | null>(null);
   const [openSort, setOpenSort] = useState(false);
   const [sort, setSort] = useState("Paling populer");
   return {
@@ -31,12 +34,20 @@ function useDirectoryState(defaultChips = ["Bali", "Pantai", "< Rp25rb"]) {
   };
 }
 
-const FILTER_KEY_MAP = {
-  Provinsi: "provinsi",
-  Kategori: "kategori",
-  "Tiket masuk": "tiket_masuk",
-  Fasilitas: "fasilitas",
+const FILTER_KEY_MAP: Record<string, keyof AttractionsFilters> = {
+  Provinsi: "province",
+  Kategori: "category",
+  "Tiket masuk": "priceRange",
+  Fasilitas: "facilities",
   Rating: "rating",
+};
+
+const SORT_KEY_MAP: Record<string, string> = {
+  "Paling populer": "popularity",
+  "Terbaru": "newest",
+  "Rating tertinggi": "rating-desc",
+  "Harga terendah": "price-asc",
+  "Harga tertinggi": "price-desc",
 };
 
 /* ── Page ── */
@@ -56,23 +67,23 @@ export default function AttractionsPage() {
   // Sync default chips to API filters on first mount
   useEffect(() => {
     setFilters({
-      provinsi: "Bali",
-      kategori: "Pantai",
-      tiket_masuk: "< Rp25rb",
-      fasilitas: "",
+      province: "Bali",
+      category: "Pantai",
+      priceRange: "< Rp25rb",
+      facilities: "",
       rating: "",
-      sort: "Paling populer",
+      sort: "popularity",
     });
   }, []);
 
-  function handlePickFilter(label, value) {
+  function handlePickFilter(label: string, value: string) {
     const fkey = FILTER_KEY_MAP[label];
     if (fkey) {
       setFilters({ ...filters, [fkey]: value });
     }
   }
 
-  function handleRemoveFilter(chip) {
+  function handleRemoveFilter(chip: string) {
     for (const [flabel, opts] of Object.entries(ATTR_FILTER_OPTIONS)) {
       if (opts.includes(chip)) {
         const fkey = FILTER_KEY_MAP[flabel];
@@ -84,18 +95,19 @@ export default function AttractionsPage() {
 
   function handleClearFilters() {
     setFilters({
-      provinsi: "",
-      kategori: "",
-      tiket_masuk: "",
-      fasilitas: "",
+      province: "",
+      category: "",
+      priceRange: "",
+      facilities: "",
       rating: "",
       sort: filters.sort,
     });
   }
 
-  function handleSortChange(value) {
+  function handleSortChange(value: string) {
     ui.setSort(value);
-    setFilters({ ...filters, sort: value });
+    const engSort = SORT_KEY_MAP[value] || "popularity";
+    setFilters({ ...filters, sort: engSort });
   }
 
   return (
@@ -139,7 +151,7 @@ export default function AttractionsPage() {
             onClearFilters={handleClearFilters}
             onSortChange={handleSortChange}
             resultLabel="atraksi"
-            totalResults={pagination?.total || 1247}
+            totalResults={pagination?.total || 0}
           />
           <AttractionGrid
             data={data}
@@ -149,8 +161,6 @@ export default function AttractionsPage() {
           />
         </>
       )}
-
-      <CTABand />
       <SiteFooter />
     </div>
   );

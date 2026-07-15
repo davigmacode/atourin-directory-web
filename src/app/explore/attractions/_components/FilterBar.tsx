@@ -1,11 +1,17 @@
 "use client";
 
 import React, { useRef, useEffect } from "react";
-import { dirStyles } from "@/styles/attraction-styles";
+import { dirStyles as dirStylesRaw } from "@/styles/attraction-styles";
 import { ATTR_FILTERS, ATTR_FILTER_OPTIONS, SORT_OPTIONS } from "@/data/attractions";
 
-/* ── SVG icons ── */
-export function HeartIcon({ filled, color = "var(--atr-text)" }) {
+const dirStyles = dirStylesRaw as Record<string, React.CSSProperties>;
+
+interface HeartIconProps {
+  filled: boolean;
+  color?: string;
+}
+
+export function HeartIcon({ filled, color = "var(--atr-text)" }: HeartIconProps) {
   return (
     <svg
       width="16"
@@ -58,7 +64,11 @@ export function StarFill() {
   );
 }
 
-export function PlusIcon({ color = "var(--atr-text)" }) {
+interface PlusIconProps {
+  color?: string;
+}
+
+export function PlusIcon({ color = "var(--atr-text)" }: PlusIconProps) {
   return (
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
       <path
@@ -84,7 +94,11 @@ export function SparkleIcon() {
   );
 }
 
-export function FilterGlyph({ kind }) {
+interface FilterGlyphProps {
+  kind: string;
+}
+
+export function FilterGlyph({ kind }: FilterGlyphProps) {
   const c = "var(--atr-purple)";
   if (kind === "pin")
     return (
@@ -157,7 +171,11 @@ export function FilterGlyph({ kind }) {
   return null;
 }
 
-export function ChevDown({ rotated }) {
+interface ChevDownProps {
+  rotated: boolean;
+}
+
+export function ChevDown({ rotated }: ChevDownProps) {
   return (
     <svg
       width="12"
@@ -263,13 +281,41 @@ export function SortIcon() {
   );
 }
 
-export function Stat({ n, label }) {
+interface StatProps {
+  n: number | string;
+  label: string;
+}
+
+export function Stat({ n, label }: StatProps) {
   return (
     <div style={dirStyles.stat}>
       <div style={dirStyles.statN}>{n}</div>
       <div style={dirStyles.statL}>{label}</div>
     </div>
   );
+}
+
+interface FilterBarProps {
+  ui: {
+    view: string;
+    setView: (v: string) => void;
+    activeChips: string[];
+    setActiveChips: (c: string[]) => void;
+    openFilter: string | null;
+    setOpenFilter: (f: string | null) => void;
+    openSort: boolean;
+    setOpenSort: (s: boolean) => void;
+    sort: string;
+    setSort: (s: string) => void;
+  };
+  onPickFilter?: (label: string, value: string) => void;
+  onRemoveFilter?: (c: string) => void;
+  onClearFilters?: () => void;
+  onSortChange?: (s: string) => void;
+  filters?: { label: string; icon: string }[];
+  filterOptions?: Record<string, string[]>;
+  resultLabel?: string;
+  totalResults?: number;
 }
 
 export default function FilterBar({
@@ -282,25 +328,25 @@ export default function FilterBar({
   filterOptions = ATTR_FILTER_OPTIONS,
   resultLabel = "atraksi",
   totalResults = 1247,
-}) {
-  const wrapRef = useRef(null);
+}: FilterBarProps) {
+  const wrapRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
-    function onDoc(e) {
-      if (wrapRef.current && !wrapRef.current.contains(e.target)) {
+    function onDoc(e: MouseEvent) {
+      if (wrapRef.current && !wrapRef.current.contains(e.target as Node)) {
         ui.setOpenFilter(null);
         ui.setOpenSort(false);
       }
     }
     document.addEventListener("mousedown", onDoc);
     return () => document.removeEventListener("mousedown", onDoc);
-  }, []);
+  }, [ui]);
 
-  function toggleFilter(label) {
+  function toggleFilter(label: string) {
     ui.setOpenFilter(ui.openFilter === label ? null : label);
     ui.setOpenSort(false);
   }
 
-  function pickFilter(label, value) {
+  function pickFilter(label: string, value: string) {
     if (!ui.activeChips.includes(value)) {
       ui.setActiveChips([...ui.activeChips, value]);
     }
@@ -308,7 +354,7 @@ export default function FilterBar({
     ui.setOpenFilter(null);
   }
 
-  function removeChip(c) {
+  function removeChip(c: string) {
     ui.setActiveChips(ui.activeChips.filter((x) => x !== c));
     onRemoveFilter?.(c);
   }

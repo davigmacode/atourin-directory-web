@@ -3,8 +3,11 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { SafeImage } from "@/components/cards";
-import { cardStyles } from "@/styles/attraction-styles";
+import { cardStyles as cardStylesRaw } from "@/styles/attraction-styles";
 import { HeartIcon, ClockSm, PinSm, StarFill } from "./FilterBar";
+import type { Attraction } from "@/types/attraction";
+
+const cardStyles = cardStylesRaw as Record<string, React.CSSProperties>;
 
 export function SkeletonCard() {
   const skeletonBg = { background: "var(--atr-outline)", borderRadius: 4 };
@@ -39,27 +42,49 @@ export function SkeletonCard() {
   );
 }
 
-export function AttrCard({
-  img,
-  name,
-  cat,
-  catBg,
-  catFg,
-  region,
-  price,
-  rating,
-  reviews,
-  hours,
-  trekking,
-  save,
-  onSave,
-}) {
+function getTimezoneAbbreviation(tz: string): string {
+  if (tz === "Asia/Jakarta") return "WIB";
+  if (tz === "Asia/Makassar") return "WITA";
+  if (tz === "Asia/Jayapura") return "WIT";
+  return "";
+}
+
+function getOpeningHoursDisplay(oh: any): string {
+  if (!oh) return "";
+  if (oh.is24Hours) return "24 Jam";
+  
+  const days = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
+  const todayIndex = new Date().getDay();
+  const todayName = days[todayIndex];
+  const todayPeriods = oh.periods?.[todayName];
+  
+  if (!todayPeriods || todayPeriods.length === 0) {
+    return "Tutup Hari Ini";
+  }
+  
+  const tzAbbrev = getTimezoneAbbreviation(oh.timezone);
+  const tzSuffix = tzAbbrev ? ` ${tzAbbrev}` : "";
+  return todayPeriods.map((p: any) => `${p.open}–${p.close}`).join(", ") + tzSuffix;
+}
+
+interface AttrCardProps {
+  a: Attraction;
+  save: boolean;
+  onSave: () => void;
+}
+
+export function AttrCard({ a, save, onSave }: AttrCardProps) {
   const [hover, setHover] = useState(false);
   const router = useRouter();
-  const slug = name
-    .toLowerCase()
-    .replace(/[^a-z0-9\s]/g, "")
-    .replace(/\s+/g, "-");
+
+  const mainCategory = a.categories?.[0];
+  const catBg = mainCategory?.metadata?.color || "#EDE9FF";
+  const catFg = "var(--atr-purple)";
+  
+  const regionText = a.destination
+    ? `${a.destination.name}, ${a.destination.province?.name || ""}`
+    : "";
+
   return (
     <article
       style={{
@@ -74,15 +99,17 @@ export function AttrCard({
       }}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
-      onClick={() => router.push(`/explore/attractions/${slug}`)}
+      onClick={() => router.push(`/explore/attractions/${a.slug}`)}
     >
       <div style={cardStyles.cardImgWrap}>
-        <SafeImage src={img} alt="" style={cardStyles.cardImg} />
-        <span
-          style={{ ...cardStyles.cardTag, background: catBg, color: catFg }}
-        >
-          {cat}
-        </span>
+        <SafeImage src={a.coverImage?.url ?? ""} alt={a.name} style={cardStyles.cardImg} />
+        {mainCategory && (
+          <span
+            style={{ ...cardStyles.cardTag, background: catBg, color: catFg }}
+          >
+            {mainCategory.name}
+          </span>
+        )}
         <button
           style={{
             ...cardStyles.cardSave,
@@ -95,7 +122,7 @@ export function AttrCard({
         >
           <HeartIcon filled={save} color={save ? "#fff" : "var(--atr-text)"} />
         </button>
-        {trekking && (
+        {a.trekking && (
           <div style={cardStyles.cardImgBottom}>
             <span
               style={{
@@ -110,7 +137,7 @@ export function AttrCard({
       </div>
 
       <div style={cardStyles.cardBody}>
-        <h3 style={cardStyles.cardTitle}>{name}</h3>
+        <h3 style={cardStyles.cardTitle}>{a.name}</h3>
         <div
           style={{
             display: "flex",
@@ -120,7 +147,7 @@ export function AttrCard({
             color: "var(--atr-text-muted)",
           }}
         >
-          <PinSm /> {region}
+          <PinSm /> {regionText}
         </div>
         <div
           style={{
@@ -134,22 +161,22 @@ export function AttrCard({
           <span
             style={{ display: "inline-flex", alignItems: "center", gap: 4 }}
           >
-            <ClockSm /> {hours}
+            <ClockSm /> {getOpeningHoursDisplay(a.openingHours)}
           </span>
-          {price === 0 ? (
+          {a.price === 0 ? (
             <span style={{ color: "#2D8838", fontWeight: 700 }}>
               · Gratis masuk
             </span>
           ) : (
             <span>
-              · Tiket Rp {(price / 1000).toLocaleString("id-ID")}rb
+              · Tiket Rp {(a.price / 1000).toLocaleString("id-ID")}rb
             </span>
           )}
         </div>
         <div style={{ ...cardStyles.cardFooter, paddingTop: 10 }}>
           <div style={cardStyles.ratingRow}>
-            <StarFill /> <strong>{rating}</strong>
-            <span style={cardStyles.reviewCount}>({reviews} review)</span>
+            <StarFill /> <strong>{a.ratingAverage}</strong>
+            <span style={cardStyles.reviewCount}>({a.reviewsCount} review)</span>
           </div>
           <span
             style={{
@@ -168,9 +195,21 @@ export function AttrCard({
   );
 }
 
-export default function AttractionGrid({ data, loadMore, hasMore, pagination }) {
-  const [saved, setSaved] = useState({});
-  function toggleSave(i) {
+interface AttractionGridProps {
+  data: Attraction[];
+  loadMore: () => void;
+  hasMore: boolean;
+  pagination?: {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+  };
+}
+
+export default function AttractionGrid({ data, loadMore, hasMore, pagination }: AttractionGridProps) {
+  const [saved, setSaved] = useState<Record<number, boolean>>({});
+  function toggleSave(i: number) {
     setSaved((prev) => ({ ...prev, [i]: !prev[i] }));
   }
   return (
@@ -184,10 +223,10 @@ export default function AttractionGrid({ data, loadMore, hasMore, pagination }) 
         </div>
       </div>
       <div style={cardStyles.grid}>
-        {data.map((a, i) => (
+        {(data || []).map((a, i) => (
           <AttrCard
             key={a.id || i}
-            {...a}
+            a={a}
             save={saved[i] ?? false}
             onSave={() => toggleSave(i)}
           />
