@@ -15,6 +15,7 @@ export { default as SkeletonCard } from "./SkeletonCard";
 export { default as LoadingPill } from "./LoadingPill";
 export { default as DateRangeModal } from "./DateRangeModal";
 export { default as GuestModal } from "./GuestModal";
-// LoginModal is intentionally not re-exported — internal to TopNav only
+export { default as FilterDropdown } from "./FilterDropdown";
+export { default as SortAndViewToggle } from "./SortAndViewToggle";
 
 export { Sk, SkText, SkProductCard, SkList, EmptyState } from "./Feedback";

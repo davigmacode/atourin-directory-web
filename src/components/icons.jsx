@@ -217,3 +217,125 @@ export function MapIcon() {
   );
 }
 
+export function FilterGlyph({ kind, color = "var(--atr-purple)" }) {
+  if (kind === "pin")
+    return (
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+        <path
+          d="M12 2C7.6 2 4 5.4 4 9.6c0 5.4 7 12 7.3 12.3.4.3 1 .3 1.4 0 .3-.3 7.3-6.9 7.3-12.3C20 5.4 16.4 2 12 2z"
+          stroke={color}
+          strokeWidth="1.8"
+        />
+        <circle cx="12" cy="9.5" r="2.5" stroke={color} strokeWidth="1.8" />
+      </svg>
+    );
+  if (kind === "clock")
+    return (
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+        <circle cx="12" cy="12" r="9" stroke={color} strokeWidth="1.8" />
+        <path
+          d="M12 7v5l3 2"
+          stroke={color}
+          strokeWidth="1.8"
+          strokeLinecap="round"
+        />
+      </svg>
+    );
+  if (kind === "wallet")
+    return (
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+        <rect
+          x="3"
+          y="6"
+          width="18"
+          height="13"
+          rx="2"
+          stroke={color}
+          strokeWidth="1.8"
+        />
+        <path
+          d="M16 12.5h3"
+          stroke={color}
+          strokeWidth="1.8"
+          strokeLinecap="round"
+        />
+      </svg>
+    );
+  if (kind === "users")
+    return (
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+        <circle cx="9" cy="9" r="3" stroke={color} strokeWidth="1.8" />
+        <circle cx="17" cy="10" r="2.4" stroke={color} strokeWidth="1.8" />
+        <path
+          d="M3 19c0-3 2.7-5 6-5s6 2 6 5M15 19c0-2 1.5-4 4-4s4 1.5 4 4"
+          stroke={color}
+          strokeWidth="1.8"
+          strokeLinecap="round"
+        />
+      </svg>
+    );
+  if (kind === "tag")
+    return (
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+        <path
+          d="M3 12V4h8l10 10-8 8-10-10z"
+          stroke={color}
+          strokeWidth="1.8"
+          strokeLinejoin="round"
+        />
+        <circle cx="8" cy="8" r="1.4" fill={color} />
+      </svg>
+    );
+  return null;
+}
+
+export function ChevDown({ rotated }) {
+  return (
+    <svg
+      width="12"
+      height="12"
+      viewBox="0 0 24 24"
+      fill="none"
+      style={{
+        transition: "transform .2s",
+        transform: rotated ? "rotate(180deg)" : "none",
+      }}
+    >
+      <path
+        d="M6 9l6 6 6-6"
+        stroke="var(--atr-text-muted)"
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
+export function CheckIcon() {
+  return (
+    <svg width="10" height="10" viewBox="0 0 24 24" fill="none">
+      <path
+        d="M5 12l5 5L20 7"
+        stroke="#fff"
+        strokeWidth="3"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+export function SortIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+      <path
+        d="M7 4v16M3 8l4-4 4 4M17 20V4M13 16l4 4 4-4"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
