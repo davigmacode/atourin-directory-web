@@ -31,7 +31,7 @@ const rg = {
   /* Filter bar */
   filterStick: {
     position: "sticky",
-    top: 128.8,
+    top: 135,
     zIndex: 30,
     background: "#fff",
     borderBottom: "1px solid var(--atr-outline)",
@@ -151,6 +151,25 @@ const rg = {
   checkboxOn: {
     background: "var(--atr-purple)",
     border: "1.5px solid var(--atr-purple)",
+  },
+  radio: {
+    width: 16,
+    height: 16,
+    borderRadius: "50%",
+    border: "1.5px solid var(--atr-outline)",
+    display: "inline-flex",
+    alignItems: "center",
+    justifyContent: "center",
+    flexShrink: 0,
+  },
+  radioOn: {
+    borderColor: "var(--atr-purple)",
+  },
+  radioInner: {
+    width: 8,
+    height: 8,
+    borderRadius: "50%",
+    background: "var(--atr-purple)",
   },
 
   islandStrip: { display: "flex", gap: 4, flexWrap: "wrap" },

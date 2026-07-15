@@ -1,30 +1,23 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import useSWR from "swr";
 import { TopNav, SiteFooter, Breadcrumb, CategoryTabs } from "@/components/layout";
-import { PROVINCES } from "@/data/explore-data";
-import { useDestinations } from "@/lib/hooks/use-destinations";
 import rgRaw from "@/styles/destination-styles";
 
 const rg = rgRaw as Record<string, React.CSSProperties>;
 import { DestinationCard, SkeletonCard, ErrorBanner, ChevDownSm } from "./_components/DestinationCard";
+import DropdownFilter from "./_components/DropdownFilter";
+import { useDestinations } from "@/lib/hooks/use-destinations";
 import type { Destination } from "@/types/destination";
+import type { Island } from "@/types/island";
+import type { Province } from "@/types/province";
 
 const SORT_OPTIONS = [
   { id: "alpha", label: "A\u2013Z" },
   { id: "alpha-desc", label: "Z\u2013A" },
   { id: "popular", label: "Terpopuler" },
   { id: "content", label: "Terbanyak konten" },
-];
-
-const ISLAND_LIST = [
-  "Jawa",
-  "Sumatera",
-  "Kalimantan",
-  "Sulawesi",
-  "Bali & Nusa Tenggara",
-  "Maluku",
-  "Papua",
 ];
 
 interface FiltersState {
@@ -41,25 +34,22 @@ interface AvailState {
 }
 
 export default function DestinationsPage() {
+  /* ─── Fetch Islands and Provinces from API ─── */
+  const { data: islandsRes } = useSWR<{ data: Island[] }>("/islands");
+  const { data: provincesRes } = useSWR<{ data: Province[] }>("/provinces");
+
+  const islandsList = islandsRes?.data || [];
+  const provincesList = provincesRes?.data || [];
+
   /* ─── Read URL params for initial filter ─── */
   const getInitialFilters = (): FiltersState => {
     const f: FiltersState = { island: "", province: "", search: "", sort: "alpha" };
     if (typeof window === "undefined") return f;
     const sp = new URLSearchParams(window.location.search);
-    const urlIsland = sp.get("island");
-    const urlProvince = sp.get("province");
-    if (urlIsland) {
-      const name = ISLAND_LIST.find(
-        (i) => i.toLowerCase().replace(/[^a-z0-9]+/g, "-") === urlIsland,
-      );
-      if (name) f.island = name;
-    }
-    if (urlProvince) {
-      const name = PROVINCES.find(
-        (p) => p.name.toLowerCase().replace(/[^a-z0-9]+/g, "-") === urlProvince,
-      )?.name;
-      if (name) f.province = name;
-    }
+    const urlSearch = sp.get("search");
+    const urlSort = sp.get("sort");
+    if (urlSearch) f.search = urlSearch;
+    if (urlSort) f.sort = urlSort;
     return f;
   };
 
@@ -98,23 +88,46 @@ export default function DestinationsPage() {
     guide: false,
   });
 
-  /* UI-only local state */
-  const [provDropdownOpen, setProvDropdownOpen] = useState(false);
-  const [provSearch, setProvSearch] = useState("");
-
-  /* Sync selectedIslands/Provinces from initial URL filters */
+  /* Sync selectedIslands/Provinces and hook filters from URL parameters once API data is loaded */
   useEffect(() => {
-    if (initFilters.island) setSelectedIslands([initFilters.island]);
-    if (initFilters.province) setSelectedProvinces([initFilters.province]);
-  }, []);
+    if (typeof window === "undefined") return;
+    const sp = new URLSearchParams(window.location.search);
+    const urlIsland = sp.get("island");
+    const urlProvince = sp.get("province");
 
-  /* Sync search and sort to the hook — drives server-side filtering */
+    let updatedIsland = "";
+    let updatedProvince = "";
+
+    if (urlIsland && islandsList.length > 0) {
+      const match = islandsList.find(
+        (i) => i.name.toLowerCase().replace(/[^a-z0-9\s]/g, "").replace(/\s+/g, "-") === urlIsland
+      );
+      if (match) {
+        updatedIsland = match.name;
+        setSelectedIslands([match.name]);
+      }
+    }
+
+    if (urlProvince && provincesList.length > 0) {
+      const match = provincesList.find((p) => p.slug === urlProvince);
+      if (match) {
+        updatedProvince = match.name;
+        setSelectedProvinces([match.name]);
+      }
+    }
+
+    if (updatedIsland || updatedProvince) {
+      setFilters({
+        ...filters,
+        island: updatedIsland || filters.island,
+        province: updatedProvince || filters.province,
+      });
+    }
+  }, [islandsList, provincesList]);
+
+  /* Sync search to the hook — drives server-side filtering */
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFilters({ ...filters, search: e.target.value });
-  };
-
-  const handleSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setFilters({ ...filters, sort: e.target.value });
   };
 
   /* Client-side post-filter for values the hook doesn't support natively */
@@ -191,13 +204,7 @@ export default function DestinationsPage() {
     setSelectedProvinces([]);
     setSelectedCategories([]);
     setAvail({ attr: false, desa: false, guide: false });
-    setProvSearch("");
-    setProvDropdownOpen(false);
   }
-
-  const provinceFilteredList = PROVINCES.filter((p) =>
-    p.name.toLowerCase().includes(provSearch.toLowerCase()),
-  );
 
   const headingTitle =
     selectedProvinces.length === 1
@@ -309,98 +316,33 @@ export default function DestinationsPage() {
             />
           </div>
 
-          {/* Province multiselect */}
-          <div style={{ position: "relative" }}>
-            <button
-              onClick={() => setProvDropdownOpen(!provDropdownOpen)}
-              style={rg.filterBtn}
-            >
-              <span>
-                Provinsi{" "}
-                {selectedProvinces.length > 0 && (
-                  <span style={rg.filterCount}>{selectedProvinces.length}</span>
-                )}
-              </span>
-              <ChevDownSm rotated={provDropdownOpen} />
-            </button>
-            {provDropdownOpen && (
-              <div style={rg.provDropdown}>
-                <input
-                  style={rg.provDropdownSearch}
-                  placeholder="Cari provinsi..."
-                  value={provSearch}
-                  onChange={(e) => setProvSearch(e.target.value)}
-                />
-                <div style={rg.provDropdownList}>
-                  {provinceFilteredList.map((p) => {
-                    const checked = selectedProvinces.includes(p.name);
-                    return (
-                      <button
-                        key={p.name}
-                        onClick={() => {
-                          if (checked)
-                            setSelectedProvinces((prev) =>
-                              prev.filter((x) => x !== p.name),
-                            );
-                          else
-                            setSelectedProvinces((prev) => [...prev, p.name]);
-                        }}
-                        style={rg.provDropdownItem}
-                      >
-                        <span
-                          style={{
-                            ...rg.checkbox,
-                            ...(checked ? rg.checkboxOn : {}),
-                          }}
-                        >
-                          {checked && (
-                            <svg
-                              width="10"
-                              height="10"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                            >
-                              <path
-                                d="M5 12l5 5L20 7"
-                                stroke="#fff"
-                                strokeWidth="3"
-                                strokeLinecap="round"
-                              />
-                            </svg>
-                          )}
-                        </span>
-                        <span>{p.name}</span>
-                        <span style={rg.provDropdownIsland}>{p.island}</span>
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-            )}
-          </div>
+          {/* Island Filter */}
+          <DropdownFilter
+            label="Pulau"
+            options={islandsList.map((i) => ({
+              id: i.name,
+              name: i.name,
+            }))}
+            selectedValues={selectedIslands}
+            onChange={setSelectedIslands}
+            multiple={true}
+            minWidth={200}
+          />
 
-          {/* Island chips */}
-          <div style={rg.islandStrip}>
-            {ISLAND_LIST.map((i) => {
-              const active = selectedIslands.includes(i);
-              return (
-                <button
-                  key={i}
-                  onClick={() => {
-                    if (active)
-                      setSelectedIslands((prev) => prev.filter((x) => x !== i));
-                    else setSelectedIslands((prev) => [...prev, i]);
-                  }}
-                  style={{
-                    ...rg.islandStripChip,
-                    ...(active ? rg.islandStripChipOn : {}),
-                  }}
-                >
-                  {i}
-                </button>
-              );
-            })}
-          </div>
+          {/* Province Filter */}
+          <DropdownFilter
+            label="Provinsi"
+            options={provincesList.map((p) => ({
+              id: p.name,
+              name: p.name,
+              subtext: p.island?.name || "",
+            }))}
+            selectedValues={selectedProvinces}
+            onChange={setSelectedProvinces}
+            multiple={true}
+            showSearch={true}
+            searchPlaceholder="Cari provinsi..."
+          />
 
           {/* Avail checkboxes */}
           <div style={rg.availRow}>
@@ -441,17 +383,24 @@ export default function DestinationsPage() {
           </div>
 
           {/* Sort */}
-          <select
-            value={filters.sort}
-            onChange={handleSortChange}
-            style={rg.sortSelect}
-          >
-            {SORT_OPTIONS.map((s) => (
-              <option key={s.id} value={s.id}>
-                Urutkan: {s.label}
-              </option>
-            ))}
-          </select>
+          <div style={{ marginLeft: "auto" }}>
+            <DropdownFilter
+              label="Urutkan"
+              options={SORT_OPTIONS.map((s) => ({
+                id: s.id,
+                name: `Urutkan: ${s.label}`,
+              }))}
+              selectedValues={[filters.sort]}
+              onChange={(vals) => {
+                if (vals.length > 0) {
+                  setFilters({ ...filters, sort: vals[0] });
+                }
+              }}
+              multiple={false}
+              alignRight={true}
+              minWidth={200}
+            />
+          </div>
 
           {activeFilters.length > 0 && (
             <button onClick={resetAll} style={rg.resetBtn}>
