@@ -5,7 +5,12 @@ import { ds } from "@/styles/detail-styles";
 import { SectionCard } from "./Shared";
 
 export default function AtrLocation({ attraction }) {
-  const coords = attraction.coords || { lat: -8.3405, lng: 115.092 };
+  const lat = attraction.latitude ?? -8.3405;
+  const lng = attraction.longitude ?? 115.092;
+  const region = attraction.destination
+    ? `${attraction.destination.name}, ${attraction.destination.province?.name || ""}`
+    : attraction.region || "Indonesia";
+
   return (
     <SectionCard title="Lokasi & Akses" icon={"📍"}>
       <div style={ds.mapBox} id="map">
@@ -16,12 +21,10 @@ export default function AtrLocation({ attraction }) {
         />
         <span style={ds.mapPin}>{"📍"}</span>
         <span style={ds.mapCoordChip}>
-          {coords.lat.toFixed(4)}, {coords.lng.toFixed(4)}
+          {lat.toFixed(4)}, {lng.toFixed(4)}
         </span>
         <a
-          href={`https://maps.google.com/?q=${encodeURIComponent(
-            attraction.name + " " + attraction.region,
-          )}`}
+          href={`https://www.google.com/maps/search/?api=1&query=${lat},${lng}`}
           target="_blank"
           rel="noreferrer"
           style={{ textDecoration: "none" }}

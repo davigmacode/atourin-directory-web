@@ -24,7 +24,7 @@ function slugify(text) {
 export function AttractionCardList({ a }) {
   const [save, setSave] = useState(false);
   const router = useRouter();
-  const slug = slugify(a.name);
+  const slug = a.slug || slugify(a.name);
 
   const badges = [
     {
@@ -40,7 +40,7 @@ export function AttractionCardList({ a }) {
 
   return (
     <article
-      onClick={() => router.push(`/attractions/${slug}`)}
+      onClick={() => router.push(`/explore/attractions/${slug}`)}
       style={{
         ...cs.atrListCard,
         textDecoration: "none",
@@ -78,7 +78,7 @@ export function AttractionCardList({ a }) {
             style={cs.atrCtaList}
             onClick={(e) => {
               e.stopPropagation();
-              router.push(`/attractions/${slug}`);
+              router.push(`/explore/attractions/${slug}`);
             }}
           >
             Lihat detail

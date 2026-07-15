@@ -18,7 +18,25 @@ const DEFAULT_FACILITIES = [
 ];
 
 export default function AtrFacilities({ attraction }) {
-  const list = attraction.facilitiesList || DEFAULT_FACILITIES;
+  const list = (attraction.facilities && attraction.facilities.length > 0)
+    ? attraction.facilities.map((f) => {
+        const knownIcons = {
+          'parkir': '🅿️',
+          'toilet': '🚾',
+          'spot-foto': '📷',
+          'souvenir': '🛍️',
+          'akses-disabilitas': '♿',
+          'restoran': '🍽️',
+          'musholla': '🕌',
+          'camping-area': '😴',
+          'sinyal-hp': '📡',
+          'air-bersih': '💧',
+          'pemandu-lokal': '🧭'
+        };
+        const icon = knownIcons[f.slug] || '✨';
+        return { icon, label: f.name, on: f.available };
+      })
+    : DEFAULT_FACILITIES;
   const onCount = list.filter((f) => f.on).length;
   const offCount = list.length - onCount;
 

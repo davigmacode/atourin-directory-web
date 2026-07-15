@@ -48,6 +48,7 @@ export interface Attraction {
   trekking: boolean;
   latitude?: number;
   longitude?: number;
+  region?: string;
   categories?: Category[];
   facilities?: FacilityAssignment[];
   media?: Media[];

@@ -4,14 +4,16 @@ import React from "react";
 import { ds } from "@/styles/detail-styles";
 
 export default function AtrGallery({ attraction }) {
-  const images = attraction.images || [
-    attraction.img,
-    attraction.img,
-    attraction.img,
-    attraction.img,
-    attraction.img,
-  ].filter(Boolean);
-  const total = attraction.totalPhotos || images.length;
+  const images = (attraction.media && attraction.media.length > 0)
+    ? attraction.media.map(m => m.url)
+    : [
+        attraction.coverImage?.url,
+        attraction.coverImage?.url,
+        attraction.coverImage?.url,
+        attraction.coverImage?.url,
+        attraction.coverImage?.url,
+      ].filter(Boolean);
+  const total = images.length;
 
   return (
     <div style={ds.galleryRow}>

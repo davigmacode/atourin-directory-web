@@ -5,16 +5,25 @@ import { ds } from "@/styles/detail-styles";
 import { Pin } from "./Shared";
 
 export default function AtrHeader({ attraction }) {
+  const primaryCat = (attraction.categories && attraction.categories.length > 0)
+    ? attraction.categories[0].name
+    : "Wisata";
+
+  const region = attraction.destination
+    ? `${attraction.destination.name}, ${attraction.destination.province?.name || ""}`
+    : attraction.region || "Indonesia";
+
   const tags = attraction.tags || [
-    attraction.cat || "Wisata",
+    primaryCat,
     "Populer",
     "Destinasi",
     "Liburan",
   ];
   const shortDesc =
+    attraction.description ||
     attraction.shortDesc ||
     attraction.desc ||
-    `Wisata populer ${attraction.name} yang berada di kawasan ${attraction.region}.`;
+    `Wisata populer ${attraction.name} yang berada di kawasan ${region}.`;
 
   return (
     <section style={ds.section}>
@@ -26,7 +35,7 @@ export default function AtrHeader({ attraction }) {
             color: attraction.catFg || "#2D8838",
           }}
         >
-          {"\uD83E\uDEA8"} {attraction.cat}
+          {"\uD83E\uDEA8"} {primaryCat}
         </span>
         <span
           style={{
@@ -41,11 +50,11 @@ export default function AtrHeader({ attraction }) {
       <h1 style={ds.hdrTitle}>{attraction.name}</h1>
       <div style={ds.hdrMetaRow}>
         <span style={ds.hdrMetaItem}>
-          <Pin /> {attraction.region}
+          <Pin /> {region}
         </span>
         <a
           href={`https://maps.google.com/?q=${encodeURIComponent(
-            attraction.name + " " + attraction.region,
+            attraction.name + " " + region,
           )}`}
           target="_blank"
           rel="noreferrer"
@@ -63,10 +72,10 @@ export default function AtrHeader({ attraction }) {
           }}
         >
           <span style={{ color: "var(--atr-yellow)" }}>{"\u2B50"}</span>{" "}
-          <strong>{attraction.rating || 4.5}</strong>
+          <strong>{attraction.ratingAverage || 4.5}</strong>
           <span style={{ color: "var(--atr-text-muted)" }}>
             {" "}
-            dari {(attraction.reviews || 0).toLocaleString("id-ID")} ulasan
+            dari {(attraction.reviewsCount || 0).toLocaleString("id-ID")} ulasan
           </span>
         </a>
       </div>

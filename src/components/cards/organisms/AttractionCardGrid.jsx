@@ -26,7 +26,7 @@ function slugify(text) {
 export function AttractionCardGrid({ a }) {
   const [save, setSave] = useState(false);
   const router = useRouter();
-  const slug = slugify(a.name);
+  const slug = a.slug || slugify(a.name);
 
   const badges = [
     {
@@ -42,7 +42,7 @@ export function AttractionCardGrid({ a }) {
 
   return (
     <article
-      onClick={() => router.push(`/attractions/${slug}`)}
+      onClick={() => router.push(`/explore/attractions/${slug}`)}
       style={{
         ...cs.atrCard,
         textDecoration: "none",
@@ -76,7 +76,7 @@ export function AttractionCardGrid({ a }) {
           price={a.price}
           onClick={(e) => {
             e.stopPropagation();
-            router.push(`/attractions/${slug}`);
+            router.push(`/explore/attractions/${slug}`);
           }}
         />
       </CardBody>

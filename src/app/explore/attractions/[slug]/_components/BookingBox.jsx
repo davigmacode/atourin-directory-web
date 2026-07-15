@@ -111,9 +111,49 @@ export function AtrWeatherStrip({ location, days, advisory }) {
   );
 }
 
+function formatDetailOpeningHours(oh) {
+  if (!oh) return "08.00 - 17.00";
+  if (oh.is24Hours) return "Buka 24 Jam";
+  
+  const days = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
+  const todayIndex = new Date().getDay();
+  const todayName = days[todayIndex];
+  const todayPeriods = oh.periods?.[todayName];
+  
+  const tzAbbrev = oh.timezone === "Asia/Jakarta" ? "WIB" : oh.timezone === "Asia/Makassar" ? "WITA" : oh.timezone === "Asia/Jayapura" ? "WIT" : "";
+  const tzSuffix = tzAbbrev ? ` ${tzAbbrev}` : "";
+  
+  if (!todayPeriods || todayPeriods.length === 0) {
+    return "Tutup Hari Ini";
+  }
+  
+  return todayPeriods.map((p) => `${p.open} - ${p.close}`).join(", ") + tzSuffix;
+}
+
+function getIsOpenStatus(oh) {
+  if (!oh) return true;
+  if (oh.is24Hours) return true;
+  
+  const days = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
+  const todayIndex = new Date().getDay();
+  const todayName = days[todayIndex];
+  const todayPeriods = oh.periods?.[todayName];
+  
+  if (!todayPeriods || todayPeriods.length === 0) {
+    return false;
+  }
+  
+  const now = new Date();
+  const currentStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+  
+  return todayPeriods.some(p => currentStr >= p.open && currentStr <= p.close);
+}
+
 export default function BookingBox({ attraction }) {
   const [save, setSave] = useState(false);
   const price = attraction.price || 0;
+  const region = attraction.destination ? attraction.destination.name : attraction.region;
+  const isOpen = getIsOpenStatus(attraction.openingHours);
 
   return (
     <div style={ds.bookCard}>
@@ -128,27 +168,28 @@ export default function BookingBox({ attraction }) {
       </div>
 
       <div style={ds.priceTable}>
-        <div style={ds.priceRow}>
-          <span style={ds.priceLabel}>{"👤"} Pengunjung (WNI)</span>
-          <span style={ds.priceVal}>
-            {price === 0 ? "Gratis" : `Rp ${price.toLocaleString("id-ID")}`}
-          </span>
-        </div>
-        <div style={ds.priceRow}>
-          <span style={ds.priceLabel}>{"👶"} Anak (&lt; 12 thn)</span>
-          <span style={ds.priceVal}>
-            {price === 0 ? "Gratis" : `Rp ${(price * 0.5).toLocaleString("id-ID")}`}
-          </span>
-        </div>
-        <div style={ds.priceRow}>
-          <span style={ds.priceLabel}>{"🌐"} Wisatawan Asing (WNA)</span>
-          <span style={ds.priceVal}>
-            {price === 0 ? "Gratis" : `Rp ${(price * 3).toLocaleString("id-ID")}`}
-          </span>
-        </div>
+        {attraction.priceTiers && attraction.priceTiers.length > 0 ? (
+          attraction.priceTiers.map((t, idx) => (
+            <div key={idx} style={ds.priceRow}>
+              <span style={ds.priceLabel}>
+                {t.name.includes("Anak") ? "👶" : t.name.includes("Asing") || t.name.includes("WNA") ? "🌐" : "👤"} {t.name}
+              </span>
+              <span style={ds.priceVal}>
+                {t.price === 0 ? "Gratis" : `Rp ${t.price.toLocaleString("id-ID")}`}
+              </span>
+            </div>
+          ))
+        ) : (
+          <div style={ds.priceRow}>
+            <span style={ds.priceLabel}>{"👤"} Tiket Masuk</span>
+            <span style={ds.priceVal}>
+              {price === 0 ? "Gratis" : `Rp ${price.toLocaleString("id-ID")}`}
+            </span>
+          </div>
+        )}
       </div>
 
-      <AtrWeatherStrip location={attraction.region} />
+      <AtrWeatherStrip location={region} />
 
       <div>
         <div
@@ -164,11 +205,11 @@ export default function BookingBox({ attraction }) {
           Jam Operasional
         </div>
         <div style={ds.opRow}>
-          <span style={ds.opDay}>Setiap hari</span>
-          <span style={ds.opHours}>{attraction.hours || "08.00 - 17.00"}</span>
+          <span style={ds.opDay}>Hari Ini</span>
+          <span style={ds.opHours}>{formatDetailOpeningHours(attraction.openingHours)}</span>
         </div>
         <div style={{ marginTop: 10 }}>
-          <StatusChip open={true} />
+          <StatusChip open={isOpen} />
         </div>
       </div>
 

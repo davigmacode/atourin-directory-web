@@ -71,15 +71,18 @@ export default function AttractionDetailPage() {
     );
   }
 
-  const regionParts = attraction.region ? attraction.region.split(",") : [];
+  const regionText = attraction.destination
+    ? `${attraction.destination.name}, ${attraction.destination.province?.name || ""}`
+    : attraction.region || "Indonesia";
+  const regionParts = regionText.split(",");
   const kota = regionParts[0] ? regionParts[0].trim() : "Daerah";
   const provinsi = regionParts[1] ? regionParts[1].trim() : "Indonesia";
 
   return (
     <div data-screen-label="Attraction Detail">
       <TopNav active="Explore" />
-      <div style={ds.pageWrap}>
-        <div style={ds.crumbBar}>
+      <div style={ds.pageWrap as React.CSSProperties}>
+        <div style={ds.crumbBar as React.CSSProperties}>
           <div style={{ width: "100%" }}>
             <Breadcrumb
               items={["Jelajahi", provinsi, kota, "Atraksi", attraction.name]}
@@ -87,12 +90,12 @@ export default function AttractionDetailPage() {
           </div>
         </div>
 
-        <div style={ds.containerWide}>
+        <div style={ds.containerWide as React.CSSProperties}>
           <AtrGallery attraction={attraction} />
         </div>
 
-        <div style={ds.twoCol}>
-          <div style={ds.mainCol}>
+        <div style={ds.twoCol as React.CSSProperties}>
+          <div style={ds.mainCol as React.CSSProperties}>
             <AtrHeader attraction={attraction} />
             <AtrDescription attraction={attraction} />
             <AtrFacilities attraction={attraction} />
@@ -102,7 +105,7 @@ export default function AttractionDetailPage() {
             <AtrItineraries attraction={attraction} />
             <AtrReviews attraction={attraction} />
           </div>
-          <aside style={ds.sideCol}>
+          <aside style={ds.sideCol as React.CSSProperties}>
             <BookingBox attraction={attraction} />
             <QuickInfoSide attraction={attraction} />
           </aside>
