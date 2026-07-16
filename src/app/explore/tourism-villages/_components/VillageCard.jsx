@@ -40,10 +40,12 @@ export default function VillageCard({
   families,
   signature,
   featured,
+  slug,
+  id,
 }) {
   const [hover, setHover] = useState(false);
   const router = useRouter();
-  const slug = name
+  const finalSlug = slug || id || name
     .toLowerCase()
     .replace(/[^a-z0-9\s]/g, "")
     .replace(/\s+/g, "-");
@@ -62,7 +64,7 @@ export default function VillageCard({
       }}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
-      onClick={() => router.push(`/explore/tourism-villages/${slug}`)}
+      onClick={() => router.push(`/explore/tourism-villages/${finalSlug}`)}
     >
       <div style={cardStyles.cardImgWrap}>
         <SafeImage src={img} alt="" style={cardStyles.cardImg} />

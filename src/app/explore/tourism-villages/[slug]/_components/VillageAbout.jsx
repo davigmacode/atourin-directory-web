@@ -18,6 +18,7 @@ function ReadMore({ text, clamp = 5 }) {
 
 export default function VillageAbout({ village }) {
   const descText =
+    village.description ||
     village.longDesc ||
     village.desc ||
     `${village.name} adalah desa wisata bertema ${village.theme || "Kebudayaan"} yang memikat, terletak di kawasan ${village.region}. Wisatawan yang berkunjung ke sini dapat menikmati keasrian lingkungan pedesaan yang asri, kebudayaan lokal yang dijaga ketat turun-temurun, serta keunikan ciri khas setempat berupa ${village.signature || "tradisi kearifan lokal"}. Keramahan penduduk lokal dan keindahan panorama alam di sekitar desa siap memberikan pengalaman liburan yang berkesan dan menenangkan dari kesibukan perkotaan.`;

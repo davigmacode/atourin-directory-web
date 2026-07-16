@@ -87,6 +87,7 @@ const vdStyles = {
 
 export default function DetailHero({ village }) {
   const coverUrl =
+    village.coverImage?.url ||
     village.cover ||
     village.img ||
     "https://images.unsplash.com/photo-1604999333679-b86d54738315?w=1800&auto=format&fit=crop&q=80";
@@ -95,11 +96,14 @@ export default function DetailHero({ village }) {
   const statusFg = village.adwiFg || "#2D8838";
 
   const galleryImages = [
-    village.img,
+    coverUrl,
+    ...(village.media ? village.media.map((m) => m.url) : []),
     "https://images.unsplash.com/photo-1570214476695-19bd467e6f7a?w=800&auto=format&fit=crop&q=80",
     "https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=800&auto=format&fit=crop&q=80",
     "https://images.unsplash.com/photo-1589394815804-964ed0be2eb5?w=800&auto=format&fit=crop&q=80",
   ].filter(Boolean);
+
+  const uniqueGalleryImages = Array.from(new Set(galleryImages));
 
   return (
     <div>
@@ -153,11 +157,11 @@ export default function DetailHero({ village }) {
               strokeLinejoin="round"
             />
           </svg>
-          Lihat semua {galleryImages.length} foto
+          Lihat semua {uniqueGalleryImages.length} foto
         </button>
       </div>
       <div style={vdStyles.galleryGrid}>
-        {galleryImages.slice(0, 4).map((src, i) => (
+        {uniqueGalleryImages.slice(0, 4).map((src, i) => (
           <div key={i} style={vdStyles.galleryItem}>
             <img src={src} alt="Gallery item" style={vdStyles.galleryItemImg} />
           </div>

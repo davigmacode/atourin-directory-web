@@ -25,7 +25,7 @@ export function useVillages() {
   });
 
   const { data, error, isLoading, isValidating } = useSWR(
-    `/villages?${params}`,
+    `/tourism-villages?${params}`,
   );
 
   useEffect(() => {

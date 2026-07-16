@@ -30,7 +30,7 @@ export default function VillageHeader({ village }) {
 
   const foundedYear = village.founded || 2012;
   const ratingValue = village.rating || 4.8;
-  const reviewsCount = village.reviews || 124;
+  const reviewsCount = village.reviewsCount || village.reviews || 124;
 
   const shortDesc =
     village.shortDesc ||

@@ -109,7 +109,10 @@ export default function VillageAccess({ village }) {
   const region = village.region || "";
   let steps = DEFAULT_STEPS;
 
-  if (region.includes("NTT")) {
+  const directions = village.location?.directions;
+  if (directions && directions.length > 0) {
+    steps = directions.map(d => ({ title: d.title, sub: d.detail }));
+  } else if (region.includes("NTT")) {
     steps = REGIONAL_STEPS.NTT;
   } else if (region.includes("Bali")) {
     steps = REGIONAL_STEPS.Bali;
