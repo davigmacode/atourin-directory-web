@@ -43,8 +43,8 @@ export async function GET(request: Request): Promise<NextResponse> {
     const langHeader = request.headers.get('accept-language') || 'id';
     const lang = langHeader.toLowerCase().includes('en') ? 'en' : 'id';
 
-    // 1. Fetch attractions
-    const { data: dbData, error: dbError } = await supabaseAdmin
+    // Build base query on directory.attractions
+    let query = supabaseAdmin
       .schema('directory')
       .from('attractions')
       .select(`
@@ -61,13 +61,14 @@ export async function GET(request: Request): Promise<NextResponse> {
         trekking,
         location_address,
         location_accessibility,
+        location_directions,
         location_latitude,
         location_longitude,
-        destination:destinations (
+        destination:destinations!inner (
           id,
           name,
           slug,
-          province:provinces (
+          province:provinces!inner (
             id,
             name,
             slug,
@@ -77,14 +78,162 @@ export async function GET(request: Request): Promise<NextResponse> {
             )
           )
         )
-      `);
+      `, { count: 'exact' });
+
+    // 1. Text Search Filter (name)
+    if (search) {
+      query = query.ilike('name', `%${search}%`);
+    }
+
+    // 2. Province Filter
+    if (province) {
+      query = query.ilike('destination.province.name', province);
+    }
+
+    // 3. Rating Filter
+    if (rating) {
+      const threshold = parseFloat(rating.replace(/[^\d.]/g, ''));
+      if (!isNaN(threshold)) {
+        query = query.gte('rating_average', threshold);
+      }
+    }
+
+    // 4. Price Range Filter
+    if (priceRange) {
+      const range = parsePriceRange(priceRange);
+      if (range) {
+        const [min, max] = range;
+        if (max === Infinity) {
+          query = query.gte('min_price', min);
+        } else if (min === max) {
+          query = query.eq('min_price', min);
+        } else {
+          query = query.gte('min_price', min).lte('min_price', max);
+        }
+      }
+    }
+
+    // 5. Category Filter
+    if (category) {
+      // Find category IDs matching slug or name
+      const { data: catData } = await supabaseAdmin
+        .schema('directory')
+        .from('categories')
+        .select('id')
+        .or(`slug.ilike.${category},name->>id.ilike.${category},name->>en.ilike.${category}`);
+
+      const targetCategoryIds = catData ? catData.map((c) => c.id) : [];
+      if (targetCategoryIds.length === 0) {
+        return NextResponse.json({
+          data: [],
+          pagination: { page, limit, total: 0, totalPages: 0 }
+        });
+      }
+
+      // Query category assignments
+      const { data: assData } = await supabaseAdmin
+        .schema('directory')
+        .from('category_assignments')
+        .select('entity_id')
+        .eq('entity_type', 'attraction')
+        .in('category_id', targetCategoryIds);
+
+      const matchedAttractionIds = assData ? assData.map((a) => a.entity_id) : [];
+      if (matchedAttractionIds.length === 0) {
+        return NextResponse.json({
+          data: [],
+          pagination: { page, limit, total: 0, totalPages: 0 }
+        });
+      }
+      query = query.in('id', matchedAttractionIds);
+    }
+
+    // 6. Facilities Filter
+    if (facilities) {
+      const facSlugs = facilities.split(',').map((s) => s.trim().toLowerCase());
+      const { data: facsData } = await supabaseAdmin
+        .schema('directory')
+        .from('facilities')
+        .select('id')
+        .in('slug', facSlugs);
+
+      if (!facsData || facsData.length < facSlugs.length) {
+        return NextResponse.json({
+          data: [],
+          pagination: { page, limit, total: 0, totalPages: 0 }
+        });
+      }
+
+      const targetFacIds = facsData.map((f) => f.id);
+      const { data: assData } = await supabaseAdmin
+        .schema('directory')
+        .from('facility_assignments')
+        .select('entity_id, facility_id')
+        .eq('entity_type', 'attraction')
+        .in('facility_id', targetFacIds);
+
+      if (!assData || assData.length === 0) {
+        return NextResponse.json({
+          data: [],
+          pagination: { page, limit, total: 0, totalPages: 0 }
+        });
+      }
+
+      const counts: Record<string, number> = {};
+      assData.forEach((row) => {
+        counts[row.entity_id] = (counts[row.entity_id] || 0) + 1;
+      });
+
+      const matchedAttractionIds = Object.keys(counts).filter(
+        (entityId) => counts[entityId] === targetFacIds.length
+      );
+
+      if (matchedAttractionIds.length === 0) {
+        return NextResponse.json({
+          data: [],
+          pagination: { page, limit, total: 0, totalPages: 0 }
+        });
+      }
+      query = query.in('id', matchedAttractionIds);
+    }
+
+    // 7. Sort Order
+    if (sort === 'popularity') {
+      query = query.order('reviews_count', { ascending: false });
+    } else if (sort === 'rating-desc') {
+      query = query.order('rating_average', { ascending: false });
+    } else if (sort === 'price-asc') {
+      query = query.order('min_price', { ascending: true });
+    } else if (sort === 'price-desc') {
+      query = query.order('min_price', { ascending: false });
+    } else {
+      query = query.order('name', { ascending: true });
+    }
+
+    // 8. Pagination Range
+    const offset = (page - 1) * limit;
+    query = query.range(offset, offset + limit - 1);
+
+    // 9. Execute query
+    const { data: dbData, error: dbError, count } = await query;
 
     if (dbError) {
       console.error('[api/attractions GET]', dbError.message);
       return NextResponse.json({ error: dbError.message }, { status: 500 });
     }
 
-    // 2. Fetch category assignments
+    const total = count || 0;
+    const attractionIds = (dbData ?? []).map((row: any) => row.id);
+
+    // Early exit if no attractions in this page
+    if (attractionIds.length === 0) {
+      return NextResponse.json({
+        data: [],
+        pagination: { page, limit, total, totalPages: Math.ceil(total / limit) }
+      });
+    }
+
+    // 10. Fetch category assignments for paged attractions
     const { data: assignmentsData, error: assignError } = await supabaseAdmin
       .schema('directory')
       .from('category_assignments')
@@ -97,14 +246,15 @@ export async function GET(request: Request): Promise<NextResponse> {
           metadata
         )
       `)
-      .eq('entity_type', 'attraction');
+      .eq('entity_type', 'attraction')
+      .in('entity_id', attractionIds);
 
     if (assignError) {
       console.error('[api/attractions GET assignments]', assignError.message);
       return NextResponse.json({ error: assignError.message }, { status: 500 });
     }
 
-    // 3. Fetch facility assignments
+    // 11. Fetch facility assignments for paged attractions
     const { data: facilityData, error: facilityError } = await supabaseAdmin
       .schema('directory')
       .from('facility_assignments')
@@ -117,14 +267,15 @@ export async function GET(request: Request): Promise<NextResponse> {
           metadata
         )
       `)
-      .eq('entity_type', 'attraction');
+      .eq('entity_type', 'attraction')
+      .in('entity_id', attractionIds);
 
     if (facilityError) {
       console.error('[api/attractions GET facilities]', facilityError.message);
       return NextResponse.json({ error: facilityError.message }, { status: 500 });
     }
 
-    // 4. Fetch media
+    // 12. Fetch media for paged attractions
     const { data: mediaData, error: mediaError } = await supabaseAdmin
       .schema('directory')
       .from('media')
@@ -136,31 +287,29 @@ export async function GET(request: Request): Promise<NextResponse> {
         metadata,
         sort_order
       `)
-      .eq('entity_type', 'attraction');
+      .eq('entity_type', 'attraction')
+      .in('entity_id', attractionIds);
 
     if (mediaError) {
       console.error('[api/attractions GET media]', mediaError.message);
       return NextResponse.json({ error: mediaError.message }, { status: 500 });
     }
 
-    // 5. Fetch price tiers for attractions
-    const attractionIds = (dbData ?? []).map((row: any) => row.id);
+    // 13. Fetch price tiers for paged attractions
     let priceTiersData: any[] = [];
-    if (attractionIds.length > 0) {
-      const { data, error } = await supabaseAdmin
-        .schema('directory')
-        .from('price_tiers')
-        .select('entity_id, name, price')
-        .eq('entity_type', 'attraction')
-        .in('entity_id', attractionIds)
-        .order('price', { ascending: true });
+    const { data, error } = await supabaseAdmin
+      .schema('directory')
+      .from('price_tiers')
+      .select('entity_id, name, price')
+      .eq('entity_type', 'attraction')
+      .in('entity_id', attractionIds)
+      .order('price', { ascending: true });
 
-      if (error) {
-        console.error('[api/attractions GET price tiers]', error.message);
-        return NextResponse.json({ error: error.message }, { status: 500 });
-      }
-      priceTiersData = data ?? [];
+    if (error) {
+      console.error('[api/attractions GET price tiers]', error.message);
+      return NextResponse.json({ error: error.message }, { status: 500 });
     }
+    priceTiersData = data ?? [];
 
     // Process categories lookup map
     const categoriesMap: Record<string, any[]> = {};
@@ -243,7 +392,7 @@ export async function GET(request: Request): Promise<NextResponse> {
     });
 
     // Map database rows to Attraction interfaces
-    let attractions: Attraction[] = (dbData ?? []).map((row: any) => {
+    const attractions: Attraction[] = (dbData ?? []).map((row: any) => {
       const rawProvince = Array.isArray(row.destination?.province)
         ? row.destination.province[0]
         : row.destination?.province;
@@ -325,7 +474,24 @@ export async function GET(request: Request): Promise<NextResponse> {
         trekking: row.trekking,
         location: {
           address: row.location_address?.[lang] || row.location_address?.id || row.location_address?.en || '',
-          accessibility: Array.isArray(row.location_accessibility) ? row.location_accessibility : [],
+          accessibility: row.location_accessibility?.[lang] || row.location_accessibility?.id || row.location_accessibility?.en || '',
+          directions: Array.isArray(row.location_directions) ? row.location_directions.map((step: any) => {
+            const titleObj = step.title;
+            const detailObj = step.detail;
+            let stepTitle = '';
+            let stepDetail = '';
+            if (typeof titleObj === 'string') {
+              stepTitle = titleObj;
+            } else if (titleObj && typeof titleObj === 'object') {
+              stepTitle = titleObj[lang] || titleObj.id || titleObj.en || '';
+            }
+            if (typeof detailObj === 'string') {
+              stepDetail = detailObj;
+            } else if (detailObj && typeof detailObj === 'object') {
+              stepDetail = detailObj[lang] || detailObj.id || detailObj.en || '';
+            }
+            return { title: stepTitle, detail: stepDetail };
+          }) : undefined,
           latitude: row.location_latitude ? Number(row.location_latitude) : undefined,
           longitude: row.location_longitude ? Number(row.location_longitude) : undefined,
         },
@@ -335,61 +501,8 @@ export async function GET(request: Request): Promise<NextResponse> {
       };
     });
 
-    // In-memory filters
-    if (search) {
-      attractions = attractions.filter((a) => a.name.toLowerCase().includes(search));
-    }
-    if (province) {
-      attractions = attractions.filter((a) =>
-        a.destination?.province?.name.toLowerCase() === province.toLowerCase()
-      );
-    }
-    if (category) {
-      attractions = attractions.filter((a) =>
-        a.categories?.some(
-          (c) => c.slug.toLowerCase() === category.toLowerCase() || c.name.toLowerCase() === category.toLowerCase()
-        )
-      );
-    }
-    if (facilities) {
-      const facSlugs = facilities.split(',').map((s) => s.trim().toLowerCase());
-      attractions = attractions.filter((a) =>
-        facSlugs.every((fs) =>
-          a.facilities?.some((f) => f.slug.toLowerCase() === fs && f.available)
-        )
-      );
-    }
-    if (priceRange) {
-      const range = parsePriceRange(priceRange);
-      if (range) {
-        attractions = attractions.filter((a) => a.minPrice >= range[0] && a.minPrice <= range[1]);
-      }
-    }
-    if (rating) {
-      const threshold = parseFloat(rating.replace(/[^\d.]/g, ''));
-      if (!isNaN(threshold)) {
-        attractions = attractions.filter((a) => a.ratingAverage >= threshold);
-      }
-    }
-
-    // In-memory sort
-    if (sort === 'popularity') {
-      attractions.sort((a, b) => b.reviewsCount - a.reviewsCount);
-    } else if (sort === 'rating-desc') {
-      attractions.sort((a, b) => b.ratingAverage - a.ratingAverage);
-    } else if (sort === 'price-asc') {
-      attractions.sort((a, b) => a.minPrice - b.minPrice);
-    } else if (sort === 'price-desc') {
-      attractions.sort((a, b) => b.minPrice - a.minPrice);
-    }
-
-    // Paginate
-    const total = attractions.length;
-    const start = (page - 1) * limit;
-    const paged = attractions.slice(start, start + limit);
-
     return NextResponse.json({
-      data: paged,
+      data: attractions,
       pagination: { page, limit, total, totalPages: Math.ceil(total / limit) },
     });
   } catch (err: any) {

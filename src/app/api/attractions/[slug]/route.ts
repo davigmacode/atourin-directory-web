@@ -31,6 +31,7 @@ export async function GET(
         trekking,
         location_address,
         location_accessibility,
+        location_directions,
         location_latitude,
         location_longitude,
         destination:destinations (
@@ -272,7 +273,24 @@ export async function GET(
       trekking: rowAny.trekking,
       location: {
         address: rowAny.location_address?.[lang] || rowAny.location_address?.id || rowAny.location_address?.en || '',
-        accessibility: Array.isArray(rowAny.location_accessibility) ? rowAny.location_accessibility : [],
+        accessibility: rowAny.location_accessibility?.[lang] || rowAny.location_accessibility?.id || rowAny.location_accessibility?.en || '',
+        directions: Array.isArray(rowAny.location_directions) ? rowAny.location_directions.map((step: any) => {
+          const titleObj = step.title;
+          const detailObj = step.detail;
+          let stepTitle = '';
+          let stepDetail = '';
+          if (typeof titleObj === 'string') {
+            stepTitle = titleObj;
+          } else if (titleObj && typeof titleObj === 'object') {
+            stepTitle = titleObj[lang] || titleObj.id || titleObj.en || '';
+          }
+          if (typeof detailObj === 'string') {
+            stepDetail = detailObj;
+          } else if (detailObj && typeof detailObj === 'object') {
+            stepDetail = detailObj[lang] || detailObj.id || detailObj.en || '';
+          }
+          return { title: stepTitle, detail: stepDetail };
+        }) : undefined,
         latitude: rowAny.location_latitude ? Number(rowAny.location_latitude) : undefined,
         longitude: rowAny.location_longitude ? Number(rowAny.location_longitude) : undefined,
       },

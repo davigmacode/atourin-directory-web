@@ -8,7 +8,8 @@ export default function AtrLocation({ attraction }) {
   const lat = attraction.location?.latitude ?? -8.3405;
   const lng = attraction.location?.longitude ?? 115.092;
   const address = attraction.location?.address;
-  const accessibilityList = attraction.location?.accessibility || [];
+  const accessibility = attraction.location?.accessibility;
+  const directions = attraction.location?.directions || [];
   const region = attraction.destination
     ? `${attraction.destination.name}, ${attraction.destination.province?.name || ""}`
     : attraction.region || "Indonesia";
@@ -50,13 +51,36 @@ export default function AtrLocation({ attraction }) {
           </button>
         </a>
       </div>
-      {accessibilityList.length > 0 ? (
+      {accessibility ? (
         <div style={ds.accessTip}>
-          <strong>Aksesibilitas</strong> {"\u00B7"} {accessibilityList.join(" \u00B7 ")}
+          <strong>Aksesibilitas</strong> {"\u00B7"} {accessibility}
         </div>
       ) : (
         <div style={ds.accessTip}>
           <strong>Aksesibilitas</strong> {"\u00B7"} Dapat dijangkau menggunakan kendaraan pribadi maupun transportasi lokal.
+        </div>
+      )}
+
+      {directions && directions.length > 0 && (
+        <div style={ds.dirSection}>
+          <h4 style={ds.dirTitle}>
+            <span>🚗</span> Akses & Cara Menuju Lokasi
+          </h4>
+          <div style={ds.dirList}>
+            {directions.map((step, idx) => {
+              const isLast = idx === directions.length - 1;
+              return (
+                <div key={idx} style={isLast ? ds.dirStepLast : ds.dirStep}>
+                  {!isLast && <div style={ds.dirLine} />}
+                  <div style={ds.dirCircle}>{idx + 1}</div>
+                  <div style={ds.dirContent}>
+                    <h5 style={ds.dirStepTitle}>{step.title}</h5>
+                    <p style={ds.dirStepDetail}>{step.detail}</p>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         </div>
       )}
     </SectionCard>

@@ -34,7 +34,8 @@ export interface PriceTier {
 
 export interface AttractionLocation {
   address: string;
-  accessibility: string[];
+  accessibility: string;
+  directions?: { title: string; detail: string; }[];
   latitude?: number;
   longitude?: number;
 }
