@@ -32,6 +32,13 @@ export interface PriceTier {
   price: number;
 }
 
+export interface AttractionLocation {
+  address: string;
+  accessibility: string[];
+  latitude?: number;
+  longitude?: number;
+}
+
 export interface Attraction {
   id: string;
   slug: string;
@@ -46,8 +53,7 @@ export interface Attraction {
   reviewsCount: number;
   openingHours: OpeningHours;
   trekking: boolean;
-  latitude?: number;
-  longitude?: number;
+  location: AttractionLocation;
   region?: string;
   categories?: Category[];
   facilities?: FacilityAssignment[];

@@ -16,8 +16,10 @@ CREATE TABLE IF NOT EXISTS directory.attractions (
   reviews_count          integer NOT NULL DEFAULT 0,
   opening_hours          jsonb NOT NULL,
   trekking               boolean NOT NULL DEFAULT false,
-  latitude               numeric(9,6),
-  longitude              numeric(9,6),
+  location_address       jsonb NOT NULL DEFAULT '{"id": "", "en": ""}'::jsonb,
+  location_accessibility jsonb NOT NULL DEFAULT '[]'::jsonb,
+  location_latitude      numeric(9,6),
+  location_longitude     numeric(9,6),
   created_at             timestamptz NOT NULL DEFAULT now(),
   updated_at             timestamptz NOT NULL DEFAULT now()
 );

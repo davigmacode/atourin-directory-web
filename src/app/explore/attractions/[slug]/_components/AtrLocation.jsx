@@ -5,14 +5,21 @@ import { ds } from "@/styles/detail-styles";
 import { SectionCard } from "./Shared";
 
 export default function AtrLocation({ attraction }) {
-  const lat = attraction.latitude ?? -8.3405;
-  const lng = attraction.longitude ?? 115.092;
+  const lat = attraction.location?.latitude ?? -8.3405;
+  const lng = attraction.location?.longitude ?? 115.092;
+  const address = attraction.location?.address;
+  const accessibilityList = attraction.location?.accessibility || [];
   const region = attraction.destination
     ? `${attraction.destination.name}, ${attraction.destination.province?.name || ""}`
     : attraction.region || "Indonesia";
 
   return (
     <SectionCard title="Lokasi & Akses" icon={"📍"}>
+      {address && (
+        <div style={{ fontSize: 13, color: "var(--atr-text-muted)", marginBottom: 12, lineHeight: "1.4" }}>
+          <strong>Alamat:</strong> {address}
+        </div>
+      )}
       <div style={ds.mapBox} id="map">
         <img
           src="https://images.unsplash.com/photo-1524661135-423995f22d0b?w=1400&auto=format&fit=crop&q=70"
@@ -43,12 +50,15 @@ export default function AtrLocation({ attraction }) {
           </button>
         </a>
       </div>
-      <div style={ds.accessTip}>
-        <strong>Aksesibilitas</strong> {"\u00B7"} Berada dekat jalan raya utama
-        provinsi. Dapat dijangkau menggunakan kendaraan roda dua (sepeda motor)
-        maupun roda empat (mobil pribadi/taksi/bus pariwisata). Tempat parkir yang
-        luas tersedia tepat di depan gerbang tiket masuk lokasi wisata.
-      </div>
+      {accessibilityList.length > 0 ? (
+        <div style={ds.accessTip}>
+          <strong>Aksesibilitas</strong> {"\u00B7"} {accessibilityList.join(" \u00B7 ")}
+        </div>
+      ) : (
+        <div style={ds.accessTip}>
+          <strong>Aksesibilitas</strong> {"\u00B7"} Dapat dijangkau menggunakan kendaraan pribadi maupun transportasi lokal.
+        </div>
+      )}
     </SectionCard>
   );
 }

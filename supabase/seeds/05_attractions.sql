@@ -2,7 +2,7 @@
 INSERT INTO directory.attractions (
   slug, name, destination_id, cover_image, description,
   price, rating_average, reviews_count, opening_hours, trekking,
-  latitude, longitude
+  location_address, location_accessibility, location_latitude, location_longitude
 ) VALUES
   (
     'pulau-padar-viewpoint', 'Pulau Padar Viewpoint', '5315',
@@ -10,7 +10,10 @@ INSERT INTO directory.attractions (
     '{"id": "Trekking ke viewpoint ikonik dengan pemandangan 3 teluk berpasir warna berbeda dari atas bukit.", "en": "Trekking to the iconic viewpoint with views of 3 different colored sandy bays from the hilltop."}'::jsonb,
     50000, 4.95, 412,
     '{"timezone": "Asia/Makassar", "is_24_hours": false, "periods": {"monday": [{"open": "06:00", "close": "18:00"}], "tuesday": [{"open": "06:00", "close": "18:00"}], "wednesday": [{"open": "06:00", "close": "18:00"}], "thursday": [{"open": "06:00", "close": "18:00"}], "friday": [{"open": "06:00", "close": "18:00"}], "saturday": [{"open": "06:00", "close": "18:00"}], "sunday": [{"open": "06:00", "close": "18:00"}]}}'::jsonb,
-    true, -8.6534, 119.5312
+    true,
+    '{"id": "Kepulauan Komodo, Kabupaten Manggarai Barat, Nusa Tenggara Timur", "en": "Komodo Archipelago, West Manggarai Regency, East Nusa Tenggara"}'::jsonb,
+    '["Trekking tangga kayu", "Pemandu lokal"]'::jsonb,
+    -8.6534, 119.5312
   ),
   (
     'candi-borobudur', 'Candi Borobudur', '3308',
@@ -18,7 +21,10 @@ INSERT INTO directory.attractions (
     '{"id": "Candi Buddha terbesar di dunia dengan 504 arca dan 2.672 panel relief yang memukau.", "en": "The largest Buddhist temple in the world featuring 504 Buddha statues and 2,672 relief panels."}'::jsonb,
     75000, 4.90, 1240,
     '{"timezone": "Asia/Jakarta", "is_24_hours": false, "periods": {"monday": [{"open": "06:30", "close": "17:30"}], "tuesday": [{"open": "06:30", "close": "17:30"}], "wednesday": [{"open": "06:30", "close": "17:30"}], "thursday": [{"open": "06:30", "close": "17:30"}], "friday": [{"open": "06:30", "close": "17:30"}], "saturday": [{"open": "06:30", "close": "17:30"}], "sunday": [{"open": "06:30", "close": "17:30"}]}}'::jsonb,
-    false, -7.6079, 110.2038
+    false,
+    '{"id": "Jl. Badrawati, Kecamatan Borobudur, Kabupaten Magelang, Jawa Tengah", "en": "Badrawati St., Borobudur District, Magelang Regency, Central Java"}'::jsonb,
+    '["Ramp kursi roda", "Akses disabilitas", "Pemandu wisata"]'::jsonb,
+    -7.6079, 110.2038
   ),
   (
     'gunung-bromo', 'Gunung Bromo', '3513',
@@ -26,7 +32,10 @@ INSERT INTO directory.attractions (
     '{"id": "Gunung berapi aktif dengan lautan pasir dan sunrise yang legendaris di Indonesia.", "en": "Active volcano with a vast sand sea and legendary sunrise vistas."}'::jsonb,
     35000, 4.88, 856,
     '{"timezone": "Asia/Jakarta", "is_24_hours": true, "periods": {}}'::jsonb,
-    true, -7.9425, 112.9530
+    true,
+    '{"id": "Kawasan Taman Nasional Bromo Tengger Semeru, Jawa Timur", "en": "Bromo Tengger Semeru National Park Area, East Java"}'::jsonb,
+    '["Transportasi Jip", "Tangga ke kawah", "Sewa kuda"]'::jsonb,
+    -7.9425, 112.9530
   ),
   (
     'pura-ulun-danu-beratan', 'Pura Ulun Danu Beratan', '5103',
@@ -34,7 +43,10 @@ INSERT INTO directory.attractions (
     '{"id": "Pura di tepi Danau Beratan dengan arsitektur ikonik yang menjadi simbol Bali.", "en": "A beautiful temple on the shores of Lake Beratan, an iconic symbol of Bali."}'::jsonb,
     50000, 4.80, 624,
     '{"timezone": "Asia/Makassar", "is_24_hours": false, "periods": {"monday": [{"open": "07:00", "close": "19:00"}], "tuesday": [{"open": "07:00", "close": "19:00"}], "wednesday": [{"open": "07:00", "close": "19:00"}], "thursday": [{"open": "07:00", "close": "19:00"}], "friday": [{"open": "07:00", "close": "19:00"}], "saturday": [{"open": "07:00", "close": "19:00"}], "sunday": [{"open": "07:00", "close": "19:00"}]}}'::jsonb,
-    false, -8.2752, 115.1668
+    false,
+    '{"id": "Danau Beratan, Candikuning, Kecamatan Baturiti, Kabupaten Tabanan, Bali", "en": "Lake Beratan, Candikuning, Baturiti District, Tabanan Regency, Bali"}'::jsonb,
+    '["Akses kursi roda", "Jalur pedestrian datar", "Toilet ramah disabilitas"]'::jsonb,
+    -8.2752, 115.1668
   ),
   (
     'pantai-tanjung-aan', 'Pantai Tanjung Aan', '5202',
@@ -42,7 +54,10 @@ INSERT INTO directory.attractions (
     '{"id": "Pantai berpasir putih dengan dua teluk dan bukit kapal selam yang ikonik.", "en": "White sandy beach with twin bays and a submarine-shaped hill viewpoint."}'::jsonb,
     0, 4.75, 388,
     '{"timezone": "Asia/Makassar", "is_24_hours": true, "periods": {}}'::jsonb,
-    false, -8.9135, 116.3218
+    false,
+    '{"id": "Kawasan Ekonomi Khusus Mandalika, Lombok Tengah, Nusa Tenggara Barat", "en": "Mandalika Special Economic Zone, Central Lombok, West Nusa Tenggara"}'::jsonb,
+    '["Akses langsung ke pasir pantai", "Area parkir dekat pantai"]'::jsonb,
+    -8.9135, 116.3218
   ),
   (
     'candi-prambanan', 'Candi Prambanan', '3404',
@@ -50,7 +65,10 @@ INSERT INTO directory.attractions (
     '{"id": "Kompleks candi Hindu terbesar di Indonesia dengan arsitektur runcing yang megah.", "en": "The largest Hindu temple compound in Indonesia, showcasing towering and pointed architecture."}'::jsonb,
     75000, 4.85, 942,
     '{"timezone": "Asia/Jakarta", "is_24_hours": false, "periods": {"monday": [{"open": "06:30", "close": "17:00"}], "tuesday": [{"open": "06:30", "close": "17:00"}], "wednesday": [{"open": "06:30", "close": "17:00"}], "thursday": [{"open": "06:30", "close": "17:00"}], "friday": [{"open": "06:30", "close": "17:00"}], "saturday": [{"open": "06:30", "close": "17:00"}], "sunday": [{"open": "06:30", "close": "17:00"}]}}'::jsonb,
-    false, -7.7520, 110.4914
+    false,
+    '{"id": "Jl. Raya Solo - Yogyakarta No.16, Kranggan, Bokoharjo, Kec. Prambanan, Kabupaten Sleman, Daerah Istimewa Yogyakarta", "en": "Solo - Yogyakarta Highway No.16, Bokoharjo, Prambanan, Sleman, Special Region of Yogyakarta"}'::jsonb,
+    '["Jalur pedestrian beraspal", "Jalur pemandu disabilitas netra", "Sewa kursi roda"]'::jsonb,
+    -7.7520, 110.4914
   ),
   (
     'danau-toba', 'Danau Toba', '1212',
@@ -58,7 +76,10 @@ INSERT INTO directory.attractions (
     '{"id": "Danau vulkanik terbesar di Asia Tenggara dengan Pulau Samosir di tengahnya.", "en": "The largest volcanic lake in Southeast Asia with Samosir Island at its center."}'::jsonb,
     0, 4.70, 510,
     '{"timezone": "Asia/Jakarta", "is_24_hours": true, "periods": {}}'::jsonb,
-    false, 2.6145, 98.7844
+    false,
+    '{"id": "Sumatera Utara, Indonesia", "en": "North Sumatra, Indonesia"}'::jsonb,
+    '["Dermaga penyeberangan kapal", "Akses jalan utama beraspal"]'::jsonb,
+    2.6145, 98.7844
   ),
   (
     'wayag-viewpoint', 'Wayag Viewpoint', '9108',
@@ -66,7 +87,10 @@ INSERT INTO directory.attractions (
     '{"id": "Pemandanagan gugusan pulau karst dari atas bukit, ikon utama Raja Ampat.", "en": "Stunning panoramic viewpoint overlooking the iconic limestone karst islands of Raja Ampat."}'::jsonb,
     200000, 4.98, 320,
     '{"timezone": "Asia/Jayapura", "is_24_hours": false, "periods": {"monday": [{"open": "05:30", "close": "17:00"}], "tuesday": [{"open": "05:30", "close": "17:00"}], "wednesday": [{"open": "05:30", "close": "17:00"}], "thursday": [{"open": "05:30", "close": "17:00"}], "friday": [{"open": "05:30", "close": "17:00"}], "saturday": [{"open": "05:30", "close": "17:00"}], "sunday": [{"open": "05:30", "close": "17:00"}]}}'::jsonb,
-    true, -0.2078, 130.0247
+    true,
+    '{"id": "Kepulauan Wayag, Kabupaten Raja Ampat, Papua Barat", "en": "Wayag Archipelago, Raja Ampat Regency, West Papua"}'::jsonb,
+    '["Trekking tebing karst terjal", "Peralatan keselamatan/pemandu wajib"]'::jsonb,
+    -0.2078, 130.0247
   ),
   (
     'air-terjun-tiu-kelep', 'Air Terjun Tiu Kelep', '5202',
@@ -74,7 +98,10 @@ INSERT INTO directory.attractions (
     '{"id": "Air terjun bertingkat dengan air jernih dan kolam alami yang menyegarkan.", "en": "Majestic multi-tiered waterfall with crystal clear water and refreshing pools."}'::jsonb,
     25000, 4.72, 234,
     '{"timezone": "Asia/Makassar", "is_24_hours": false, "periods": {"monday": [{"open": "07:00", "close": "17:00"}], "tuesday": [{"open": "07:00", "close": "17:00"}], "wednesday": [{"open": "07:00", "close": "17:00"}], "thursday": [{"open": "07:00", "close": "17:00"}], "friday": [{"open": "07:00", "close": "17:00"}], "saturday": [{"open": "07:00", "close": "17:00"}], "sunday": [{"open": "07:00", "close": "17:00"}]}}'::jsonb,
-    true, -8.3090, 116.4063
+    true,
+    '{"id": "Senaru, Kecamatan Bayan, Kabupaten Lombok Utara, Nusa Tenggara Barat", "en": "Senaru, Bayan District, North Lombok Regency, West Nusa Tenggara"}'::jsonb,
+    '["Trekking jalur tanah & sungai", "Pemandu lokal wajib"]'::jsonb,
+    -8.3090, 116.4063
   ),
   (
     'kawah-putih-ciwidey', 'Kawah Putih Ciwidey', '3273',
@@ -82,7 +109,10 @@ INSERT INTO directory.attractions (
     '{"id": "Kawah belerang dengan air putih kehijauan dan pemandangan alam yang unik.", "en": "Striking volcanic crater lake with pale turquoise waters and misty forest surrounds."}'::jsonb,
     75000, 4.50, 678,
     '{"timezone": "Asia/Jakarta", "is_24_hours": false, "periods": {"monday": [{"open": "07:00", "close": "17:00"}], "tuesday": [{"open": "07:00", "close": "17:00"}], "wednesday": [{"open": "07:00", "close": "17:00"}], "thursday": [{"open": "07:00", "close": "17:00"}], "friday": [{"open": "07:00", "close": "17:00"}], "saturday": [{"open": "07:00", "close": "17:00"}], "sunday": [{"open": "07:00", "close": "17:00"}]}}'::jsonb,
-    false, -7.1662, 107.4021
+    false,
+    '{"id": "Jl. Raya Soreang-Ciwidey, Sugihmukti, Kecamatan Pasirjambu, Kabupaten Bandung, Jawa Barat", "en": "Soreang-Ciwidey Highway, Sugihmukti, Pasirjambu District, Bandung Regency, West Java"}'::jsonb,
+    '["Shutle Ontang-anting", "Jalur kayu (wooden track) ramah disabilitas"]'::jsonb,
+    -7.1662, 107.4021
   )
 ON CONFLICT (slug) DO NOTHING;
 
