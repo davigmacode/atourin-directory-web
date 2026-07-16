@@ -5,18 +5,20 @@
 
 -- ── 1. Table: categories ──────────────────────────────────────
 CREATE TABLE IF NOT EXISTS directory.categories (
-  id          text PRIMARY KEY DEFAULT gen_random_uuid()::text,
-  slug        text UNIQUE NOT NULL,
-  name        jsonb NOT NULL DEFAULT '{"id": "", "en": ""}'::jsonb,
-  metadata    jsonb NOT NULL DEFAULT '{}'::jsonb,
-  created_at  timestamptz NOT NULL DEFAULT now(),
-  updated_at  timestamptz NOT NULL DEFAULT now()
+  id            text PRIMARY KEY DEFAULT gen_random_uuid()::text,
+  slug          text UNIQUE NOT NULL,
+  name          jsonb NOT NULL DEFAULT '{"id": "", "en": ""}'::jsonb,
+  entity_types  text[] NOT NULL DEFAULT '{}'::text[],
+  metadata      jsonb NOT NULL DEFAULT '{}'::jsonb,
+  created_at    timestamptz NOT NULL DEFAULT now(),
+  updated_at    timestamptz NOT NULL DEFAULT now()
 );
 
 -- Index for searching categories
 CREATE INDEX IF NOT EXISTS categories_slug_idx ON directory.categories (slug);
 CREATE INDEX IF NOT EXISTS categories_name_id_idx ON directory.categories ((name->>'id'));
 CREATE INDEX IF NOT EXISTS categories_name_en_idx ON directory.categories ((name->>'en'));
+CREATE INDEX IF NOT EXISTS categories_entity_types_idx ON directory.categories USING gin (entity_types);
 
 -- Trigger for updated_at
 CREATE TRIGGER categories_updated_at

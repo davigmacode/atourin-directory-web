@@ -29,6 +29,7 @@ export async function GET(request: Request): Promise<NextResponse> {
             id,
             slug,
             name,
+            entity_types,
             metadata
           )
         `)
@@ -47,8 +48,34 @@ export async function GET(request: Request): Promise<NextResponse> {
           id: cat.id,
           slug: cat.slug,
           name: resolveName(cat.name),
+          entity_types: cat.entity_types,
           metadata: cat.metadata || {},
         }));
+
+      return NextResponse.json({ data: categories });
+    }
+
+    if (entityType) {
+      // Fetch only categories that are expected for this entity type
+      const { data, error } = await supabaseAdmin
+        .schema('directory')
+        .from('categories')
+        .select('id, slug, name, metadata, entity_types')
+        .contains('entity_types', [entityType])
+        .order('name->>id');
+
+      if (error) {
+        console.error('[api/categories GET by entity_type]', error.message);
+        return NextResponse.json({ error: error.message }, { status: 500 });
+      }
+
+      const categories: Category[] = (data ?? []).map((row: any) => ({
+        id: row.id,
+        slug: row.slug,
+        name: resolveName(row.name),
+        entity_types: row.entity_types,
+        metadata: row.metadata || {},
+      }));
 
       return NextResponse.json({ data: categories });
     }
@@ -57,7 +84,7 @@ export async function GET(request: Request): Promise<NextResponse> {
     const { data, error } = await supabaseAdmin
       .schema('directory')
       .from('categories')
-      .select('id, slug, name, metadata')
+      .select('id, slug, name, metadata, entity_types')
       .order('name->>id'); // Order by name text field in JSONB
 
     if (error) {
@@ -69,6 +96,7 @@ export async function GET(request: Request): Promise<NextResponse> {
       id: row.id,
       slug: row.slug,
       name: resolveName(row.name),
+      entity_types: row.entity_types,
       metadata: row.metadata || {},
     }));
 

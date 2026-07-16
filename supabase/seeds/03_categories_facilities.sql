@@ -1,15 +1,15 @@
 -- ── Seed Data: categories ─────────────────────────────────
-INSERT INTO directory.categories (slug, name, metadata) VALUES
-  ('alam', '{"id": "Alam", "en": "Nature"}'::jsonb, '{"icon": "🌿", "color": "#E6F7E6"}'),
-  ('budaya', '{"id": "Budaya", "en": "Culture"}'::jsonb, '{"icon": "🎭", "color": "#EDE9FF"}'),
-  ('sejarah', '{"id": "Sejarah", "en": "History"}'::jsonb, '{"icon": "🛣️", "color": "#FFF4D9"}'),
-  ('kuliner', '{"id": "Kuliner", "en": "Culinary"}'::jsonb, '{"icon": "🌙", "color": "#FFE2E2"}'),
-  ('religi', '{"id": "Religi", "en": "Religious"}'::jsonb, '{"icon": "🕌", "color": "#E2F1FF"}'),
-  ('petualangan', '{"id": "Petualangan", "en": "Adventure"}'::jsonb, '{"icon": "⚽", "color": "#D9F2DA"}'),
-  ('heritage', '{"id": "Heritage", "en": "Heritage"}'::jsonb, '{"icon": "🎯", "color": "#FFE9D6"}'),
-  ('bahari', '{"id": "Bahari", "en": "Marine"}'::jsonb, '{"icon": "🌊", "color": "#D4ECF4"}'),
-  ('desa-wisata', '{"id": "Desa Wisata", "en": "Tourism Village"}'::jsonb, '{"icon": "🌾", "color": "#F0FBE9"}'),
-  ('ecotourism', '{"id": "Ecotourism", "en": "Ecotourism"}'::jsonb, '{"icon": "🌱", "color": "#E6F7E6"}')
+INSERT INTO directory.categories (slug, name, entity_types, metadata) VALUES
+  ('alam', '{"id": "Alam", "en": "Nature"}'::jsonb, ARRAY['attraction', 'destination', 'village', 'itinerary'], '{"icon": "🌿", "color": "#E6F7E6"}'),
+  ('budaya', '{"id": "Budaya", "en": "Culture"}'::jsonb, ARRAY['attraction', 'destination', 'village', 'itinerary'], '{"icon": "🎭", "color": "#EDE9FF"}'),
+  ('sejarah', '{"id": "Sejarah", "en": "History"}'::jsonb, ARRAY['attraction', 'destination', 'village', 'itinerary'], '{"icon": "🛣️", "color": "#FFF4D9"}'),
+  ('kuliner', '{"id": "Kuliner", "en": "Culinary"}'::jsonb, ARRAY['attraction', 'destination', 'village', 'itinerary'], '{"icon": "🌙", "color": "#FFE2E2"}'),
+  ('religi', '{"id": "Religi", "en": "Religious"}'::jsonb, ARRAY['attraction', 'destination', 'village', 'itinerary'], '{"icon": "🕌", "color": "#E2F1FF"}'),
+  ('petualangan', '{"id": "Petualangan", "en": "Adventure"}'::jsonb, ARRAY['attraction', 'destination', 'village', 'itinerary'], '{"icon": "⚽", "color": "#D9F2DA"}'),
+  ('heritage', '{"id": "Heritage", "en": "Heritage"}'::jsonb, ARRAY['attraction', 'destination', 'village', 'itinerary'], '{"icon": "🎯", "color": "#FFE9D6"}'),
+  ('bahari', '{"id": "Bahari", "en": "Marine"}'::jsonb, ARRAY['attraction', 'destination', 'village', 'itinerary'], '{"icon": "🌊", "color": "#D4ECF4"}'),
+  ('desa-wisata', '{"id": "Desa Wisata", "en": "Tourism Village"}'::jsonb, ARRAY['village'], '{"icon": "🌾", "color": "#F0FBE9"}'),
+  ('ecotourism', '{"id": "Ecotourism", "en": "Ecotourism"}'::jsonb, ARRAY['attraction', 'destination', 'village', 'itinerary'], '{"icon": "🌱", "color": "#E6F7E6"}')
 ON CONFLICT (slug) DO NOTHING;
 
 -- ── Seed Data: facilities ─────────────────────────────────
