@@ -18,7 +18,6 @@ CREATE TABLE IF NOT EXISTS directory.attractions (
   trekking               boolean NOT NULL DEFAULT false,
   latitude               numeric(9,6),
   longitude              numeric(9,6),
-  price_tiers            jsonb,
   created_at             timestamptz NOT NULL DEFAULT now(),
   updated_at             timestamptz NOT NULL DEFAULT now()
 );
@@ -38,4 +37,25 @@ CREATE INDEX IF NOT EXISTS attractions_destination_id_idx ON directory.attractio
 -- Trigger for updated_at
 CREATE TRIGGER attractions_updated_at
   BEFORE UPDATE ON directory.attractions
+  FOR EACH ROW EXECUTE FUNCTION directory.set_updated_at();
+
+-- ── 2. Table: price_tiers (Polymorphic) ────────────────────────
+CREATE TABLE IF NOT EXISTS directory.price_tiers (
+  id           text PRIMARY KEY DEFAULT gen_random_uuid()::text,
+  entity_type  text NOT NULL,
+  entity_id    text NOT NULL,
+  name         jsonb NOT NULL DEFAULT '{"id": "", "en": ""}'::jsonb,
+  price        integer NOT NULL DEFAULT 0,
+  created_at   timestamptz NOT NULL DEFAULT now(),
+  updated_at   timestamptz NOT NULL DEFAULT now(),
+  CONSTRAINT price_tiers_entity_type_check CHECK (entity_type IN ('destination', 'attraction', 'village', 'itinerary')),
+  UNIQUE (entity_type, entity_id, name)
+);
+
+-- Index for searching price tiers
+CREATE INDEX IF NOT EXISTS price_tiers_entity_idx ON directory.price_tiers (entity_type, entity_id);
+
+-- Trigger for updated_at
+CREATE TRIGGER price_tiers_updated_at
+  BEFORE UPDATE ON directory.price_tiers
   FOR EACH ROW EXECUTE FUNCTION directory.set_updated_at();

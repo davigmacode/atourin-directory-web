@@ -61,7 +61,6 @@ export async function GET(request: Request): Promise<NextResponse> {
         trekking,
         latitude,
         longitude,
-        price_tiers,
         destination:destinations (
           id,
           name,
@@ -142,6 +141,25 @@ export async function GET(request: Request): Promise<NextResponse> {
       return NextResponse.json({ error: mediaError.message }, { status: 500 });
     }
 
+    // 5. Fetch price tiers for attractions
+    const attractionIds = (dbData ?? []).map((row: any) => row.id);
+    let priceTiersData: any[] = [];
+    if (attractionIds.length > 0) {
+      const { data, error } = await supabaseAdmin
+        .schema('directory')
+        .from('price_tiers')
+        .select('entity_id, name, price')
+        .eq('entity_type', 'attraction')
+        .in('entity_id', attractionIds)
+        .order('price', { ascending: true });
+
+      if (error) {
+        console.error('[api/attractions GET price tiers]', error.message);
+        return NextResponse.json({ error: error.message }, { status: 500 });
+      }
+      priceTiersData = data ?? [];
+    }
+
     // Process categories lookup map
     const categoriesMap: Record<string, any[]> = {};
     (assignmentsData ?? []).forEach((row: any) => {
@@ -199,9 +217,7 @@ export async function GET(request: Request): Promise<NextResponse> {
     const mediaMap: Record<string, any[]> = {};
     (mediaData ?? []).forEach((m: any) => {
       const entityId = m.entity_id;
-      if (!mediaMap[entityId]) {
-        mediaMap[entityId] = [];
-      }
+      mediaMap[entityId] = mediaMap[entityId] || [];
       mediaMap[entityId].push({
         id: m.id,
         entityType: 'attraction',
@@ -210,6 +226,17 @@ export async function GET(request: Request): Promise<NextResponse> {
         url: m.url,
         metadata: m.metadata || {},
         sortOrder: m.sort_order,
+      });
+    });
+
+    // Process price tiers lookup map
+    const priceTiersMap: Record<string, any[]> = {};
+    priceTiersData.forEach((pt: any) => {
+      const entityId = pt.entity_id;
+      priceTiersMap[entityId] = priceTiersMap[entityId] || [];
+      priceTiersMap[entityId].push({
+        name: pt.name,
+        price: pt.price
       });
     });
 
@@ -275,7 +302,7 @@ export async function GET(request: Request): Promise<NextResponse> {
         },
         description: row.description?.[lang] || row.description?.id || row.description?.en || '',
         price: row.price,
-        priceTiers: Array.isArray(row.price_tiers) ? row.price_tiers.map((t: any) => {
+        priceTiers: (priceTiersMap[row.id] && priceTiersMap[row.id].length > 0) ? priceTiersMap[row.id].map((t: any) => {
           const nameObj = t.name;
           let tierName = '';
           if (typeof nameObj === 'string') {

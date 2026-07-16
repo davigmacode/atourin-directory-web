@@ -31,7 +31,6 @@ export async function GET(
         trekking,
         latitude,
         longitude,
-        price_tiers,
         destination:destinations (
           id,
           name,
@@ -102,6 +101,20 @@ export async function GET(
     if (facilityError) {
       console.error('[api/attractions/[slug] GET facilities]', facilityError.message);
       return NextResponse.json({ error: facilityError.message }, { status: 500 });
+    }
+
+    // 5. Fetch price tiers from polymorphic table
+    const { data: priceTiersData, error: priceTiersError } = await supabaseAdmin
+      .schema('directory')
+      .from('price_tiers')
+      .select('name, price')
+      .eq('entity_type', 'attraction')
+      .eq('entity_id', row.id)
+      .order('price', { ascending: true });
+
+    if (priceTiersError) {
+      console.error('[api/attractions/[slug] GET price tiers]', priceTiersError.message);
+      return NextResponse.json({ error: priceTiersError.message }, { status: 500 });
     }
 
     // 4. Fetch media
@@ -236,7 +249,7 @@ export async function GET(
       },
       description: rowAny.description?.[lang] || rowAny.description?.id || rowAny.description?.en || '',
       price: rowAny.price,
-      priceTiers: Array.isArray(rowAny.price_tiers) ? rowAny.price_tiers.map((t: any) => {
+      priceTiers: (priceTiersData && priceTiersData.length > 0) ? priceTiersData.map((t: any) => {
         const nameObj = t.name;
         let tierName = '';
         if (typeof nameObj === 'string') {
