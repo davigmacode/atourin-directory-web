@@ -47,7 +47,7 @@ export interface Attraction {
   destination?: Destination;
   coverImage: CoverImage;
   description?: string;
-  price: number;
+  minPrice: number;
   priceTiers?: PriceTier[];
   ratingAverage: number;
   reviewsCount: number;

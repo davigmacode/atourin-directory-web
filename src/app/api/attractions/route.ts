@@ -54,7 +54,7 @@ export async function GET(request: Request): Promise<NextResponse> {
         destination_id,
         cover_image,
         description,
-        price,
+        min_price,
         rating_average,
         reviews_count,
         opening_hours,
@@ -303,7 +303,7 @@ export async function GET(request: Request): Promise<NextResponse> {
           base64: row.cover_image?.base64 ?? null,
         },
         description: row.description?.[lang] || row.description?.id || row.description?.en || '',
-        price: row.price,
+        minPrice: row.min_price,
         priceTiers: (priceTiersMap[row.id] && priceTiersMap[row.id].length > 0) ? priceTiersMap[row.id].map((t: any) => {
           const nameObj = t.name;
           let tierName = '';
@@ -362,7 +362,7 @@ export async function GET(request: Request): Promise<NextResponse> {
     if (priceRange) {
       const range = parsePriceRange(priceRange);
       if (range) {
-        attractions = attractions.filter((a) => a.price >= range[0] && a.price <= range[1]);
+        attractions = attractions.filter((a) => a.minPrice >= range[0] && a.minPrice <= range[1]);
       }
     }
     if (rating) {
@@ -378,9 +378,9 @@ export async function GET(request: Request): Promise<NextResponse> {
     } else if (sort === 'rating-desc') {
       attractions.sort((a, b) => b.ratingAverage - a.ratingAverage);
     } else if (sort === 'price-asc') {
-      attractions.sort((a, b) => a.price - b.price);
+      attractions.sort((a, b) => a.minPrice - b.minPrice);
     } else if (sort === 'price-desc') {
-      attractions.sort((a, b) => b.price - a.price);
+      attractions.sort((a, b) => b.minPrice - a.minPrice);
     }
 
     // Paginate

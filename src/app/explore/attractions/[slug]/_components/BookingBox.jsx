@@ -151,7 +151,7 @@ function getIsOpenStatus(oh) {
 
 export default function BookingBox({ attraction }) {
   const [save, setSave] = useState(false);
-  const price = attraction.price || 0;
+  const minPrice = attraction.minPrice || 0;
   const region = attraction.destination ? attraction.destination.name : attraction.region;
   const isOpen = getIsOpenStatus(attraction.openingHours);
 
@@ -161,9 +161,9 @@ export default function BookingBox({ attraction }) {
         <span style={ds.bookEyebrow}>Tiket Masuk</span>
         <div style={ds.bookFromRow}>
           <span style={ds.bookFromVal}>
-            {price === 0 ? "Gratis" : `Mulai Rp ${(price / 1000).toLocaleString("id-ID")}rb`}
+            {minPrice === 0 ? "Gratis" : `Mulai Rp ${(minPrice / 1000).toLocaleString("id-ID")}rb`}
           </span>
-          {price > 0 && <span style={ds.bookFromUnit}>/orang</span>}
+          {minPrice > 0 && <span style={ds.bookFromUnit}>/orang</span>}
         </div>
       </div>
 
@@ -183,7 +183,7 @@ export default function BookingBox({ attraction }) {
           <div style={ds.priceRow}>
             <span style={ds.priceLabel}>{"👤"} Tiket Masuk</span>
             <span style={ds.priceVal}>
-              {price === 0 ? "Gratis" : `Rp ${price.toLocaleString("id-ID")}`}
+              {minPrice === 0 ? "Gratis" : `Rp ${minPrice.toLocaleString("id-ID")}`}
             </span>
           </div>
         )}

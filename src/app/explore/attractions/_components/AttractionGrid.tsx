@@ -163,13 +163,13 @@ export function AttrCard({ a, save, onSave }: AttrCardProps) {
           >
             <ClockSm /> {getOpeningHoursDisplay(a.openingHours)}
           </span>
-          {a.price === 0 ? (
+          {a.minPrice === 0 ? (
             <span style={{ color: "#2D8838", fontWeight: 700 }}>
               · Gratis masuk
             </span>
           ) : (
             <span>
-              · Tiket Rp {(a.price / 1000).toLocaleString("id-ID")}rb
+              · Tiket mulai Rp {(a.minPrice / 1000).toLocaleString("id-ID")}rb
             </span>
           )}
         </div>

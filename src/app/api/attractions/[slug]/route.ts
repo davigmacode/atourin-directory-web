@@ -24,7 +24,7 @@ export async function GET(
         destination_id,
         cover_image,
         description,
-        price,
+        min_price,
         rating_average,
         reviews_count,
         opening_hours,
@@ -250,7 +250,7 @@ export async function GET(
         base64: rowAny.cover_image?.base64 ?? null,
       },
       description: rowAny.description?.[lang] || rowAny.description?.id || rowAny.description?.en || '',
-      price: rowAny.price,
+      minPrice: rowAny.min_price,
       priceTiers: (priceTiersData && priceTiersData.length > 0) ? priceTiersData.map((t: any) => {
         const nameObj = t.name;
         let tierName = '';

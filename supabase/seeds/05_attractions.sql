@@ -1,7 +1,7 @@
 -- ── Seed Data: attractions ────────────────────────────────
 INSERT INTO directory.attractions (
   slug, name, destination_id, cover_image, description,
-  price, rating_average, reviews_count, opening_hours, trekking,
+  min_price, rating_average, reviews_count, opening_hours, trekking,
   location_address, location_accessibility, location_latitude, location_longitude
 ) VALUES
   (

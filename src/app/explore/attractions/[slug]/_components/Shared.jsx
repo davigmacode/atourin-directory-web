@@ -191,7 +191,7 @@ export function MiniAttractionCard({ a }) {
             {"\u2605"} <strong>{a.rating}</strong>
           </span>
           <span style={ds.miniPrice}>
-            {a.price === 0 ? "Gratis" : `Rp ${(a.price / 1000).toFixed(0)}rb`}
+            {a.minPrice === 0 ? "Gratis" : `Mulai Rp ${(a.minPrice / 1000).toFixed(0)}rb`}
           </span>
         </div>
       </div>
