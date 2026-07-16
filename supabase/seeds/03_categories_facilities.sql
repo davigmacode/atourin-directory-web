@@ -13,19 +13,19 @@ INSERT INTO directory.categories (slug, name, metadata) VALUES
 ON CONFLICT (slug) DO NOTHING;
 
 -- ── Seed Data: facilities ─────────────────────────────────
-INSERT INTO directory.facilities (slug, name, metadata) VALUES
-  ('parkir', '{"id": "Parkir", "en": "Parking"}'::jsonb, '{"icon": "🅿️"}'),
-  ('toilet', '{"id": "Toilet", "en": "Restroom"}'::jsonb, '{"icon": "🚾"}'),
-  ('spot-foto', '{"id": "Spot Foto", "en": "Photo Spot"}'::jsonb, '{"icon": "📸"}'),
-  ('souvenir', '{"id": "Souvenir", "en": "Souvenir"}'::jsonb, '{"icon": "🛍️"}'),
-  ('akses-disabilitas', '{"id": "Akses Disabilitas", "en": "Disability Access"}'::jsonb, '{"icon": "♿"}'),
-  ('restoran', '{"id": "Restoran / Warung", "en": "Restaurant / Eatery"}'::jsonb, '{"icon": "🍽️"}'),
-  ('musholla', '{"id": "Musholla", "en": "Prayer Room"}'::jsonb, '{"icon": "🕌"}'),
-  ('camping-area', '{"id": "Camping Area", "en": "Camping Area"}'::jsonb, '{"icon": "⛺"}'),
-  ('sinyal-hp', '{"id": "Sinyal HP", "en": "Mobile Signal"}'::jsonb, '{"icon": "📶"}'),
-  ('air-bersih', '{"id": "Air Bersih", "en": "Clean Water"}'::jsonb, '{"icon": "💧"}'),
-  ('pemandu-lokal', '{"id": "Pemandu Lokal", "en": "Local Guide"}'::jsonb, '{"icon": "🙋"}'),
-  ('homestay', '{"id": "Homestay", "en": "Homestay"}'::jsonb, '{"icon": "🏡"}'),
-  ('charging-station', '{"id": "Stasiun Pengisian Daya", "en": "Charging Station"}'::jsonb, '{"icon": "🔌"}'),
-  ('wifi', '{"id": "WiFi", "en": "WiFi Connection"}'::jsonb, '{"icon": "📶"}')
+INSERT INTO directory.facilities (slug, name, entity_types, metadata) VALUES
+  ('parkir', '{"id": "Parkir", "en": "Parking"}'::jsonb, ARRAY['attraction', 'village'], '{"icon": "🅿️"}'),
+  ('toilet', '{"id": "Toilet", "en": "Restroom"}'::jsonb, ARRAY['attraction', 'village'], '{"icon": "🚾"}'),
+  ('spot-foto', '{"id": "Spot Foto", "en": "Photo Spot"}'::jsonb, ARRAY['attraction'], '{"icon": "📸"}'),
+  ('souvenir', '{"id": "Souvenir", "en": "Souvenir"}'::jsonb, ARRAY['attraction'], '{"icon": "🛍️"}'),
+  ('akses-disabilitas', '{"id": "Akses Disabilitas", "en": "Disability Access"}'::jsonb, ARRAY['attraction'], '{"icon": "♿"}'),
+  ('restoran', '{"id": "Restoran / Warung", "en": "Restaurant / Eatery"}'::jsonb, ARRAY['attraction', 'village'], '{"icon": "🍽️"}'),
+  ('musholla', '{"id": "Musholla", "en": "Prayer Room"}'::jsonb, ARRAY['attraction', 'village'], '{"icon": "🕌"}'),
+  ('camping-area', '{"id": "Camping Area", "en": "Camping Area"}'::jsonb, ARRAY['attraction'], '{"icon": "⛺"}'),
+  ('sinyal-hp', '{"id": "Sinyal HP", "en": "Mobile Signal"}'::jsonb, ARRAY['attraction'], '{"icon": "📶"}'),
+  ('air-bersih', '{"id": "Air Bersih", "en": "Clean Water"}'::jsonb, ARRAY['attraction'], '{"icon": "💧"}'),
+  ('pemandu-lokal', '{"id": "Pemandu Lokal", "en": "Local Guide"}'::jsonb, ARRAY['attraction', 'village'], '{"icon": "🙋"}'),
+  ('homestay', '{"id": "Homestay", "en": "Homestay"}'::jsonb, ARRAY['village'], '{"icon": "🏡"}'),
+  ('charging-station', '{"id": "Stasiun Pengisian Daya", "en": "Charging Station"}'::jsonb, ARRAY['village'], '{"icon": "🔌"}'),
+  ('wifi', '{"id": "WiFi", "en": "WiFi Connection"}'::jsonb, ARRAY['village'], '{"icon": "📶"}')
 ON CONFLICT (slug) DO NOTHING;

@@ -109,7 +109,6 @@ export async function GET(request: Request): Promise<NextResponse> {
       .from('facility_assignments')
       .select(`
         entity_id,
-        available,
         facility:facilities (
           id,
           slug,
@@ -192,7 +191,7 @@ export async function GET(request: Request): Promise<NextResponse> {
         slug: fac.slug,
         name: facName,
         metadata: fac.metadata || {},
-        available: row.available,
+        available: true,
       });
     });
 

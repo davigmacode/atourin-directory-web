@@ -6,6 +6,7 @@ export interface Facility {
   id: string;
   slug: string;
   name: string;
+  entity_types?: string[];
   metadata: FacilityMetadata;
   createdAt?: string;
   updatedAt?: string;

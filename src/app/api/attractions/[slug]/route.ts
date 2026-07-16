@@ -79,19 +79,23 @@ export async function GET(
       return NextResponse.json({ error: assignError.message }, { status: 500 });
     }
 
-    // 3. Fetch facility assignments
-    const { data: facilityData, error: facilityError } = await supabaseAdmin
+    // 3. Fetch all facilities that are expected for attractions from the database
+    const { data: allFacs, error: allFacsError } = await supabaseAdmin
+      .schema('directory')
+      .from('facilities')
+      .select('id, slug, name, metadata')
+      .contains('entity_types', ['attraction']);
+
+    if (allFacsError) {
+      console.error('[api/attractions/[slug] GET expected facilities]', allFacsError.message);
+      return NextResponse.json({ error: allFacsError.message }, { status: 500 });
+    }
+
+    // Fetch facility assignments
+    const { data: facilityAssignments, error: facilityError } = await supabaseAdmin
       .schema('directory')
       .from('facility_assignments')
-      .select(`
-        available,
-        facility:facilities (
-          id,
-          slug,
-          name,
-          metadata
-        )
-      `)
+      .select('facility_id, available')
       .eq('entity_type', 'attraction')
       .eq('entity_id', row.id);
 
@@ -139,9 +143,8 @@ export async function GET(
     }).filter((c) => c !== null);
 
     // Process facilities
-    const facilities = (facilityData ?? []).map((fa: any) => {
-      const fac = fa.facility;
-      if (!fac) return null;
+    const facilities = (allFacs ?? []).map((fac: any) => {
+      const match = (facilityAssignments ?? []).find((fa: any) => fa.facility_id === fac.id);
       const nameObj = fac.name;
       let facName = '';
       if (typeof nameObj === 'string') {
@@ -154,9 +157,9 @@ export async function GET(
         slug: fac.slug,
         name: facName,
         metadata: fac.metadata || {},
-        available: fa.available,
+        available: match ? match.available : false,
       };
-    }).filter((f) => f !== null);
+    });
 
     // Process media
     const media = (mediaData ?? [])

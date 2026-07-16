@@ -36,10 +36,22 @@ export function ReadMore({ text, clamp = 4 }) {
 }
 
 export function FacilityItem({ icon, label, available = true }) {
+  const isEnglish = typeof window !== "undefined" && window.localStorage?.getItem("atr.lang") === "en";
+  const notAvailableText = isEnglish ? "not available" : "tidak tersedia";
+
   return (
     <div style={{ ...ds.facItem, ...(available ? {} : ds.facItemOff) }}>
       <span style={ds.facIcon}>{icon}</span>
-      <span style={{ ...ds.facLabel, ...(available ? {} : ds.facStrike) }}>{label}</span>
+      <div style={{ display: "flex", flexDirection: "column", minWidth: 0 }}>
+        <span style={{ ...ds.facLabel, ...(available ? {} : ds.facStrike) }}>
+          {label}
+        </span>
+        {!available && (
+          <span style={{ fontSize: 10, color: "var(--atr-text-muted)", marginTop: 2, fontWeight: 500 }}>
+            {notAvailableText}
+          </span>
+        )}
+      </div>
     </div>
   );
 }
