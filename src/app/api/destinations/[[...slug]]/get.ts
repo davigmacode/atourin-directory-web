@@ -1,16 +1,11 @@
-import { NextResponse } from 'next/server';
+import { Elysia, t } from 'elysia';
 import { supabaseAdmin } from '@/lib/supabase';
 import type { Destination } from '@/types/destination';
 
-export async function GET(
-  request: Request,
-  { params }: { params: Promise<{ slug: string }> }
-): Promise<NextResponse> {
-  try {
-    const { slug } = await params;
-    
+export const getController = new Elysia()
+  .get('/:slug', async ({ params: { slug }, headers, set }) => {
     // Language resolution
-    const langHeader = request.headers.get('accept-language') || 'id';
+    const langHeader = headers['accept-language'] || 'id';
     const lang = langHeader.toLowerCase().includes('en') ? 'en' : 'id';
 
     // 1. Fetch destination
@@ -47,11 +42,13 @@ export async function GET(
 
     if (destError) {
       console.error('[api/destinations/[slug] GET]', destError.message);
-      return NextResponse.json({ error: destError.message }, { status: 500 });
+      set.status = 500;
+      return { error: destError.message };
     }
 
     if (!row) {
-      return NextResponse.json({ error: 'Destination not found' }, { status: 404 });
+      set.status = 404;
+      return { error: 'Destination not found' };
     }
 
     // 2. Fetch category assignments
@@ -69,7 +66,8 @@ export async function GET(
 
     if (assignError) {
       console.error('[api/destinations/[slug] GET assignments]', assignError.message);
-      return NextResponse.json({ error: assignError.message }, { status: 500 });
+      set.status = 500;
+      return { error: assignError.message };
     }
 
     // 3. Fetch media
@@ -88,7 +86,8 @@ export async function GET(
 
     if (mediaError) {
       console.error('[api/destinations/[slug] GET media]', mediaError.message);
-      return NextResponse.json({ error: mediaError.message }, { status: 500 });
+      set.status = 500;
+      return { error: mediaError.message };
     }
 
     const tags = (assignmentsData ?? [])
@@ -120,6 +119,7 @@ export async function GET(
         sortOrder: m.sort_order,
       }))
       .sort((a: any, b: any) => a.sortOrder - b.sortOrder);
+    
     const rawProvince = Array.isArray(row.province) ? row.province[0] : row.province;
     const rawIsland = rawProvince
       ? (Array.isArray(rawProvince.island) ? rawProvince.island[0] : rawProvince.island)
@@ -166,9 +166,5 @@ export async function GET(
       media,
     };
 
-    return NextResponse.json({ data: destination });
-  } catch (err: any) {
-    console.error('[api/destinations/[slug] GET catch]', err.message);
-    return NextResponse.json({ error: err.message }, { status: 500 });
-  }
-}
+    return { data: destination };
+  });

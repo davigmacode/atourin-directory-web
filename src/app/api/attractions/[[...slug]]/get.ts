@@ -1,16 +1,11 @@
-import { NextResponse } from 'next/server';
+import { Elysia, t } from 'elysia';
 import { supabaseAdmin } from '@/lib/supabase';
 import type { Attraction } from '@/types/attraction';
 
-export async function GET(
-  request: Request,
-  { params }: { params: Promise<{ slug: string }> }
-): Promise<NextResponse> {
-  try {
-    const { slug } = await params;
-    
+export const getController = new Elysia()
+  .get('/:slug', async ({ params: { slug }, headers, set }) => {
     // Language resolution
-    const langHeader = request.headers.get('accept-language') || 'id';
+    const langHeader = headers['accept-language'] || 'id';
     const lang = langHeader.toLowerCase().includes('en') ? 'en' : 'id';
 
     // 1. Fetch attraction
@@ -54,11 +49,13 @@ export async function GET(
 
     if (dbError) {
       console.error('[api/attractions/[slug] GET]', dbError.message);
-      return NextResponse.json({ error: dbError.message }, { status: 500 });
+      set.status = 500;
+      return { error: dbError.message };
     }
 
     if (!row) {
-      return NextResponse.json({ error: 'Attraction not found' }, { status: 404 });
+      set.status = 404;
+      return { error: 'Attraction not found' };
     }
 
     // 2. Fetch category assignments
@@ -78,7 +75,8 @@ export async function GET(
 
     if (assignError) {
       console.error('[api/attractions/[slug] GET assignments]', assignError.message);
-      return NextResponse.json({ error: assignError.message }, { status: 500 });
+      set.status = 500;
+      return { error: assignError.message };
     }
 
     // 3. Fetch all facilities that are expected for attractions from the database
@@ -90,7 +88,8 @@ export async function GET(
 
     if (allFacsError) {
       console.error('[api/attractions/[slug] GET expected facilities]', allFacsError.message);
-      return NextResponse.json({ error: allFacsError.message }, { status: 500 });
+      set.status = 500;
+      return { error: allFacsError.message };
     }
 
     // Fetch facility assignments
@@ -103,7 +102,8 @@ export async function GET(
 
     if (facilityError) {
       console.error('[api/attractions/[slug] GET facilities]', facilityError.message);
-      return NextResponse.json({ error: facilityError.message }, { status: 500 });
+      set.status = 500;
+      return { error: facilityError.message };
     }
 
     // 5. Fetch price tiers from polymorphic table
@@ -117,7 +117,8 @@ export async function GET(
 
     if (priceTiersError) {
       console.error('[api/attractions/[slug] GET price tiers]', priceTiersError.message);
-      return NextResponse.json({ error: priceTiersError.message }, { status: 500 });
+      set.status = 500;
+      return { error: priceTiersError.message };
     }
 
     // 4. Fetch media
@@ -136,7 +137,8 @@ export async function GET(
 
     if (mediaError) {
       console.error('[api/attractions/[slug] GET media]', mediaError.message);
-      return NextResponse.json({ error: mediaError.message }, { status: 500 });
+      set.status = 500;
+      return { error: mediaError.message };
     }
 
     // Process categories
@@ -299,9 +301,5 @@ export async function GET(
       media,
     };
 
-    return NextResponse.json({ data: attraction });
-  } catch (err: any) {
-    console.error('[api/attractions/[slug] GET catch]', err.message);
-    return NextResponse.json({ error: err.message }, { status: 500 });
-  }
-}
+    return { data: attraction };
+  });

@@ -1,24 +1,23 @@
-import { NextResponse } from 'next/server';
+import { Elysia, t } from 'elysia';
 import { supabaseAdmin } from '@/lib/supabase';
 import type { Destination } from '@/types/destination';
 
-export async function GET(request: Request): Promise<NextResponse> {
-  try {
-    const { searchParams } = new URL(request.url);
-    const page = parseInt(searchParams.get('page') || '1');
-    const limit = parseInt(searchParams.get('limit') || '12');
-    const sort = searchParams.get('sort') || 'alpha';
-    const search = (searchParams.get('search') || '').toLowerCase();
-    const island = searchParams.get('island') || '';
-    const province = searchParams.get('province') || '';
-    const category = searchParams.get('category') || '';
+export const findController = new Elysia()
+  .get('/', async ({ query, headers, set }) => {
+    const page = parseInt(query.page || '1');
+    const limit = parseInt(query.limit || '12');
+    const sort = query.sort || 'alpha';
+    const search = (query.search || '').toLowerCase();
+    const island = query.island || '';
+    const province = query.province || '';
+    const category = query.category || '';
 
     // Language resolution
-    const langHeader = request.headers.get('accept-language') || 'id';
+    const langHeader = headers['accept-language'] || 'id';
     const lang = langHeader.toLowerCase().includes('en') ? 'en' : 'id';
 
-    // 1. Query destinations
-    const { data: dbData, error: destError } = await supabaseAdmin
+    // Build base query
+    let dbQuery = supabaseAdmin
       .schema('directory')
       .from('destinations')
       .select(`
@@ -36,23 +35,94 @@ export async function GET(request: Request): Promise<NextResponse> {
         market_products_count,
         rating_average,
         popular_score,
-        province:provinces (
+        province:provinces!inner (
           id,
           name,
           slug,
-          island:islands (
+          island:islands!inner (
             id,
             name
           )
         )
-      `);
+      `, { count: 'exact' });
+
+    // Apply DB Filters
+    if (search) {
+      dbQuery = dbQuery.ilike('name', `%${search}%`);
+    }
+    if (island) {
+      dbQuery = dbQuery.ilike('province.island.name', island);
+    }
+    if (province) {
+      dbQuery = dbQuery.ilike('province.name', province);
+    }
+
+    if (category) {
+      const { data: catData } = await supabaseAdmin
+        .schema('directory')
+        .from('categories')
+        .select('id')
+        .or(`slug.ilike.${category},name->>id.ilike.${category},name->>en.ilike.${category}`);
+
+      const targetCategoryIds = catData ? catData.map((c) => c.id) : [];
+      if (targetCategoryIds.length === 0) {
+        return {
+          data: [],
+          pagination: { page, limit, total: 0, totalPages: 0 }
+        };
+      }
+
+      const { data: assData } = await supabaseAdmin
+        .schema('directory')
+        .from('category_assignments')
+        .select('entity_id')
+        .eq('entity_type', 'destination')
+        .in('category_id', targetCategoryIds);
+
+      const matchedDestinationIds = assData ? assData.map((a) => a.entity_id) : [];
+      if (matchedDestinationIds.length === 0) {
+        return {
+          data: [],
+          pagination: { page, limit, total: 0, totalPages: 0 }
+        };
+      }
+      dbQuery = dbQuery.in('id', matchedDestinationIds);
+    }
+
+    // Sorting
+    if (sort === 'alpha') {
+      dbQuery = dbQuery.order('name', { ascending: true });
+    } else if (sort === 'alpha-desc') {
+      dbQuery = dbQuery.order('name', { ascending: false });
+    } else if (sort === 'popular') {
+      dbQuery = dbQuery.order('popular_score', { ascending: false });
+    } else if (sort === 'content') {
+      dbQuery = dbQuery.order('attractions_count', { ascending: false });
+    }
+
+    // Pagination Range
+    const offset = (page - 1) * limit;
+    dbQuery = dbQuery.range(offset, offset + limit - 1);
+
+    const { data: dbData, error: destError, count } = await dbQuery;
 
     if (destError) {
       console.error('[api/destinations GET destinations]', destError.message);
-      return NextResponse.json({ error: destError.message }, { status: 500 });
+      set.status = 500;
+      return { error: destError.message };
     }
 
-    // 2. Query category assignments (for tags)
+    const total = count || 0;
+    const destinationIds = (dbData ?? []).map((row: any) => row.id);
+
+    if (destinationIds.length === 0) {
+      return {
+        data: [],
+        pagination: { page, limit, total, totalPages: Math.ceil(total / limit) }
+      };
+    }
+
+    // Query category assignments (only for paged destinations)
     const { data: assignmentsData, error: assignError } = await supabaseAdmin
       .schema('directory')
       .from('category_assignments')
@@ -63,14 +133,16 @@ export async function GET(request: Request): Promise<NextResponse> {
           name
         )
       `)
-      .eq('entity_type', 'destination');
+      .eq('entity_type', 'destination')
+      .in('entity_id', destinationIds);
 
     if (assignError) {
       console.error('[api/destinations GET assignments]', assignError.message);
-      return NextResponse.json({ error: assignError.message }, { status: 500 });
+      set.status = 500;
+      return { error: assignError.message };
     }
 
-    // 3. Query media
+    // Query media (only for paged destinations)
     const { data: mediaData, error: mediaError } = await supabaseAdmin
       .schema('directory')
       .from('media')
@@ -82,20 +154,22 @@ export async function GET(request: Request): Promise<NextResponse> {
         metadata,
         sort_order
       `)
-      .eq('entity_type', 'destination');
+      .eq('entity_type', 'destination')
+      .in('entity_id', destinationIds);
 
     if (mediaError) {
       console.error('[api/destinations GET media]', mediaError.message);
-      return NextResponse.json({ error: mediaError.message }, { status: 500 });
+      set.status = 500;
+      return { error: mediaError.message };
     }
 
     // Process assignments into a lookup map
     const assignmentsMap: Record<string, { slug: string; name: string }[]> = {};
     (assignmentsData ?? []).forEach((row: any) => {
       const entityId = row.entity_id;
-      const category = row.category;
-      if (!category) return;
-      const nameObj = category.name;
+      const cat = row.category;
+      if (!cat) return;
+      const nameObj = cat.name;
       let tagName = '';
       if (typeof nameObj === 'string') {
         tagName = nameObj;
@@ -107,7 +181,7 @@ export async function GET(request: Request): Promise<NextResponse> {
           assignmentsMap[entityId] = [];
         }
         assignmentsMap[entityId].push({
-          slug: category.slug || '',
+          slug: cat.slug || '',
           name: tagName,
         });
       }
@@ -132,7 +206,7 @@ export async function GET(request: Request): Promise<NextResponse> {
     });
 
     // Map rows to Destination interfaces
-    let destinations: Destination[] = (dbData ?? []).map((row: any) => {
+    const destinations: Destination[] = (dbData ?? []).map((row: any) => {
       const tags = assignmentsMap[row.id] ?? [];
       const media = (mediaMap[row.id] ?? []).sort((a: any, b: any) => a.sortOrder - b.sortOrder);
 
@@ -183,42 +257,18 @@ export async function GET(request: Request): Promise<NextResponse> {
       };
     });
 
-    // In-memory filters
-    if (search) {
-      destinations = destinations.filter((d) => d.name.toLowerCase().includes(search));
-    }
-    if (island) {
-      destinations = destinations.filter((d) => d.province?.island?.name.toLowerCase() === island.toLowerCase());
-    }
-    if (province) {
-      destinations = destinations.filter((d) => d.province?.name.toLowerCase() === province.toLowerCase());
-    }
-    if (category) {
-      destinations = destinations.filter((d) => d.tags?.some((t) => t.slug.toLowerCase() === category.toLowerCase() || t.name.toLowerCase() === category.toLowerCase()));
-    }
-
-    // In-memory sort
-    if (sort === 'alpha') {
-      destinations.sort((a, b) => a.name.localeCompare(b.name));
-    } else if (sort === 'alpha-desc') {
-      destinations.sort((a, b) => b.name.localeCompare(a.name));
-    } else if (sort === 'popular') {
-      destinations.sort((a, b) => b.popularScore - a.popularScore);
-    } else if (sort === 'content') {
-      destinations.sort((a, b) => (b.attractionsCount + b.itinerariesCount) - (a.attractionsCount + a.itinerariesCount));
-    }
-
-    // Paginate
-    const total = destinations.length;
-    const start = (page - 1) * limit;
-    const paged = destinations.slice(start, start + limit);
-
-    return NextResponse.json({
-      data: paged,
-      pagination: { page, limit, total, totalPages: Math.ceil(total / limit) },
-    });
-  } catch (err: any) {
-    console.error('[api/destinations GET catch]', err.message);
-    return NextResponse.json({ error: err.message }, { status: 500 });
-  }
-}
+    return {
+      data: destinations,
+      pagination: { page, limit, total, totalPages: Math.ceil(total / limit) }
+    };
+  }, {
+    query: t.Optional(t.Object({
+      page: t.Optional(t.String()),
+      limit: t.Optional(t.String()),
+      sort: t.Optional(t.String()),
+      search: t.Optional(t.String()),
+      island: t.Optional(t.String()),
+      province: t.Optional(t.String()),
+      category: t.Optional(t.String()),
+    }))
+  });

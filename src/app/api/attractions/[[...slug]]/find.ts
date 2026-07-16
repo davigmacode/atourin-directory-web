@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server';
+import { Elysia, t } from 'elysia';
 import { supabaseAdmin } from '@/lib/supabase';
 import type { Attraction } from '@/types/attraction';
 
@@ -26,25 +26,24 @@ function parsePriceRange(range: string): [number, number] | null {
   return null;
 }
 
-export async function GET(request: Request): Promise<NextResponse> {
-  try {
-    const { searchParams } = new URL(request.url);
-    const page = parseInt(searchParams.get('page') || '1');
-    const limit = parseInt(searchParams.get('limit') || '12');
-    const sort = searchParams.get('sort') || 'popularity';
-    const search = (searchParams.get('search') || '').toLowerCase();
-    const province = searchParams.get('province') || '';
-    const category = searchParams.get('category') || '';
-    const facilities = searchParams.get('facilities') || '';
-    const priceRange = searchParams.get('priceRange') || '';
-    const rating = searchParams.get('rating') || '';
+export const findController = new Elysia()
+  .get('/', async ({ query, headers, set }) => {
+    const page = parseInt(query.page || '1');
+    const limit = parseInt(query.limit || '12');
+    const sort = query.sort || 'popularity';
+    const search = (query.search || '').toLowerCase();
+    const province = query.province || '';
+    const category = query.category || '';
+    const facilities = query.facilities || '';
+    const priceRange = query.priceRange || '';
+    const rating = query.rating || '';
 
     // Language resolution
-    const langHeader = request.headers.get('accept-language') || 'id';
+    const langHeader = headers['accept-language'] || 'id';
     const lang = langHeader.toLowerCase().includes('en') ? 'en' : 'id';
 
     // Build base query on directory.attractions
-    let query = supabaseAdmin
+    let dbQuery = supabaseAdmin
       .schema('directory')
       .from('attractions')
       .select(`
@@ -82,19 +81,19 @@ export async function GET(request: Request): Promise<NextResponse> {
 
     // 1. Text Search Filter (name)
     if (search) {
-      query = query.ilike('name', `%${search}%`);
+      dbQuery = dbQuery.ilike('name', `%${search}%`);
     }
 
     // 2. Province Filter
     if (province) {
-      query = query.ilike('destination.province.name', province);
+      dbQuery = dbQuery.ilike('destination.province.name', province);
     }
 
     // 3. Rating Filter
     if (rating) {
       const threshold = parseFloat(rating.replace(/[^\d.]/g, ''));
       if (!isNaN(threshold)) {
-        query = query.gte('rating_average', threshold);
+        dbQuery = dbQuery.gte('rating_average', threshold);
       }
     }
 
@@ -104,11 +103,11 @@ export async function GET(request: Request): Promise<NextResponse> {
       if (range) {
         const [min, max] = range;
         if (max === Infinity) {
-          query = query.gte('min_price', min);
+          dbQuery = dbQuery.gte('min_price', min);
         } else if (min === max) {
-          query = query.eq('min_price', min);
+          dbQuery = dbQuery.eq('min_price', min);
         } else {
-          query = query.gte('min_price', min).lte('min_price', max);
+          dbQuery = dbQuery.gte('min_price', min).lte('min_price', max);
         }
       }
     }
@@ -124,10 +123,10 @@ export async function GET(request: Request): Promise<NextResponse> {
 
       const targetCategoryIds = catData ? catData.map((c) => c.id) : [];
       if (targetCategoryIds.length === 0) {
-        return NextResponse.json({
+        return {
           data: [],
           pagination: { page, limit, total: 0, totalPages: 0 }
-        });
+        };
       }
 
       // Query category assignments
@@ -140,12 +139,12 @@ export async function GET(request: Request): Promise<NextResponse> {
 
       const matchedAttractionIds = assData ? assData.map((a) => a.entity_id) : [];
       if (matchedAttractionIds.length === 0) {
-        return NextResponse.json({
+        return {
           data: [],
           pagination: { page, limit, total: 0, totalPages: 0 }
-        });
+        };
       }
-      query = query.in('id', matchedAttractionIds);
+      dbQuery = dbQuery.in('id', matchedAttractionIds);
     }
 
     // 6. Facilities Filter
@@ -158,10 +157,10 @@ export async function GET(request: Request): Promise<NextResponse> {
         .in('slug', facSlugs);
 
       if (!facsData || facsData.length < facSlugs.length) {
-        return NextResponse.json({
+        return {
           data: [],
           pagination: { page, limit, total: 0, totalPages: 0 }
-        });
+        };
       }
 
       const targetFacIds = facsData.map((f) => f.id);
@@ -173,10 +172,10 @@ export async function GET(request: Request): Promise<NextResponse> {
         .in('facility_id', targetFacIds);
 
       if (!assData || assData.length === 0) {
-        return NextResponse.json({
+        return {
           data: [],
           pagination: { page, limit, total: 0, totalPages: 0 }
-        });
+        };
       }
 
       const counts: Record<string, number> = {};
@@ -189,37 +188,38 @@ export async function GET(request: Request): Promise<NextResponse> {
       );
 
       if (matchedAttractionIds.length === 0) {
-        return NextResponse.json({
+        return {
           data: [],
           pagination: { page, limit, total: 0, totalPages: 0 }
-        });
+        };
       }
-      query = query.in('id', matchedAttractionIds);
+      dbQuery = dbQuery.in('id', matchedAttractionIds);
     }
 
     // 7. Sort Order
     if (sort === 'popularity') {
-      query = query.order('reviews_count', { ascending: false });
+      dbQuery = dbQuery.order('reviews_count', { ascending: false });
     } else if (sort === 'rating-desc') {
-      query = query.order('rating_average', { ascending: false });
+      dbQuery = dbQuery.order('rating_average', { ascending: false });
     } else if (sort === 'price-asc') {
-      query = query.order('min_price', { ascending: true });
+      dbQuery = dbQuery.order('min_price', { ascending: true });
     } else if (sort === 'price-desc') {
-      query = query.order('min_price', { ascending: false });
+      dbQuery = dbQuery.order('min_price', { ascending: false });
     } else {
-      query = query.order('name', { ascending: true });
+      dbQuery = dbQuery.order('name', { ascending: true });
     }
 
     // 8. Pagination Range
     const offset = (page - 1) * limit;
-    query = query.range(offset, offset + limit - 1);
+    dbQuery = dbQuery.range(offset, offset + limit - 1);
 
     // 9. Execute query
-    const { data: dbData, error: dbError, count } = await query;
+    const { data: dbData, error: dbError, count } = await dbQuery;
 
     if (dbError) {
       console.error('[api/attractions GET]', dbError.message);
-      return NextResponse.json({ error: dbError.message }, { status: 500 });
+      set.status = 500;
+      return { error: dbError.message };
     }
 
     const total = count || 0;
@@ -227,10 +227,10 @@ export async function GET(request: Request): Promise<NextResponse> {
 
     // Early exit if no attractions in this page
     if (attractionIds.length === 0) {
-      return NextResponse.json({
+      return {
         data: [],
         pagination: { page, limit, total, totalPages: Math.ceil(total / limit) }
-      });
+      };
     }
 
     // 10. Fetch category assignments for paged attractions
@@ -251,7 +251,8 @@ export async function GET(request: Request): Promise<NextResponse> {
 
     if (assignError) {
       console.error('[api/attractions GET assignments]', assignError.message);
-      return NextResponse.json({ error: assignError.message }, { status: 500 });
+      set.status = 500;
+      return { error: assignError.message };
     }
 
     // 11. Fetch facility assignments for paged attractions
@@ -272,7 +273,8 @@ export async function GET(request: Request): Promise<NextResponse> {
 
     if (facilityError) {
       console.error('[api/attractions GET facilities]', facilityError.message);
-      return NextResponse.json({ error: facilityError.message }, { status: 500 });
+      set.status = 500;
+      return { error: facilityError.message };
     }
 
     // 12. Fetch media for paged attractions
@@ -292,12 +294,13 @@ export async function GET(request: Request): Promise<NextResponse> {
 
     if (mediaError) {
       console.error('[api/attractions GET media]', mediaError.message);
-      return NextResponse.json({ error: mediaError.message }, { status: 500 });
+      set.status = 500;
+      return { error: mediaError.message };
     }
 
     // 13. Fetch price tiers for paged attractions
     let priceTiersData: any[] = [];
-    const { data, error } = await supabaseAdmin
+    const { data: ptData, error: ptError } = await supabaseAdmin
       .schema('directory')
       .from('price_tiers')
       .select('entity_id, name, price')
@@ -305,11 +308,12 @@ export async function GET(request: Request): Promise<NextResponse> {
       .in('entity_id', attractionIds)
       .order('price', { ascending: true });
 
-    if (error) {
-      console.error('[api/attractions GET price tiers]', error.message);
-      return NextResponse.json({ error: error.message }, { status: 500 });
+    if (ptError) {
+      console.error('[api/attractions GET price tiers]', ptError.message);
+      set.status = 500;
+      return { error: ptError.message };
     }
-    priceTiersData = data ?? [];
+    priceTiersData = ptData ?? [];
 
     // Process categories lookup map
     const categoriesMap: Record<string, any[]> = {};
@@ -501,12 +505,20 @@ export async function GET(request: Request): Promise<NextResponse> {
       };
     });
 
-    return NextResponse.json({
+    return {
       data: attractions,
-      pagination: { page, limit, total, totalPages: Math.ceil(total / limit) },
-    });
-  } catch (err: any) {
-    console.error('[api/attractions GET catch]', err.message);
-    return NextResponse.json({ error: err.message }, { status: 500 });
-  }
-}
+      pagination: { page, limit, total, totalPages: Math.ceil(total / limit) }
+    };
+  }, {
+    query: t.Optional(t.Object({
+      page: t.Optional(t.String()),
+      limit: t.Optional(t.String()),
+      sort: t.Optional(t.String()),
+      search: t.Optional(t.String()),
+      province: t.Optional(t.String()),
+      category: t.Optional(t.String()),
+      facilities: t.Optional(t.String()),
+      priceRange: t.Optional(t.String()),
+      rating: t.Optional(t.String()),
+    }))
+  });
