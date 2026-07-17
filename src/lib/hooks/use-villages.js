@@ -98,7 +98,6 @@ export function useVillages() {
   const updateFilters = useCallback((newFilters) => {
     setFilters(newFilters);
     setPage(1);
-    setAllData([]);
   }, []);
 
   return {

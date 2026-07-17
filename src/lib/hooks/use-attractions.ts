@@ -52,7 +52,6 @@ export function useAttractions() {
   const updateFilters = useCallback((newFilters: AttractionsFilters) => {
     setFilters(newFilters);
     setPage(1);
-    setAllData([]);
   }, []);
 
   return {

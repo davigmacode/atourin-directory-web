@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 import cs from "@/styles/card-styles";
 import CardCover from "../molecules/CardCover";
 import CardBody from "../molecules/CardBody";
@@ -25,7 +25,6 @@ function slugify(text) {
  */
 export function AttractionCardGrid({ a }) {
   const [save, setSave] = useState(false);
-  const router = useRouter();
   const slug = a.slug || slugify(a.name);
 
   const badges = [
@@ -41,19 +40,21 @@ export function AttractionCardGrid({ a }) {
   ];
 
   return (
-    <article
-      onClick={() => router.push(`/explore/attractions/${slug}`)}
+    <Link
+      href={`/explore/attractions/${slug}`}
       style={{
         ...cs.atrCard,
         textDecoration: "none",
         color: "inherit",
         cursor: "pointer",
+        display: "block",
       }}
     >
       <CardCover src={a.img} alt="" badges={badges}>
         <IconButton
           saved={save}
           onClick={(e) => {
+            e.preventDefault();
             e.stopPropagation();
             setSave(!save);
           }}
@@ -75,11 +76,10 @@ export function AttractionCardGrid({ a }) {
         <CardFooter
           price={a.price}
           onClick={(e) => {
-            e.stopPropagation();
-            router.push(`/explore/attractions/${slug}`);
+            e.preventDefault();
           }}
         />
       </CardBody>
-    </article>
+    </Link>
   );
 }

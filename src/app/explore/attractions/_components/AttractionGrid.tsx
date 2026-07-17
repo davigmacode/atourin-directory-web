@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { SafeImage } from "@/components/cards";
 import { cardStyles as cardStylesRaw } from "@/styles/attraction-styles";
 import { HeartIcon, ClockSm, PinSm, StarFill } from "./FilterBar";
@@ -75,7 +75,6 @@ interface AttrCardProps {
 
 export function AttrCard({ a, save, onSave }: AttrCardProps) {
   const [hover, setHover] = useState(false);
-  const router = useRouter();
 
   const mainCategory = a.categories?.[0];
   const catBg = mainCategory?.metadata?.color || "#EDE9FF";
@@ -86,9 +85,13 @@ export function AttrCard({ a, save, onSave }: AttrCardProps) {
     : "";
 
   return (
-    <article
+    <Link
+      href={`/explore/attractions/${a.slug}`}
       style={{
         ...cardStyles.card,
+        textDecoration: "none",
+        color: "inherit",
+        display: "block",
         ...(hover
           ? {
               transform: "translateY(-3px)",
@@ -99,7 +102,6 @@ export function AttrCard({ a, save, onSave }: AttrCardProps) {
       }}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
-      onClick={() => router.push(`/explore/attractions/${a.slug}`)}
     >
       <div style={cardStyles.cardImgWrap}>
         <SafeImage src={a.coverImage?.url ?? ""} alt={a.name} style={cardStyles.cardImg} />
@@ -191,7 +193,7 @@ export function AttrCard({ a, save, onSave }: AttrCardProps) {
           </span>
         </div>
       </div>
-    </article>
+    </Link>
   );
 }
 

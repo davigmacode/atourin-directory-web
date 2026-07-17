@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 import cs from "@/styles/card-styles";
 import CardCover from "../molecules/CardCover";
 import Badge from "../atoms/Badge";
@@ -23,7 +23,6 @@ function slugify(text) {
  */
 export function AttractionCardList({ a }) {
   const [save, setSave] = useState(false);
-  const router = useRouter();
   const slug = a.slug || slugify(a.name);
 
   const badges = [
@@ -39,13 +38,14 @@ export function AttractionCardList({ a }) {
   ];
 
   return (
-    <article
-      onClick={() => router.push(`/explore/attractions/${slug}`)}
+    <Link
+      href={`/explore/attractions/${slug}`}
       style={{
         ...cs.atrListCard,
         textDecoration: "none",
         color: "inherit",
         cursor: "pointer",
+        display: "block",
       }}
     >
       <CardCover src={a.img} alt="" badges={badges} style={cs.atrListImgWrap} />
@@ -67,6 +67,7 @@ export function AttractionCardList({ a }) {
           <IconButton
             saved={save}
             onClick={(e) => {
+              e.preventDefault();
               e.stopPropagation();
               setSave(!save);
             }}
@@ -77,8 +78,7 @@ export function AttractionCardList({ a }) {
           <button
             style={cs.atrCtaList}
             onClick={(e) => {
-              e.stopPropagation();
-              router.push(`/explore/attractions/${slug}`);
+              e.preventDefault();
             }}
           >
             Lihat detail
@@ -86,6 +86,7 @@ export function AttractionCardList({ a }) {
           <button
             style={cs.atrCtaPesan}
             onClick={(e) => {
+              e.preventDefault();
               e.stopPropagation();
             }}
           >
@@ -93,6 +94,6 @@ export function AttractionCardList({ a }) {
           </button>
         </div>
       </div>
-    </article>
+    </Link>
   );
 }

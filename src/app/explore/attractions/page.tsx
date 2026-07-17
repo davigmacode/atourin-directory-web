@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { Suspense, useState, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { TopNav, SiteFooter, CategoryTabs } from "@/components/layout";
 import { cardStyles as cardStylesRaw } from "@/styles/attraction-styles";
 import { useAttractions, type AttractionsFilters } from "@/lib/hooks/use-attractions";
@@ -50,9 +51,11 @@ const SORT_KEY_MAP: Record<string, string> = {
   "Harga tertinggi": "price-desc",
 };
 
-/* ── Page ── */
-export default function AttractionsPage() {
-  const ui = useDirectoryState(["Bali", "Pantai", "< Rp25rb"]);
+/* ── Inner Page (needs Suspense for useSearchParams) ── */
+function AttractionsPageInner() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const ui = useDirectoryState([]);
   const {
     data,
     isLoading,
@@ -64,50 +67,76 @@ export default function AttractionsPage() {
     pagination,
   } = useAttractions();
 
-  // Sync default chips to API filters on first mount
+  // Sync initial filters from URL on mount
   useEffect(() => {
-    setFilters({
-      province: "Bali",
-      category: "Pantai",
-      priceRange: "< Rp25rb",
-      facilities: "",
-      rating: "",
-      sort: "popularity",
-    });
+    const province   = searchParams.get("province")   || "";
+    const category   = searchParams.get("category")   || "";
+    const priceRange = searchParams.get("priceRange") || "";
+    const facilities = searchParams.get("facilities") || "";
+    const rating     = searchParams.get("rating")     || "";
+    const sort       = searchParams.get("sort")       || "popularity";
+
+    setFilters({ province, category, priceRange, facilities, rating, sort });
+
+    // Sync active chips from URL
+    const chips = [province, category, priceRange].filter(Boolean);
+    if (chips.length > 0) ui.setActiveChips(chips);
+    if (sort) {
+      const uiSort = Object.entries(SORT_KEY_MAP).find(([, v]) => v === sort)?.[0] || "Paling populer";
+      ui.setSort(uiSort);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   function handlePickFilter(label: string, value: string) {
     const fkey = FILTER_KEY_MAP[label];
     if (fkey) {
-      setFilters({ ...filters, [fkey]: value });
+      const newFilters = { ...filters, [fkey]: value };
+      setFilters(newFilters);
+      syncUrl(newFilters);
     }
   }
 
   function handleRemoveFilter(chip: string) {
+    let newFilters = { ...filters };
     for (const [flabel, opts] of Object.entries(ATTR_FILTER_OPTIONS)) {
       if (opts.includes(chip)) {
         const fkey = FILTER_KEY_MAP[flabel];
-        if (fkey) setFilters({ ...filters, [fkey]: "" });
+        if (fkey) newFilters = { ...newFilters, [fkey]: "" };
         break;
       }
     }
+    setFilters(newFilters);
+    syncUrl(newFilters);
   }
 
   function handleClearFilters() {
-    setFilters({
+    const newFilters: AttractionsFilters = {
       province: "",
       category: "",
       priceRange: "",
       facilities: "",
       rating: "",
       sort: filters.sort,
-    });
+    };
+    setFilters(newFilters);
+    syncUrl(newFilters);
   }
 
   function handleSortChange(value: string) {
     ui.setSort(value);
     const engSort = SORT_KEY_MAP[value] || "popularity";
-    setFilters({ ...filters, sort: engSort });
+    const newFilters = { ...filters, sort: engSort };
+    setFilters(newFilters);
+    syncUrl(newFilters);
+  }
+
+  function syncUrl(f: AttractionsFilters) {
+    const p = new URLSearchParams();
+    Object.entries(f).forEach(([k, v]) => {
+      if (v && !(k === "sort" && v === "popularity")) p.set(k, v as string);
+    });
+    router.replace(`?${p.toString()}`, { scroll: false });
   }
 
   return (
@@ -163,5 +192,13 @@ export default function AttractionsPage() {
       )}
       <SiteFooter />
     </div>
+  );
+}
+
+export default function AttractionsPage() {
+  return (
+    <Suspense fallback={null}>
+      <AttractionsPageInner />
+    </Suspense>
   );
 }
