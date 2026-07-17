@@ -112,7 +112,7 @@ export const findController = new Elysia()
       }
     }
 
-    // 6. Specialism filter — via guide_categories (taxonomy type='guide_specialism')
+    // 6. Specialism filter ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â via tour_guide_specialism (taxonomy type='guide_specialism')
     if (specialism) {
       const { data: specCats } = await supabaseAdmin
         .schema('directory')
@@ -131,7 +131,7 @@ export const findController = new Elysia()
 
       const { data: assData } = await supabaseAdmin
         .schema('directory')
-        .from('guide_categories')
+        .from('tour_guide_specialism')
         .select('guide_id')
         .in('taxonomy_id', targetTaxonomyIds);
 
@@ -145,7 +145,7 @@ export const findController = new Elysia()
       dbQuery = dbQuery.in('id', matchedIds);
     }
 
-    // 7. Language filter — via tour_guide_languages → taxonomy (type='guide_language')
+    // 7. Language filter ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â via tour_guide_languages ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ taxonomy (type='guide_language')
     if (language) {
       const { data: langCats } = await supabaseAdmin
         .schema('directory')
@@ -178,7 +178,7 @@ export const findController = new Elysia()
       dbQuery = dbQuery.in('id', matchedIds);
     }
 
-    // 8. Certification filter — via certification_assignments (entity_type='guide')
+    // 8. Certification filter ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â via tour_guide_certifications
     if (certification) {
       const { data: certs } = await supabaseAdmin
         .schema('directory')
@@ -196,12 +196,11 @@ export const findController = new Elysia()
 
       const { data: certAss } = await supabaseAdmin
         .schema('directory')
-        .from('certification_assignments')
-        .select('entity_id')
-        .eq('entity_type', 'guide')
+        .from('tour_guide_certifications')
+        .select('tour_guide_id')
         .in('certification_id', targetCertIds);
 
-      const matchedIds = certAss ? Array.from(new Set(certAss.map((a) => a.entity_id))) : [];
+      const matchedIds = certAss ? Array.from(new Set(certAss.map((a) => a.tour_guide_id))) : [];
       if (matchedIds.length === 0) {
         return {
           data: [],
@@ -251,7 +250,7 @@ export const findController = new Elysia()
     // 12. Fetch specialism assignments
     const { data: specialismData, error: specError } = await supabaseAdmin
       .schema('directory')
-      .from('guide_categories')
+      .from('tour_guide_specialism')
       .select(`
         guide_id,
         is_primary,
@@ -296,9 +295,9 @@ export const findController = new Elysia()
     // 14. Fetch certifications
     const { data: certData, error: certError } = await supabaseAdmin
       .schema('directory')
-      .from('certification_assignments')
+      .from('tour_guide_certifications')
       .select(`
-        entity_id,
+        tour_guide_id,
         issued_at,
         expires_at,
         certification:certifications (
@@ -309,8 +308,7 @@ export const findController = new Elysia()
           issuer
         )
       `)
-      .eq('entity_type', 'guide')
-      .in('entity_id', guideIds);
+      .in('tour_guide_id', guideIds);
 
     if (certError) {
       console.error('[api/tour-guides GET certs]', certError.message);
@@ -373,8 +371,8 @@ export const findController = new Elysia()
       } else if (nameObj && typeof nameObj === 'object') {
         certName = nameObj[lang] || nameObj.id || nameObj.en || '';
       }
-      certificationsMap[row.entity_id] = certificationsMap[row.entity_id] || [];
-      certificationsMap[row.entity_id].push({
+      certificationsMap[row.tour_guide_id] = certificationsMap[row.tour_guide_id] || [];
+      certificationsMap[row.tour_guide_id].push({
         id: cert.id,
         slug: cert.slug,
         name: certName,

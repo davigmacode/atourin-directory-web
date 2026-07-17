@@ -54,7 +54,7 @@ export const getController = new Elysia()
     // 2. Fetch specialism assignments
     const { data: specialismData, error: specError } = await supabaseAdmin
       .schema('directory')
-      .from('guide_categories')
+      .from('tour_guide_specialism')
       .select(`
         is_primary,
         taxonomy:taxonomies (
@@ -99,7 +99,7 @@ export const getController = new Elysia()
     // 4. Fetch certifications
     const { data: certData, error: certError } = await supabaseAdmin
       .schema('directory')
-      .from('certification_assignments')
+      .from('tour_guide_certifications')
       .select(`
         issued_at,
         expires_at,
@@ -111,8 +111,7 @@ export const getController = new Elysia()
           issuer
         )
       `)
-      .eq('entity_type', 'guide')
-      .eq('entity_id', row.id);
+      .eq('tour_guide_id', row.id);
 
     if (certError) {
       console.error('[api/tour-guides/[slug] GET certs]', certError.message);

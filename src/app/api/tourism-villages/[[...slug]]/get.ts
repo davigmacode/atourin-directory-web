@@ -90,7 +90,7 @@ export const getController = new Elysia()
     // 2. Fetch category assignments
     const { data: assignmentsData, error: assignError } = await supabaseAdmin
       .schema('directory')
-      .from('village_categories')
+      .from('tourism_village_categories')
       .select(`
         taxonomy:taxonomies (
           id,
@@ -100,12 +100,12 @@ export const getController = new Elysia()
           metadata
         )
       `)
-      .eq('village_id', row.id);
+      .eq('tourism_village_id', row.id);
 
     // 2b. Fetch activity assignments
     const { data: activitiesData, error: actError } = await supabaseAdmin
       .schema('directory')
-      .from('village_activities')
+      .from('tourism_village_activities')
       .select(`
         taxonomy:taxonomies (
           id,
@@ -115,7 +115,7 @@ export const getController = new Elysia()
           metadata
         )
       `)
-      .eq('village_id', row.id);
+      .eq('tourism_village_id', row.id);
 
     if (assignError) {
       console.error('[api/tourism-villages/[slug] GET assignments]', assignError.message);
@@ -170,7 +170,7 @@ export const getController = new Elysia()
       return { error: mediaError.message };
     }
 
-    // Process categories — preserve type and raw name for ADWI resolution
+    // Process categories Ã¢â‚¬â€ preserve type and raw name for ADWI resolution
     const categories = (assignmentsData ?? []).map((ca: any) => {
       const cat = ca.taxonomy;
       if (!cat) return null;
@@ -314,7 +314,7 @@ export const getController = new Elysia()
       }
     }
 
-    // Activities compilation — from village_activities table
+    // Activities compilation Ã¢â‚¬â€ from village_activities table
     if (activities.length === 0) {
       activities.push({ id: '', slug: 'homestay', name: 'Homestay', type: 'village_activity', metadata: {} });
     }

@@ -96,7 +96,7 @@ export const getController = new Elysia()
     const { data: facilityAssignments, error: facilityError } = await supabaseAdmin
       .schema('directory')
       .from('facility_assignments')
-      .select('facility_id, available')
+      .select('facility_id')
       .eq('entity_type', 'attraction')
       .eq('entity_id', row.id);
 
@@ -176,7 +176,7 @@ export const getController = new Elysia()
         slug: fac.slug,
         name: facName,
         metadata: fac.metadata || {},
-        available: match ? match.available : false,
+        available: !!match,
       };
     });
 

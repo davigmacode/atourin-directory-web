@@ -1,4 +1,4 @@
--- Ã¢â€â‚¬Ã¢â€â‚¬ Seed Data: tourism_villages Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
+-- ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ Seed Data: tourism_villages ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬
 INSERT INTO directory.tourism_villages (
   slug, name, destination_id, cover_image, description,
   featured, adwi_level_id, village_theme_id, rating_average, reviews_count,
@@ -13,7 +13,7 @@ INSERT INTO directory.tourism_villages (
     7, 350000, 50, 'Mbaru Niang',
     '{"id": "Kecamatan Satarmese Barat, Kabupaten Manggarai, Nusa Tenggara Timur", "en": "West Satarmese District, Manggarai Regency, East Nusa Tenggara"}'::jsonb,
     '{"id": "Terletak di pegunungan terpencil. Akses jalan aspal hanya sampai ke pos Denge, dilanjutkan dengan trekking mendaki bukit terjal hutan hujan sekitar 2-3 jam. Tidak ramah kursi roda.", "en": "Located in remote highlands. Road access only reaches Denge post, followed by a steep rainforest uphill trek of about 2-3 hours. Not wheelchair accessible."}'::jsonb,
-    '[{"title": {"id": "Labuan Bajo Ã¢â€ â€™ Pos Denge", "en": "Labuan Bajo Ã¢â€ â€™ Denge Post"}, "detail": {"id": "Perjalanan darat sewa mobil ~4-5 jam melewati jalan berkelok lintas Flores.", "en": "Overland trip by rented car ~4-5 hours passing winding Flores roads."}}, {"title": {"id": "Pos Denge Ã¢â€ â€™ Pos Registrasi Wae Rebo", "en": "Denge Post Ã¢â€ â€™ Wae Rebo Registration Post"}, "detail": {"id": "Berjalan kaki menyusuri jalan setapak menanjak sejauh ~4.5 km.", "en": "Walk along the uphill footpath for ~4.5 km."}}]'::jsonb,
+    '[{"title": {"id": "Labuan Bajo ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ Pos Denge", "en": "Labuan Bajo ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ Denge Post"}, "detail": {"id": "Perjalanan darat sewa mobil ~4-5 jam melewati jalan berkelok lintas Flores.", "en": "Overland trip by rented car ~4-5 hours passing winding Flores roads."}}, {"title": {"id": "Pos Denge ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ Pos Registrasi Wae Rebo", "en": "Denge Post ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ Wae Rebo Registration Post"}, "detail": {"id": "Berjalan kaki menyusuri jalan setapak menanjak sejauh ~4.5 km.", "en": "Walk along the uphill footpath for ~4.5 km."}}]'::jsonb,
     -8.7758, 120.2831
   ),
   (
@@ -24,7 +24,7 @@ INSERT INTO directory.tourism_villages (
     76, 200000, 300, 'Pekarangan seragam',
     '{"id": "Kecamatan Bangli, Kabupaten Bangli, Bali", "en": "Bangli District, Bangli Regency, Bali"}'::jsonb,
     '{"id": "Sangat ramah disabilitas. Seluruh area jalan desa dilapisi paving block datar tanpa tanjakan terjal, bebas kendaraan bermotor.", "en": "Very wheelchair friendly. The entire village paths are paved flat block, with no steep climbs, and completely motor vehicle free."}'::jsonb,
-    '[{"title": {"id": "Bandara Ngurah Rai Ã¢â€ â€™ Bangli", "en": "Ngurah Rai Airport Ã¢â€ â€™ Bangli"}, "detail": {"id": "Berkendara ke utara melewati Ubud atau Bypass Ida Bagus Mantra ~1.5 jam.", "en": "Drive north passing Ubud or Ida Bagus Mantra Bypass ~1.5 hours."}}, {"title": {"id": "Tempat Parkir Ã¢â€ â€™ Gerbang Desa", "en": "Parking Lot Ã¢â€ â€™ Village Gate"}, "detail": {"id": "Berjalan kaki sejauh 100 meter ke pintu masuk utama desa.", "en": "Walk 100 meters to the main entrance of the village."}}]'::jsonb,
+    '[{"title": {"id": "Bandara Ngurah Rai ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ Bangli", "en": "Ngurah Rai Airport ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ Bangli"}, "detail": {"id": "Berkendara ke utara melewati Ubud atau Bypass Ida Bagus Mantra ~1.5 jam.", "en": "Drive north passing Ubud or Ida Bagus Mantra Bypass ~1.5 hours."}}, {"title": {"id": "Tempat Parkir ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ Gerbang Desa", "en": "Parking Lot ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ Village Gate"}, "detail": {"id": "Berjalan kaki sejauh 100 meter ke pintu masuk utama desa.", "en": "Walk 100 meters to the main entrance of the village."}}]'::jsonb,
     -8.4326, 115.3582
   ),
   (
@@ -35,7 +35,7 @@ INSERT INTO directory.tourism_villages (
     38, 175000, 150, 'Gunung api purba',
     '{"id": "Kecamatan Patuk, Kabupaten Gunungkidul, DI Yogyakarta", "en": "Patuk District, Gunungkidul Regency, DI Yogyakarta"}'::jsonb,
     '{"id": "Kawasan desa berbukit-bukit. Akses ke puncak gunung api purba berupa jalur trekking tanah dan batuan terjal berundak yang tidak ramah disabilitas.", "en": "Hilly village terrain. Access to the summit of the ancient volcano is via steep dirt and rock trekking paths not suitable for disabled access."}'::jsonb,
-    '[{"title": {"id": "Yogyakarta Ã¢â€ â€™ Patuk", "en": "Yogyakarta Ã¢â€ â€™ Patuk"}, "detail": {"id": "Melewati Jl. Wonosari naik ke arah bukit Patuk ~45 menit.", "en": "Via Wonosari St. driving up towards Patuk hill ~45 minutes."}}, {"title": {"id": "Patuk Ã¢â€ â€™ Nglanggeran", "en": "Patuk Ã¢â€ â€™ Nglanggeran"}, "detail": {"id": "Belok kiri di pertigaan GCD Patuk ikuti penunjuk jalan ~10 menit.", "en": "Turn left at GCD Patuk intersection, follow directions ~10 minutes."}}]'::jsonb,
+    '[{"title": {"id": "Yogyakarta ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ Patuk", "en": "Yogyakarta ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ Patuk"}, "detail": {"id": "Melewati Jl. Wonosari naik ke arah bukit Patuk ~45 menit.", "en": "Via Wonosari St. driving up towards Patuk hill ~45 minutes."}}, {"title": {"id": "Patuk ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ Nglanggeran", "en": "Patuk ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ Nglanggeran"}, "detail": {"id": "Belok kiri di pertigaan GCD Patuk ikuti penunjuk jalan ~10 menit.", "en": "Turn left at GCD Patuk intersection, follow directions ~10 minutes."}}]'::jsonb,
     -7.8722, 110.5427
   ),
   (
@@ -46,7 +46,7 @@ INSERT INTO directory.tourism_villages (
     24, 250000, 100, 'Bio-rock coral',
     '{"id": "Kecamatan Gerokgak, Kabupaten Buleleng, Bali", "en": "Gerokgak District, Buleleng Regency, Bali"}'::jsonb,
     '{"id": "Sangat mudah diakses di tepi jalan raya utama Bali Utara. Area pantai landai berpasir hitam yang mudah dijelajahi.", "en": "Very accessible on the main North Bali highway. Flat sandy beachfront area that is easy to explore."}'::jsonb,
-    '[{"title": {"id": "Denpasar Ã¢â€ â€™ Singaraja Ã¢â€ â€™ Pemuteran", "en": "Denpasar Ã¢â€ â€™ Singaraja Ã¢â€ â€™ Pemuteran"}, "detail": {"id": "Perjalanan darat memotong tengah pulau Bali ~3.5 jam.", "en": "Overland trip crossing the center of Bali island ~3.5 hours."}}]'::jsonb,
+    '[{"title": {"id": "Denpasar ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ Singaraja ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ Pemuteran", "en": "Denpasar ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ Singaraja ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ Pemuteran"}, "detail": {"id": "Perjalanan darat memotong tengah pulau Bali ~3.5 jam.", "en": "Overland trip crossing the center of Bali island ~3.5 hours."}}]'::jsonb,
     -8.1481, 114.6292
   ),
   (
@@ -57,7 +57,7 @@ INSERT INTO directory.tourism_villages (
     48, 165000, 200, 'Sawah terasering',
     '{"id": "Kecamatan Cangkringan, Kabupaten Sleman, DI Yogyakarta", "en": "Cangkringan District, Sleman Regency, DI Yogyakarta"}'::jsonb,
     '{"id": "Area perumahan warga datar dan mudah diakses. Sebagian jalur persawahan berundak tanah liat yang licin saat hujan.", "en": "Residential areas are flat and easy to access. Some paddy field trails are terraced clay paths that get slippery when raining."}'::jsonb,
-    '[{"title": {"id": "Yogyakarta Ã¢â€ â€™ Cangkringan", "en": "Yogyakarta Ã¢â€ â€™ Cangkringan"}, "detail": {"id": "Berkendara lurus ke utara menyusuri Jl. Kaliurang ~40 menit.", "en": "Drive straight north along Kaliurang St. ~40 minutes."}}]'::jsonb,
+    '[{"title": {"id": "Yogyakarta ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ Cangkringan", "en": "Yogyakarta ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ Cangkringan"}, "detail": {"id": "Berkendara lurus ke utara menyusuri Jl. Kaliurang ~40 menit.", "en": "Drive straight north along Kaliurang St. ~40 minutes."}}]'::jsonb,
     -7.6433, 110.4394
   ),
   (
@@ -68,7 +68,7 @@ INSERT INTO directory.tourism_villages (
     150, 0, 250, 'Rumah Sasak adat',
     '{"id": "Kecamatan Pujut, Kabupaten Lombok Tengah, Nusa Tenggara Barat", "en": "Pujut District, Central Lombok Regency, West Nusa Tenggara"}'::jsonb,
     '{"id": "Akses jalan desa berupa undakan tanah berundak dan gang sempit beraspal. Sedikit menyulitkan pengguna kursi roda.", "en": "Village access is earthen steps and narrow paved alleyways. Slightly challenging for wheelchair users."}'::jsonb,
-    '[{"title": {"id": "Bandara Lombok Ã¢â€ â€™ Sade", "en": "Lombok Airport Ã¢â€ â€™ Sade"}, "detail": {"id": "Berkendara ke arah selatan menuju pantai Kuta ~15 menit di tepi jalan utama.", "en": "Drive south towards Kuta beach ~15 minutes right along the main road."}}]'::jsonb,
+    '[{"title": {"id": "Bandara Lombok ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ Sade", "en": "Lombok Airport ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ Sade"}, "detail": {"id": "Berkendara ke arah selatan menuju pantai Kuta ~15 menit di tepi jalan utama.", "en": "Drive south towards Kuta beach ~15 minutes right along the main road."}}]'::jsonb,
     -8.8398, 116.2917
   ),
   (
@@ -79,7 +79,7 @@ INSERT INTO directory.tourism_villages (
     28, 175000, 150, 'Kawah Putih & Ranca Upas',
     '{"id": "Kecamatan Rancabali, Kabupaten Bandung, Jawa Barat", "en": "Rancabali District, Bandung Regency, West Java"}'::jsonb,
     '{"id": "Jalur aspal mulus masuk ke pusat desa. Ramah kendaraan roda empat dan bus sedang. Jalur ke kebun strawberry datar.", "en": "Smooth paved roads into the village center. Accessible by cars and mid-sized buses. Trails to strawberry farms are flat."}'::jsonb,
-    '[{"title": {"id": "Bandung Ã¢â€ â€™ Ciwidey Ã¢â€ â€™ Rancabali", "en": "Bandung Ã¢â€ â€™ Ciwidey Ã¢â€ â€™ Rancabali"}, "detail": {"id": "Melewati tol Soreang-Pasir Koja dilanjutkan jalur arteri Soreang-Ciwidey ~1.5 jam.", "en": "Via Soreang-Pasir Koja toll followed by Soreang-Ciwidey arterial road ~1.5 hours."}}]'::jsonb,
+    '[{"title": {"id": "Bandung ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ Ciwidey ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ Rancabali", "en": "Bandung ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ Ciwidey ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ Rancabali"}, "detail": {"id": "Melewati tol Soreang-Pasir Koja dilanjutkan jalur arteri Soreang-Ciwidey ~1.5 jam.", "en": "Via Soreang-Pasir Koja toll followed by Soreang-Ciwidey arterial road ~1.5 hours."}}]'::jsonb,
     -7.1432, 107.3912
   ),
   (
@@ -90,12 +90,12 @@ INSERT INTO directory.tourism_villages (
     12, 250000, 80, 'Kasepuhan adat Sunda',
     '{"id": "Kecamatan Cisolok, Kabupaten Sukabumi, Jawa Barat", "en": "Cisolok District, Sukabumi Regency, West Java"}'::jsonb,
     '{"id": "Medan perbukitan sangat terjal berbatu. Direkomendasikan menggunakan kendaraan 4WD (Jip) untuk masuk ke desa. Sangat tidak ramah kursi roda.", "en": "Extremely steep and rocky mountainous terrain. 4WD vehicles (Jeep) are highly recommended to enter. Not wheelchair friendly."}'::jsonb,
-    '[{"title": {"id": "Pelabuhan Ratu Ã¢â€ â€™ Cisolok", "en": "Pelabuhan Ratu Ã¢â€ â€™ Cisolok"}, "detail": {"id": "Berkendara ke arah barat menuju perbatasan Banten ~30 menit.", "en": "Drive west towards Banten border ~30 minutes."}}, {"title": {"id": "Cisolok Ã¢â€ â€™ Ciptagelar", "en": "Cisolok Ã¢â€ â€™ Ciptagelar"}, "detail": {"id": "Jalur berbatu tanah menanjak melintasi pegunungan Halimun ~1.5 jam.", "en": "Rocky uphill dirt track crossing Halimun mountains ~1.5 hours."}}]'::jsonb,
+    '[{"title": {"id": "Pelabuhan Ratu ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ Cisolok", "en": "Pelabuhan Ratu ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ Cisolok"}, "detail": {"id": "Berkendara ke arah barat menuju perbatasan Banten ~30 menit.", "en": "Drive west towards Banten border ~30 minutes."}}, {"title": {"id": "Cisolok ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ Ciptagelar", "en": "Cisolok ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ Ciptagelar"}, "detail": {"id": "Jalur berbatu tanah menanjak melintasi pegunungan Halimun ~1.5 jam.", "en": "Rocky uphill dirt track crossing Halimun mountains ~1.5 hours."}}]'::jsonb,
     -6.7925, 106.4912
   );
 
--- Ã¢â€â‚¬Ã¢â€â‚¬ 2. Category Assignments Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
-INSERT INTO directory.village_activities (village_id, taxonomy_id) VALUES
+-- ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ 2. Category Assignments ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬
+INSERT INTO directory.tourism_village_activities (tourism_village_id, taxonomy_id) VALUES
   -- Wae Rebo
   ((SELECT id FROM directory.tourism_villages WHERE slug = 'desa-wae-rebo'), (SELECT id FROM directory.taxonomies WHERE slug = 'tarian' AND type = 'village_activity')),
   ((SELECT id FROM directory.tourism_villages WHERE slug = 'desa-wae-rebo'), (SELECT id FROM directory.taxonomies WHERE slug = 'workshop' AND type = 'village_activity')),
@@ -129,7 +129,7 @@ INSERT INTO directory.village_activities (village_id, taxonomy_id) VALUES
   ((SELECT id FROM directory.tourism_villages WHERE slug = 'desa-wisata-ciptagelar'), (SELECT id FROM directory.taxonomies WHERE slug = 'workshop' AND type = 'village_activity')),
   ((SELECT id FROM directory.tourism_villages WHERE slug = 'desa-wisata-ciptagelar'), (SELECT id FROM directory.taxonomies WHERE slug = 'homestay' AND type = 'village_activity'));
 
--- Ã¢â€â‚¬Ã¢â€â‚¬ 3. Facility Assignments Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
+-- ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ 3. Facility Assignments ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬
 INSERT INTO directory.facility_assignments (facility_id, entity_type, entity_id) VALUES
   ((SELECT id FROM directory.facilities WHERE slug = 'toilet'), 'village', (SELECT id FROM directory.tourism_villages WHERE slug = 'desa-wae-rebo')),
   ((SELECT id FROM directory.facilities WHERE slug = 'restoran'), 'village', (SELECT id FROM directory.tourism_villages WHERE slug = 'desa-wae-rebo')),

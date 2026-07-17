@@ -23,12 +23,12 @@ export const findController = new Elysia()
       const t = type as string;
       let tableName: string | null = null;
       if (t === 'category') tableName = 'attraction_categories';
-      else if (t === 'guide_specialism') tableName = 'guide_categories';
-      else if (t === 'village_activity') tableName = 'village_activities';
+      else if (t === 'guide_specialism') tableName = 'tour_guide_specialism';
+      else if (t === 'village_activity') tableName = 'tourism_village_activities';
       else tableName = `${t}s`;
 
       // For type=adwi_level / village_theme, the assignment is via direct FK
-      // columns on tourism_villages — handled in tourism-villages get/find.
+      // columns on tourism_villages ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â handled in tourism-villages get/find.
       if (tableName) {
         const { data, error } = await supabaseAdmin
           .schema('directory')
@@ -44,8 +44,8 @@ export const findController = new Elysia()
           `)
           .eq(tableName === 'attraction_categories' ? 'attraction_id' :
               tableName === 'destination_categories' ? 'destination_id' :
-              tableName === 'village_categories' ? 'village_id' :
-              tableName === 'village_activities' ? 'village_id' :
+              tableName === 'tourism_village_categories' ? 'tourism_village_id' :
+              tableName === 'tourism_village_activities' ? 'tourism_village_id' :
               tableName === 'itinerary_categories' ? 'itinerary_id' :
               'guide_id', entityId);
 

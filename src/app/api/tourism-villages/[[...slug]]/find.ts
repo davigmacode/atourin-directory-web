@@ -125,7 +125,7 @@ export const findController = new Elysia()
       dbQuery = dbQuery.eq('adwi_level_id', adwiCat.id);
     }
 
-    // 4. Theme Filter — resolved directly via village_theme_id FK
+    // 4. Theme Filter Ã¢â‚¬â€ resolved directly via village_theme_id FK
     if (theme) {
       const { data: themeCat } = await supabaseAdmin
         .schema('directory')
@@ -167,11 +167,11 @@ export const findController = new Elysia()
       if (catIds.length > 0) {
         const { data: assData } = await supabaseAdmin
           .schema('directory')
-          .from('village_activities')
-          .select('village_id')
+          .from('tourism_village_activities')
+          .select('tourism_village_id')
           .in('taxonomy_id', catIds);
         if (assData) {
-          matchedVillageIds = matchedVillageIds.concat(assData.map((a) => a.village_id));
+          matchedVillageIds = matchedVillageIds.concat(assData.map((a) => a.tourism_village_id));
         }
       }
 
@@ -247,9 +247,9 @@ export const findController = new Elysia()
     // Fetch category assignments
     const { data: assignmentsData } = await supabaseAdmin
       .schema('directory')
-      .from('village_categories')
+      .from('tourism_village_categories')
       .select(`
-        village_id,
+        tourism_village_id,
         taxonomy:taxonomies (
           id,
           slug,
@@ -258,14 +258,14 @@ export const findController = new Elysia()
           metadata
         )
       `)
-      .in('village_id', villageIds);
+      .in('tourism_village_id', villageIds);
 
     // Fetch activity assignments
     const { data: activitiesData } = await supabaseAdmin
       .schema('directory')
-      .from('village_activities')
+      .from('tourism_village_activities')
       .select(`
-        village_id,
+        tourism_village_id,
         taxonomy:taxonomies (
           id,
           slug,
@@ -274,7 +274,7 @@ export const findController = new Elysia()
           metadata
         )
       `)
-      .in('village_id', villageIds);
+      .in('tourism_village_id', villageIds);
 
     // Fetch facilities assignments
     const { data: facilityData } = await supabaseAdmin
@@ -294,7 +294,7 @@ export const findController = new Elysia()
     // Map helpers
     const categoriesMap: Record<string, any[]> = {};
     (assignmentsData ?? []).forEach((row: any) => {
-      const entityId = row.village_id;
+      const entityId = row.tourism_village_id;
       const cat = row.taxonomy;
       if (!cat) return;
       categoriesMap[entityId] = categoriesMap[entityId] || [];
@@ -303,7 +303,7 @@ export const findController = new Elysia()
 
     const activitiesMap: Record<string, any[]> = {};
     (activitiesData ?? []).forEach((row: any) => {
-      const entityId = row.village_id;
+      const entityId = row.tourism_village_id;
       const act = row.taxonomy;
       if (!act) return;
       activitiesMap[entityId] = activitiesMap[entityId] || [];
@@ -338,7 +338,7 @@ export const findController = new Elysia()
         }
       }
 
-      // Activities compilation — from village_activities table
+      // Activities compilation Ã¢â‚¬â€ from village_activities table
       const activities: { id: string; slug: string; name: string; type: string; metadata: Record<string, any> }[] = acts.map((c: any) => {
         const nameObj = c.name;
         let actName = '';

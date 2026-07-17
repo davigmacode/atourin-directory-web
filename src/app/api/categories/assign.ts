@@ -3,8 +3,8 @@ import { supabaseAdmin } from '@/lib/supabase';
 
 const TABLE_BY_TYPE: Record<string, { table: string; fkColumn: string }> = {
   category:            { table: 'attraction_categories',   fkColumn: 'attraction_id' },
-  guide_specialism:    { table: 'guide_categories',       fkColumn: 'guide_id' },
-  village_activity:    { table: 'village_activities',     fkColumn: 'village_id' },
+  guide_specialism:    { table: 'tour_guide_specialism',       fkColumn: 'guide_id' },
+  village_activity:    { table: 'tourism_village_activities',     fkColumn: 'tourism_village_id' },
 };
 
 export const assignController = new Elysia()
