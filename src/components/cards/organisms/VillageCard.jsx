@@ -30,22 +30,25 @@ function formatPrice(price) {
  *                families, signature, theme }
  */
 export default function VillageCard({ d }) {
-  const statusKey = d.adwi || d.status || "";
+  const statusKey = d.adwiLevel?.name || d.adwi_level?.name || d.adwi || d.status || "";
   const sColor = DESA_STATUS_COLOR[statusKey] || {
     bg: "#F0F0F0",
     fg: "#5C5C5C",
   };
 
   const desc = d.desc || d.description || "";
-  const chips = d.tags || d.activities || [];
+  const chips = d.tags || (Array.isArray(d.activities) ? d.activities.map(a => typeof a === 'object' ? a.name : a) : []);
   const activityCount =
     typeof d.activities === "number"
       ? d.activities
       : Array.isArray(d.activities)
         ? d.activities.length
         : 0;
-  const hasHomestay = d.homestay != null ? d.homestay : d.price > 0;
-  const reviews = d.reviews || 0;
+  const hasHomestay = d.homestay != null ? d.homestay : (d.homestayCount > 0 || d.homestay_count > 0 || d.price > 0 || d.homestayMinPrice > 0);
+  const reviews = d.reviewsCount || d.reviews_count || d.reviews || 0;
+  const rating = d.ratingAverage || d.rating_average || d.rating || 0;
+  const price = d.homestayMinPrice || d.homestay_min_price || d.price || 0;
+  const imgUrl = d.coverImage?.url || d.img || "";
 
   const badges = [
     {
@@ -71,20 +74,20 @@ export default function VillageCard({ d }) {
         cursor: "pointer",
       }}
     >
-      <CardCover src={d.img} alt="" badges={badges} />
+      <CardCover src={imgUrl} alt="" badges={badges} />
       <CardBody
         name={d.name}
         desc={desc}
         meta={
           <span style={cs.atrLoc}>
-            📍 {d.kecamatan || d.region || ""}
+            📍 {d.kecamatan || d.destination?.name || d.region || ""}
           </span>
         }
       >
         {chips.length > 0 && (
           <div style={cs.desaTagRow}>
-            {chips.slice(0, 3).map((t) => (
-              <span key={t} style={cs.desaTag}>
+            {chips.slice(0, 3).map((t, idx) => (
+              <span key={typeof t === 'string' ? t : idx} style={cs.desaTag}>
                 {t}
               </span>
             ))}
@@ -94,11 +97,11 @@ export default function VillageCard({ d }) {
           🌿 <strong>{activityCount}</strong> aktivitas
           {hasHomestay && " · 🏡 Homestay tersedia"}
           {!hasHomestay &&
-            d.price > 0 &&
-            ` · Mulai ${formatPrice(d.price)}`}
+            price > 0 &&
+            ` · Mulai ${formatPrice(price)}`}
         </div>
         <div style={cs.atrFooter}>
-          <Rating rating={d.rating} reviews={reviews} />
+          <Rating rating={rating} reviews={reviews} />
           <button style={cs.atrCta}>Lihat profil →</button>
         </div>
       </CardBody>

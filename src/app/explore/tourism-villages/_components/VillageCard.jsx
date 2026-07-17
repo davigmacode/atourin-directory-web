@@ -36,13 +36,18 @@ export default function VillageCard({
   adwiBg,
   adwiFg,
   adwi_level,
+  adwiLevel,
   theme,
+  villageTheme,
   activities = [],
   price,
   homestay_min_price,
+  homestayMinPrice,
   rating,
+  ratingAverage,
   families,
   homestay_count,
+  homestayCount,
   signature,
   featured,
   slug,
@@ -56,11 +61,13 @@ export default function VillageCard({
   const displayRegion = destination
     ? `${destination.name}, ${destination.province?.name || ""}`
     : region;
-  const displayAdwiName = adwi_level?.name || adwi;
-  const displayAdwiBg = adwi_level?.metadata?.color || adwiBg;
-  const displayAdwiFg = adwi_level?.metadata?.fg || adwiFg;
-  const displayPrice = typeof homestay_min_price === "number" ? homestay_min_price : price;
-  const displayFamilies = typeof homestay_count === "number" ? homestay_count : families;
+  const displayAdwiName = adwiLevel?.name || adwi_level?.name || adwi;
+  const displayAdwiBg = adwiLevel?.metadata?.color || adwi_level?.metadata?.color || adwiBg;
+  const displayAdwiFg = adwiLevel?.metadata?.fg || adwi_level?.metadata?.fg || adwiFg;
+  const displayPrice = typeof homestayMinPrice === "number" ? homestayMinPrice : (typeof homestay_min_price === "number" ? homestay_min_price : price);
+  const displayFamilies = typeof homestayCount === "number" ? homestayCount : (typeof homestay_count === "number" ? homestay_count : families);
+  const displayTheme = villageTheme?.name || theme;
+  const displayRating = typeof ratingAverage === "number" ? ratingAverage : rating;
 
   const finalSlug = slug || id || name
     .toLowerCase()
@@ -142,22 +149,26 @@ export default function VillageCard({
               fontWeight: 600,
             }}
           >
-            {theme}
+            {displayTheme}
           </span>
-          {activities.slice(0, 2).map((a) => (
-            <span
-              key={a}
-              style={{
-                background: "#fff",
-                border: "1px solid var(--atr-outline)",
-                color: "var(--atr-text-muted)",
-                padding: "4px 9px",
-                borderRadius: 999,
-              }}
-            >
-              {a}
-            </span>
-          ))}
+          {activities.slice(0, 2).map((a, idx) => {
+            const actName = typeof a === "object" ? (a.name || "") : a;
+            const actKey = typeof a === "object" ? (a.slug || a.id || idx) : a;
+            return (
+              <span
+                key={actKey}
+                style={{
+                  background: "#fff",
+                  border: "1px solid var(--atr-outline)",
+                  color: "var(--atr-text-muted)",
+                  padding: "4px 9px",
+                  borderRadius: 999,
+                }}
+              >
+                {actName}
+              </span>
+            );
+          })}
           {activities.length > 2 && (
             <span
               style={{ color: "var(--atr-text-muted)", padding: "4px 4px" }}
@@ -170,7 +181,7 @@ export default function VillageCard({
         <div style={{ ...cardStyles.cardFooter, paddingTop: 10 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
             <div style={cardStyles.ratingRow}>
-              <StarFill /> <strong>{rating}</strong>
+              <StarFill /> <strong>{displayRating}</strong>
             </div>
             <div style={{ fontSize: 11, color: "var(--atr-text-muted)" }}>
               {"\uD83C\uDFE0"} {displayFamilies} KK homestay

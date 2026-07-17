@@ -313,7 +313,7 @@ export const findController = new Elysia()
       }
 
       // Activities compilation — resolve from category_assignments (entity_types contains 'village_activity')
-      const activities: { id: string; slug: string; name: string; entity_types: string[]; metadata: Record<string, any> }[] = [];
+      const activities: { id: string; slug: string; name: string; entityTypes: string[]; metadata: Record<string, any> }[] = [];
       cats.forEach((c) => {
         if (Array.isArray(c.entity_types) && c.entity_types.includes('village_activity')) {
           const nameObj = c.name;
@@ -327,13 +327,13 @@ export const findController = new Elysia()
             id: c.id,
             slug: c.slug,
             name: actName,
-            entity_types: c.entity_types,
+            entityTypes: c.entity_types,
             metadata: c.metadata || {}
           });
         }
       });
       if (activities.length === 0) {
-        activities.push({ id: '', slug: 'homestay', name: 'Homestay', entity_types: ['village_activity'], metadata: {} });
+        activities.push({ id: '', slug: 'homestay', name: 'Homestay', entityTypes: ['village_activity'], metadata: {} });
       }
 
       const rawDestination = Array.isArray(row.destination)
@@ -423,23 +423,23 @@ export const findController = new Elysia()
           base64: row.cover_image?.base64 || null
         },
         destination: destinationMapped,
-        adwi_level: adwiCat ? {
+        adwiLevel: adwiCat ? {
           id: adwiCat.id,
           slug: adwiCat.slug,
           name: adwiCapitalized,
           metadata: adwiCat.metadata || {}
         } : null,
-        village_theme: themeCat ? {
+        villageTheme: themeCat ? {
           id: themeCat.id,
           slug: themeCat.slug,
           name: themeStr,
           metadata: themeCat.metadata || {}
         } : null,
         activities,
-        homestay_min_price: row.homestay_min_price,
-        rating_average: Number(row.rating_average),
-        reviews_count: row.reviews_count,
-        homestay_count: row.homestay_count,
+        homestayMinPrice: row.homestay_min_price,
+        ratingAverage: Number(row.rating_average),
+        reviewsCount: row.reviews_count,
+        homestayCount: row.homestay_count,
         signature: row.signature,
         featured: row.featured,
         categories,
