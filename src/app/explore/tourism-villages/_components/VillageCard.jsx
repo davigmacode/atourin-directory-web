@@ -28,16 +28,21 @@ function StarFill() {
 
 export default function VillageCard({
   img,
+  coverImage,
   name,
   region,
+  destination,
   adwi,
   adwiBg,
   adwiFg,
+  adwi_level,
   theme,
   activities = [],
   price,
+  homestay_min_price,
   rating,
   families,
+  homestay_count,
   signature,
   featured,
   slug,
@@ -45,6 +50,18 @@ export default function VillageCard({
 }) {
   const [hover, setHover] = useState(false);
   const router = useRouter();
+
+  // Resolve mapping variations
+  const displayImg = coverImage?.url || img;
+  const displayRegion = destination
+    ? `${destination.name}, ${destination.province?.name || ""}`
+    : region;
+  const displayAdwiName = adwi_level?.name || adwi;
+  const displayAdwiBg = adwi_level?.metadata?.color || adwiBg;
+  const displayAdwiFg = adwi_level?.metadata?.fg || adwiFg;
+  const displayPrice = typeof homestay_min_price === "number" ? homestay_min_price : price;
+  const displayFamilies = typeof homestay_count === "number" ? homestay_count : families;
+
   const finalSlug = slug || id || name
     .toLowerCase()
     .replace(/[^a-z0-9\s]/g, "")
@@ -67,12 +84,14 @@ export default function VillageCard({
       onClick={() => router.push(`/explore/tourism-villages/${finalSlug}`)}
     >
       <div style={cardStyles.cardImgWrap}>
-        <SafeImage src={img} alt="" style={cardStyles.cardImg} />
-        <span
-          style={{ ...cardStyles.cardTag, background: adwiBg, color: adwiFg }}
-        >
-          ADWI {adwi}
-        </span>
+        <SafeImage src={displayImg} alt="" style={cardStyles.cardImg} />
+        {displayAdwiName && (
+          <span
+            style={{ ...cardStyles.cardTag, background: displayAdwiBg, color: displayAdwiFg }}
+          >
+            ADWI {displayAdwiName}
+          </span>
+        )}
         {featured && (
           <div
             style={{
@@ -93,7 +112,7 @@ export default function VillageCard({
         )}
         <div style={cardStyles.cardImgBottom}>
           <span style={cardStyles.cardCityPill}>
-            <PinSm /> {region}
+            <PinSm /> {displayRegion}
           </span>
         </div>
       </div>
@@ -154,11 +173,11 @@ export default function VillageCard({
               <StarFill /> <strong>{rating}</strong>
             </div>
             <div style={{ fontSize: 11, color: "var(--atr-text-muted)" }}>
-              {"\uD83C\uDFE0"} {families} KK homestay
+              {"\uD83C\uDFE0"} {displayFamilies} KK homestay
             </div>
           </div>
           <div style={{ textAlign: "right" }}>
-            {price === 0 ? (
+            {displayPrice === 0 ? (
               <span style={{ fontSize: 12, fontWeight: 700, color: "#2D8838" }}>
                 Gratis
               </span>
@@ -174,7 +193,7 @@ export default function VillageCard({
                     color: "var(--atr-purple)",
                   }}
                 >
-                  Rp {(price / 1000).toLocaleString("id-ID")}rb
+                  Rp {(displayPrice / 1000).toLocaleString("id-ID")}rb
                   <span
                     style={{
                       fontWeight: 500,

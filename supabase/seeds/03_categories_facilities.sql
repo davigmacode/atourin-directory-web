@@ -9,7 +9,26 @@ INSERT INTO directory.categories (slug, name, entity_types, metadata) VALUES
   ('heritage', '{"id": "Heritage", "en": "Heritage"}'::jsonb, ARRAY['attraction', 'destination', 'village', 'itinerary'], '{"icon": "🎯", "color": "#FFE9D6"}'),
   ('bahari', '{"id": "Bahari", "en": "Marine"}'::jsonb, ARRAY['attraction', 'destination', 'village', 'itinerary'], '{"icon": "🌊", "color": "#D4ECF4"}'),
   ('desa-wisata', '{"id": "Desa Wisata", "en": "Tourism Village"}'::jsonb, ARRAY['village'], '{"icon": "🌾", "color": "#F0FBE9"}'),
-  ('ecotourism', '{"id": "Ecotourism", "en": "Ecotourism"}'::jsonb, ARRAY['attraction', 'destination', 'village', 'itinerary'], '{"icon": "🌱", "color": "#E6F7E6"}')
+  ('ecotourism', '{"id": "Ecotourism", "en": "Ecotourism"}'::jsonb, ARRAY['attraction', 'destination', 'village', 'itinerary'], '{"icon": "🌱", "color": "#E6F7E6"}'),
+  -- ADWI Levels (Anugerah Desa Wisata Indonesia) — entity_types = adwi_level
+  ('adwi-rintisan', '{"id": "Rintisan", "en": "Rintisan"}'::jsonb, ARRAY['adwi_level'], '{"icon": "🌱", "color": "rgba(196,73,73,0.14)", "fg": "#C44949"}'),
+  ('adwi-berkembang', '{"id": "Berkembang", "en": "Berkembang"}'::jsonb, ARRAY['adwi_level'], '{"icon": "🌿", "color": "rgba(31,111,176,0.14)", "fg": "#1F6FB0"}'),
+  ('adwi-maju', '{"id": "Maju", "en": "Maju"}'::jsonb, ARRAY['adwi_level'], '{"icon": "🌳", "color": "rgba(81,176,84,0.16)", "fg": "#2D8838"}'),
+  ('adwi-mandiri', '{"id": "Mandiri", "en": "Mandiri"}'::jsonb, ARRAY['adwi_level'], '{"icon": "🏆", "color": "rgba(180,122,0,0.16)", "fg": "#B47A00"}'),
+  -- Village Themes (village_theme)
+  ('tema-budaya', '{"id": "Budaya & Adat", "en": "Culture & Heritage"}'::jsonb, ARRAY['village_theme'], '{"icon": "🎭"}'),
+  ('tema-alam', '{"id": "Alam & Ekowisata", "en": "Nature & Ecotourism"}'::jsonb, ARRAY['village_theme'], '{"icon": "🌿"}'),
+  ('tema-kerajinan', '{"id": "Kerajinan", "en": "Handcrafts"}'::jsonb, ARRAY['village_theme'], '{"icon": "🏺"}'),
+  ('tema-kuliner', '{"id": "Kuliner Lokal", "en": "Local Culinary"}'::jsonb, ARRAY['village_theme'], '{"icon": "🍽️"}'),
+  ('tema-bahari', '{"id": "Bahari", "en": "Marine & Coastal"}'::jsonb, ARRAY['village_theme'], '{"icon": "🌊"}'),
+  ('tema-pertanian', '{"id": "Agrowisata", "en": "Agrotourism"}'::jsonb, ARRAY['village_theme'], '{"icon": "🌾"}'),
+  -- Village Activities (village_activity)
+  ('aktivitas-tarian', '{"id": "Tarian", "en": "Traditional Dance"}'::jsonb, ARRAY['village_activity'], '{"icon": "💃"}'),
+  ('aktivitas-kuliner', '{"id": "Kuliner", "en": "Culinary Tasting"}'::jsonb, ARRAY['village_activity'], '{"icon": "🍳"}'),
+  ('aktivitas-trekking', '{"id": "Trekking", "en": "Nature Trekking"}'::jsonb, ARRAY['village_activity'], '{"icon": "🥾"}'),
+  ('aktivitas-snorkel', '{"id": "Snorkel", "en": "Coral Snorkeling"}'::jsonb, ARRAY['village_activity'], '{"icon": "🤿"}'),
+  ('aktivitas-workshop', '{"id": "Workshop", "en": "Traditional Workshop"}'::jsonb, ARRAY['village_activity'], '{"icon": "🔨"}'),
+  ('aktivitas-homestay', '{"id": "Homestay", "en": "Local Stay Experience"}'::jsonb, ARRAY['village_activity'], '{"icon": "🏡"}')
 ON CONFLICT (slug) DO NOTHING;
 
 -- ── Seed Data: facilities ─────────────────────────────────
