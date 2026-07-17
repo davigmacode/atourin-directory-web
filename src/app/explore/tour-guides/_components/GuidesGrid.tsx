@@ -2,7 +2,10 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { cardStyles } from "@/styles/attraction-styles";
+import { cardStyles as cardStylesRaw } from "@/styles/attraction-styles";
+
+const cardStyles = cardStylesRaw as Record<string, React.CSSProperties>;
+import type { TourGuide } from "@/types/tour-guide";
 
 /* ── Icons ── */
 function PinSm() {
@@ -26,7 +29,7 @@ function StarFill() {
 }
 
 /* ── Card Style Object ── */
-const gc = {
+const gc: Record<string, React.CSSProperties> = {
   card: {
     background: "#fff",
     borderRadius: 16,
@@ -138,28 +141,26 @@ const gc = {
 };
 
 /* ── GuideCard ── */
-export function GuideCard({
-  name,
-  img,
-  region,
-  spec,
-  specBg,
-  specFg,
-  langs,
-  certs,
-  rating,
-  trips,
-  price,
-  exp,
-  verified,
-}) {
+function GuideCard({ guide }: { guide: TourGuide }) {
   const [hover, setHover] = useState(false);
   const router = useRouter();
 
-  const slug = name
-    .toLowerCase()
-    .replace(/[^a-z0-9\s]/g, "")
-    .replace(/\s+/g, "-");
+  const name = guide.name;
+  const img = guide.avatar?.url || "";
+  const region = guide.destination
+    ? `${guide.destination.name}, ${guide.destination.province?.name || ""}`
+    : "";
+  const specs = guide.specialisms || [];
+  const firstSpec = specs[0];
+  const specBg = firstSpec?.metadata?.color || "#EDE9FF";
+  const specFg = firstSpec?.metadata?.fg || "var(--atr-purple)";
+  const langs = (guide.languages || []).map((l) => l.code).filter(Boolean);
+  const certs = (guide.certifications || []).map((c) => c.name);
+  const rating = guide.ratingAverage;
+  const trips = guide.tripsCount;
+  const price = guide.dailyRate;
+  const exp = `${guide.yearExperience} tahun`;
+  const verified = guide.verified;
 
   return (
     <article
@@ -174,7 +175,7 @@ export function GuideCard({
       }}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
-      onClick={() => router.push(`/explore/tour-guides/${slug}`)}
+      onClick={() => router.push(`/explore/tour-guides/${guide.slug}`)}
     >
       <div style={gc.topRow}>
         <div style={gc.avatarWrap}>
@@ -209,12 +210,12 @@ export function GuideCard({
       </div>
 
       <div style={gc.specRow}>
-        {spec.map((s) => (
+        {specs.map((s) => (
           <span
-            key={s}
-            style={{ ...gc.spec, background: specBg, color: specFg }}
+            key={s.id}
+            style={{ ...gc.spec, background: s.metadata?.color || specBg, color: s.metadata?.fg || specFg }}
           >
-            {s}
+            {s.name}
           </span>
         ))}
       </div>
@@ -345,7 +346,7 @@ function GuidesLoading() {
   );
 }
 
-function GuidesError({ message }) {
+function GuidesError({ message }: { message?: string }) {
   return (
     <div
       style={{
@@ -385,6 +386,14 @@ export default function GuidesGrid({
   isError,
   error,
   total,
+}: {
+  data?: TourGuide[];
+  loadMore?: () => void;
+  hasMore?: boolean;
+  isLoading?: boolean;
+  isError?: boolean;
+  error?: { message?: string };
+  total?: number;
 }) {
   if (isError) return <GuidesError message={error?.message} />;
   if (!isLoading && data.length === 0) return <GuidesEmpty />;
@@ -405,7 +414,7 @@ export default function GuidesGrid({
         <>
           <div style={cardStyles.grid}>
             {data.map((g, i) => (
-              <GuideCard key={g.id ?? i} {...g} />
+              <GuideCard key={g.id ?? i} guide={g} />
             ))}
           </div>
           <div style={cardStyles.paginationRow}>

@@ -28,7 +28,27 @@ INSERT INTO directory.categories (slug, name, entity_types, metadata) VALUES
   ('aktivitas-trekking', '{"id": "Trekking", "en": "Nature Trekking"}'::jsonb, ARRAY['village_activity'], '{"icon": "🥾"}'),
   ('aktivitas-snorkel', '{"id": "Snorkel", "en": "Coral Snorkeling"}'::jsonb, ARRAY['village_activity'], '{"icon": "🤿"}'),
   ('aktivitas-workshop', '{"id": "Workshop", "en": "Traditional Workshop"}'::jsonb, ARRAY['village_activity'], '{"icon": "🔨"}'),
-  ('aktivitas-homestay', '{"id": "Homestay", "en": "Local Stay Experience"}'::jsonb, ARRAY['village_activity'], '{"icon": "🏡"}')
+  ('aktivitas-homestay', '{"id": "Homestay", "en": "Local Stay Experience"}'::jsonb, ARRAY['village_activity'], '{"icon": "🏡"}'),
+  -- Guide Languages (guide_language)
+  ('lang-id',  '{"id": "Indonesia",  "en": "Indonesian"}'::jsonb,  ARRAY['guide_language'], '{"icon": "🇮🇩", "code": "ID"}'),
+  ('lang-en',  '{"id": "Inggris",    "en": "English"}'::jsonb,     ARRAY['guide_language'], '{"icon": "🇬🇧", "code": "EN"}'),
+  ('lang-jp',  '{"id": "Jepang",     "en": "Japanese"}'::jsonb,    ARRAY['guide_language'], '{"icon": "🇯🇵", "code": "JP"}'),
+  ('lang-fr',  '{"id": "Prancis",    "en": "French"}'::jsonb,      ARRAY['guide_language'], '{"icon": "🇫🇷", "code": "FR"}'),
+  ('lang-de',  '{"id": "Jerman",     "en": "German"}'::jsonb,      ARRAY['guide_language'], '{"icon": "🇩🇪", "code": "DE"}'),
+  ('lang-ko',  '{"id": "Korea",      "en": "Korean"}'::jsonb,      ARRAY['guide_language'], '{"icon": "🇰🇷", "code": "KO"}'),
+  ('lang-zh',  '{"id": "Mandarin",   "en": "Mandarin"}'::jsonb,    ARRAY['guide_language'], '{"icon": "🇨🇳", "code": "ZH"}'),
+  ('lang-ar',  '{"id": "Arab",       "en": "Arabic"}'::jsonb,      ARRAY['guide_language'], '{"icon": "🇸🇦", "code": "AR"}'),
+  ('lang-nl',  '{"id": "Belanda",    "en": "Dutch"}'::jsonb,       ARRAY['guide_language'], '{"icon": "🇳🇱", "code": "NL"}'),
+  ('lang-es',  '{"id": "Spanyol",    "en": "Spanish"}'::jsonb,     ARRAY['guide_language'], '{"icon": "🇪🇸", "code": "ES"}'),
+  -- Guide Specialisms (guide_specialism)
+  ('spec-bahari',      '{"id": "Bahari",       "en": "Marine"}'::jsonb,      ARRAY['guide_specialism'], '{"icon": "🤿", "color": "#D4ECF4", "fg": "#1F6FB0"}'),
+  ('spec-petualangan', '{"id": "Petualangan",  "en": "Adventure"}'::jsonb,   ARRAY['guide_specialism'], '{"icon": "🏔️", "color": "#D9F2DA", "fg": "#2D8838"}'),
+  ('spec-heritage',    '{"id": "Heritage",     "en": "Heritage"}'::jsonb,    ARRAY['guide_specialism'], '{"icon": "🏛️", "color": "#FFE9D6", "fg": "#B47A00"}'),
+  ('spec-kuliner',     '{"id": "Kuliner",      "en": "Culinary"}'::jsonb,    ARRAY['guide_specialism'], '{"icon": "🍽️", "color": "#FFE2E2", "fg": "#C44949"}'),
+  ('spec-spiritual',   '{"id": "Spiritual",    "en": "Spiritual"}'::jsonb,   ARRAY['guide_specialism'], '{"icon": "🙏", "color": "#EDE9FF", "fg": "#6B52D4"}'),
+  ('spec-hiking',      '{"id": "Hiking",       "en": "Hiking"}'::jsonb,      ARRAY['guide_specialism'], '{"icon": "🥾", "color": "#D9F2DA", "fg": "#2D8838"}'),
+  ('spec-budaya',      '{"id": "Budaya",       "en": "Culture"}'::jsonb,     ARRAY['guide_specialism'], '{"icon": "🎭", "color": "#EDE9FF", "fg": "#6B52D4"}'),
+  ('spec-fotografi',   '{"id": "Fotografi",    "en": "Photography"}'::jsonb, ARRAY['guide_specialism'], '{"icon": "📸", "color": "#FFF4D6", "fg": "#B47A00"}')
 ON CONFLICT (slug) DO NOTHING;
 
 -- ── Seed Data: facilities ─────────────────────────────────

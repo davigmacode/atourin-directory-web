@@ -3,7 +3,7 @@
 import React from "react";
 import { useParams } from "next/navigation";
 import { TopNav, SiteFooter, Breadcrumb } from "@/components/layout";
-import { useGuide } from "@/lib/hooks/use-guide";
+import { useTourGuide } from "@/lib/hooks/use-tour-guide";
 import { ds } from "@/styles/detail-styles";
 
 import DetailHero from "./_components/DetailHero";
@@ -133,7 +133,7 @@ function NotFound() {
 
 export default function GuideDetailPage() {
   const { slug } = useParams();
-  const { guide, isLoading, isError, error } = useGuide(slug);
+  const { guide, isLoading, isError, error } = useTourGuide(slug);
 
   if (isLoading) return <LoadingSkeleton />;
   if (isError)
@@ -142,8 +142,7 @@ export default function GuideDetailPage() {
     );
   if (!guide) return <NotFound />;
 
-  const regionParts = guide.region ? guide.region.split(",") : [];
-  const kota = regionParts[0] ? regionParts[0].trim() : "Labuan Bajo";
+  const kota = guide.destination?.name || "Tour Guide";
 
   return (
     <div data-screen-label="Tour Guide Detail" style={{ minHeight: "100vh", background: "var(--atr-bg-soft)" }}>

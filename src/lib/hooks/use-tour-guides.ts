@@ -2,20 +2,34 @@
 
 import useSWR from "swr";
 import { useState, useCallback, useEffect } from "react";
+import type { TourGuide } from "@/types/tour-guide";
 
 const PER_PAGE = 12;
 
-export function useGuides() {
+export interface TourGuidesFilters {
+  province?: string;
+  destination?: string;
+  specialism?: string;
+  language?: string;
+  certification?: string;
+  price?: string;
+  verified?: string;
+  sort?: string;
+}
+
+export function useTourGuides() {
   const [page, setPage] = useState(1);
-  const [filters, setFilters] = useState({
-    wilayah: "",
-    spesialisasi: "",
-    bahasa: "",
-    harga: "",
-    sertifikasi: "",
-    sort: "alpha",
+  const [filters, setFilters] = useState<TourGuidesFilters>({
+    province: "",
+    destination: "",
+    specialism: "",
+    language: "",
+    certification: "",
+    price: "",
+    verified: "",
+    sort: "popularity",
   });
-  const [allData, setAllData] = useState([]);
+  const [allData, setAllData] = useState<TourGuide[]>([]);
 
   const params = new URLSearchParams();
   params.set("page", String(page));
@@ -24,23 +38,24 @@ export function useGuides() {
     if (v) params.set(k, v);
   });
 
-  const { data, error, isLoading, isValidating } = useSWR(`/guides?${params}`);
+  const { data, error, isLoading, isValidating } = useSWR(
+    `/tour-guides?${params.toString()}`
+  );
 
   useEffect(() => {
     if (data?.data) {
       setAllData((prev) => (page === 1 ? data.data : [...prev, ...data.data]));
     }
-  }, [data]);
+  }, [data, page]);
 
   const loadMore = useCallback(() => {
     if (data?.pagination?.page < data?.pagination?.totalPages)
       setPage((p) => p + 1);
   }, [data]);
 
-  const updateFilters = useCallback((newFilters) => {
+  const updateFilters = useCallback((newFilters: TourGuidesFilters) => {
     setFilters(newFilters);
     setPage(1);
-    setAllData([]);
   }, []);
 
   return {
