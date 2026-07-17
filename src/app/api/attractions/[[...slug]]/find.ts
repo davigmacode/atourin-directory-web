@@ -1,6 +1,7 @@
 import { Elysia, t } from 'elysia';
 import { supabaseAdmin } from '@/lib/supabase';
 import type { Attraction } from '@/types/attraction';
+import type { Taxonomy } from '@/types/taxonomy';
 
 function parsePriceRange(range: string): [number, number] | null {
   const r = range.replace(/\s*\u2013\s*/g, ' - ').trim();
@@ -114,28 +115,28 @@ export const findController = new Elysia()
 
     // 5. Category Filter
     if (category) {
-      // Find category IDs matching slug or name
+      // Find taxonomy IDs matching slug or name
       const { data: catData } = await supabaseAdmin
         .schema('directory')
-        .from('categories')
+        .from('taxonomies')
         .select('id')
         .or(`slug.ilike.${category},name->>id.ilike.${category},name->>en.ilike.${category}`);
 
-      const targetCategoryIds = catData ? catData.map((c) => c.id) : [];
-      if (targetCategoryIds.length === 0) {
+      const targetTaxonomyIds = catData ? catData.map((c) => c.id) : [];
+      if (targetTaxonomyIds.length === 0) {
         return {
           data: [],
           pagination: { page, limit, total: 0, totalPages: 0 }
         };
       }
 
-      // Query category assignments
+      // Query taxonomy assignments
       const { data: assData } = await supabaseAdmin
         .schema('directory')
-        .from('category_assignments')
+        .from('taxonomy_assignments')
         .select('entity_id')
-        .eq('entity_type', 'attraction')
-        .in('category_id', targetCategoryIds);
+        .eq('entity_type', 'attraction_category')
+        .in('taxonomy_id', targetTaxonomyIds);
 
       const matchedAttractionIds = assData ? assData.map((a) => a.entity_id) : [];
       if (matchedAttractionIds.length === 0) {
@@ -233,20 +234,20 @@ export const findController = new Elysia()
       };
     }
 
-    // 10. Fetch category assignments for paged attractions
+    // 10. Fetch taxonomy assignments for paged attractions
     const { data: assignmentsData, error: assignError } = await supabaseAdmin
       .schema('directory')
-      .from('category_assignments')
+      .from('taxonomy_assignments')
       .select(`
         entity_id,
-        category:categories (
+        taxonomy:taxonomies (
           id,
           slug,
           name,
           metadata
         )
       `)
-      .eq('entity_type', 'attraction')
+      .eq('entity_type', 'attraction_category')
       .in('entity_id', attractionIds);
 
     if (assignError) {
@@ -315,13 +316,13 @@ export const findController = new Elysia()
     }
     priceTiersData = ptData ?? [];
 
-    // Process categories lookup map
-    const categoriesMap: Record<string, any[]> = {};
+    // Process taxonomies lookup map
+    const categoriesMap: Record<string, Taxonomy[]> = {};
     (assignmentsData ?? []).forEach((row: any) => {
       const entityId = row.entity_id;
-      const cat = row.category;
+      const cat = row.taxonomy;
       if (!cat) return;
-      
+
       const nameObj = cat.name;
       let catName = '';
       if (typeof nameObj === 'string') {
@@ -337,6 +338,7 @@ export const findController = new Elysia()
         id: cat.id,
         slug: cat.slug,
         name: catName,
+        entity_types: cat.entity_types,
         metadata: cat.metadata || {},
       });
     });

@@ -1,4 +1,4 @@
--- ── Seed Data: destinations ───────────────────────────────
+-- Ã¢â€â‚¬Ã¢â€â‚¬ Seed Data: destinations Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
 INSERT INTO directory.destinations (
   id, slug, name, type, province_id, cover_image, description,
   attractions_count, villages_count, itineraries_count, tour_guides_count, market_products_count,
@@ -174,125 +174,125 @@ INSERT INTO directory.destinations (
   )
 ON CONFLICT (id) DO NOTHING;
 
--- ── Seed Data: category_assignments (for tags) ────────────
-INSERT INTO directory.category_assignments (category_id, entity_type, entity_id) VALUES
+-- Ã¢â€â‚¬Ã¢â€â‚¬ Seed Data: category_assignments (for tags) Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
+INSERT INTO directory.taxonomy_assignments (taxonomy_id, entity_type, entity_id) VALUES
   -- 5202 (Lombok Tengah) -> Bahari, Petualangan, Budaya
-  ((SELECT id FROM directory.categories WHERE slug = 'bahari'), 'destination', '5202'),
-  ((SELECT id FROM directory.categories WHERE slug = 'petualangan'), 'destination', '5202'),
-  ((SELECT id FROM directory.categories WHERE slug = 'budaya'), 'destination', '5202'),
+  ((SELECT id FROM directory.taxonomies WHERE slug = 'bahari'), 'destination_category', '5202'),
+  ((SELECT id FROM directory.taxonomies WHERE slug = 'petualangan'), 'destination_category', '5202'),
+  ((SELECT id FROM directory.taxonomies WHERE slug = 'budaya'), 'destination_category', '5202'),
 
   -- 3471 (Yogyakarta) -> Budaya, Sejarah, Kuliner
-  ((SELECT id FROM directory.categories WHERE slug = 'budaya'), 'destination', '3471'),
-  ((SELECT id FROM directory.categories WHERE slug = 'sejarah'), 'destination', '3471'),
-  ((SELECT id FROM directory.categories WHERE slug = 'kuliner'), 'destination', '3471'),
+  ((SELECT id FROM directory.taxonomies WHERE slug = 'budaya'), 'destination_category', '3471'),
+  ((SELECT id FROM directory.taxonomies WHERE slug = 'sejarah'), 'destination_category', '3471'),
+  ((SELECT id FROM directory.taxonomies WHERE slug = 'kuliner'), 'destination_category', '3471'),
 
   -- 3404 (Sleman) -> Alam, Desa Wisata
-  ((SELECT id FROM directory.categories WHERE slug = 'alam'), 'destination', '3404'),
-  ((SELECT id FROM directory.categories WHERE slug = 'desa-wisata'), 'destination', '3404'),
+  ((SELECT id FROM directory.taxonomies WHERE slug = 'alam'), 'destination_category', '3404'),
+  ((SELECT id FROM directory.taxonomies WHERE slug = 'desa-wisata'), 'destination_category', '3404'),
 
   -- 3308 (Magelang) -> Heritage, Budaya, Alam
-  ((SELECT id FROM directory.categories WHERE slug = 'heritage'), 'destination', '3308'),
-  ((SELECT id FROM directory.categories WHERE slug = 'budaya'), 'destination', '3308'),
-  ((SELECT id FROM directory.categories WHERE slug = 'alam'), 'destination', '3308'),
+  ((SELECT id FROM directory.taxonomies WHERE slug = 'heritage'), 'destination_category', '3308'),
+  ((SELECT id FROM directory.taxonomies WHERE slug = 'budaya'), 'destination_category', '3308'),
+  ((SELECT id FROM directory.taxonomies WHERE slug = 'alam'), 'destination_category', '3308'),
 
   -- 3273 (Bandung) -> Kuliner, Alam
-  ((SELECT id FROM directory.categories WHERE slug = 'kuliner'), 'destination', '3273'),
-  ((SELECT id FROM directory.categories WHERE slug = 'alam'), 'destination', '3273'),
+  ((SELECT id FROM directory.taxonomies WHERE slug = 'kuliner'), 'destination_category', '3273'),
+  ((SELECT id FROM directory.taxonomies WHERE slug = 'alam'), 'destination_category', '3273'),
 
   -- 3205 (Garut) -> Alam, Petualangan
-  ((SELECT id FROM directory.categories WHERE slug = 'alam'), 'destination', '3205'),
-  ((SELECT id FROM directory.categories WHERE slug = 'petualangan'), 'destination', '3205'),
+  ((SELECT id FROM directory.taxonomies WHERE slug = 'alam'), 'destination_category', '3205'),
+  ((SELECT id FROM directory.taxonomies WHERE slug = 'petualangan'), 'destination_category', '3205'),
 
   -- 3513 (Probolinggo) -> Alam, Petualangan
-  ((SELECT id FROM directory.categories WHERE slug = 'alam'), 'destination', '3513'),
-  ((SELECT id FROM directory.categories WHERE slug = 'petualangan'), 'destination', '3513'),
+  ((SELECT id FROM directory.taxonomies WHERE slug = 'alam'), 'destination_category', '3513'),
+  ((SELECT id FROM directory.taxonomies WHERE slug = 'petualangan'), 'destination_category', '3513'),
 
   -- 3578 (Surabaya) -> Sejarah, Kuliner
-  ((SELECT id FROM directory.categories WHERE slug = 'sejarah'), 'destination', '3578'),
-  ((SELECT id FROM directory.categories WHERE slug = 'kuliner'), 'destination', '3578'),
+  ((SELECT id FROM directory.taxonomies WHERE slug = 'sejarah'), 'destination_category', '3578'),
+  ((SELECT id FROM directory.taxonomies WHERE slug = 'kuliner'), 'destination_category', '3578'),
 
   -- 3573 (Malang) -> Alam, Kuliner, Heritage
-  ((SELECT id FROM directory.categories WHERE slug = 'alam'), 'destination', '3573'),
-  ((SELECT id FROM directory.categories WHERE slug = 'kuliner'), 'destination', '3573'),
-  ((SELECT id FROM directory.categories WHERE slug = 'heritage'), 'destination', '3573'),
+  ((SELECT id FROM directory.taxonomies WHERE slug = 'alam'), 'destination_category', '3573'),
+  ((SELECT id FROM directory.taxonomies WHERE slug = 'kuliner'), 'destination_category', '3573'),
+  ((SELECT id FROM directory.taxonomies WHERE slug = 'heritage'), 'destination_category', '3573'),
 
   -- 3510 (Banyuwangi) -> Bahari, Alam
-  ((SELECT id FROM directory.categories WHERE slug = 'bahari'), 'destination', '3510'),
-  ((SELECT id FROM directory.categories WHERE slug = 'alam'), 'destination', '3510'),
+  ((SELECT id FROM directory.taxonomies WHERE slug = 'bahari'), 'destination_category', '3510'),
+  ((SELECT id FROM directory.taxonomies WHERE slug = 'alam'), 'destination_category', '3510'),
 
   -- 5171 (Denpasar) -> Bahari, Kuliner
-  ((SELECT id FROM directory.categories WHERE slug = 'bahari'), 'destination', '5171'),
-  ((SELECT id FROM directory.categories WHERE slug = 'kuliner'), 'destination', '5171'),
+  ((SELECT id FROM directory.taxonomies WHERE slug = 'bahari'), 'destination_category', '5171'),
+  ((SELECT id FROM directory.taxonomies WHERE slug = 'kuliner'), 'destination_category', '5171'),
 
   -- 5104 (Gianyar) -> Budaya, Alam
-  ((SELECT id FROM directory.categories WHERE slug = 'budaya'), 'destination', '5104'),
-  ((SELECT id FROM directory.categories WHERE slug = 'alam'), 'destination', '5104'),
+  ((SELECT id FROM directory.taxonomies WHERE slug = 'budaya'), 'destination_category', '5104'),
+  ((SELECT id FROM directory.taxonomies WHERE slug = 'alam'), 'destination_category', '5104'),
 
   -- 5103 (Badung) -> Bahari
-  ((SELECT id FROM directory.categories WHERE slug = 'bahari'), 'destination', '5103'),
+  ((SELECT id FROM directory.taxonomies WHERE slug = 'bahari'), 'destination_category', '5103'),
 
   -- 5107 (Karangasem) -> Bahari, Budaya
-  ((SELECT id FROM directory.categories WHERE slug = 'bahari'), 'destination', '5107'),
-  ((SELECT id FROM directory.categories WHERE slug = 'budaya'), 'destination', '5107'),
+  ((SELECT id FROM directory.taxonomies WHERE slug = 'bahari'), 'destination_category', '5107'),
+  ((SELECT id FROM directory.taxonomies WHERE slug = 'budaya'), 'destination_category', '5107'),
 
   -- 5315 (Labuan Bajo) -> Bahari, Petualangan
-  ((SELECT id FROM directory.categories WHERE slug = 'bahari'), 'destination', '5315'),
-  ((SELECT id FROM directory.categories WHERE slug = 'petualangan'), 'destination', '5315'),
+  ((SELECT id FROM directory.taxonomies WHERE slug = 'bahari'), 'destination_category', '5315'),
+  ((SELECT id FROM directory.taxonomies WHERE slug = 'petualangan'), 'destination_category', '5315'),
 
   -- 1212 (Toba Samosir) -> Alam, Budaya
-  ((SELECT id FROM directory.categories WHERE slug = 'alam'), 'destination', '1212'),
-  ((SELECT id FROM directory.categories WHERE slug = 'budaya'), 'destination', '1212'),
+  ((SELECT id FROM directory.taxonomies WHERE slug = 'alam'), 'destination_category', '1212'),
+  ((SELECT id FROM directory.taxonomies WHERE slug = 'budaya'), 'destination_category', '1212'),
 
   -- 1371 (Padang) -> Kuliner, Bahari
-  ((SELECT id FROM directory.categories WHERE slug = 'kuliner'), 'destination', '1371'),
-  ((SELECT id FROM directory.categories WHERE slug = 'bahari'), 'destination', '1371'),
+  ((SELECT id FROM directory.taxonomies WHERE slug = 'kuliner'), 'destination_category', '1371'),
+  ((SELECT id FROM directory.taxonomies WHERE slug = 'bahari'), 'destination_category', '1371'),
 
   -- 1375 (Bukittinggi) -> Heritage, Alam
-  ((SELECT id FROM directory.categories WHERE slug = 'heritage'), 'destination', '1375'),
-  ((SELECT id FROM directory.categories WHERE slug = 'alam'), 'destination', '1375'),
+  ((SELECT id FROM directory.taxonomies WHERE slug = 'heritage'), 'destination_category', '1375'),
+  ((SELECT id FROM directory.taxonomies WHERE slug = 'alam'), 'destination_category', '1375'),
 
   -- 1171 (Banda Aceh) -> Sejarah, Religi
-  ((SELECT id FROM directory.categories WHERE slug = 'sejarah'), 'destination', '1171'),
-  ((SELECT id FROM directory.categories WHERE slug = 'religi'), 'destination', '1171'),
+  ((SELECT id FROM directory.taxonomies WHERE slug = 'sejarah'), 'destination_category', '1171'),
+  ((SELECT id FROM directory.taxonomies WHERE slug = 'religi'), 'destination_category', '1171'),
 
   -- 7371 (Makassar) -> Kuliner, Bahari, Sejarah
-  ((SELECT id FROM directory.categories WHERE slug = 'kuliner'), 'destination', '7371'),
-  ((SELECT id FROM directory.categories WHERE slug = 'bahari'), 'destination', '7371'),
-  ((SELECT id FROM directory.categories WHERE slug = 'sejarah'), 'destination', '7371'),
+  ((SELECT id FROM directory.taxonomies WHERE slug = 'kuliner'), 'destination_category', '7371'),
+  ((SELECT id FROM directory.taxonomies WHERE slug = 'bahari'), 'destination_category', '7371'),
+  ((SELECT id FROM directory.taxonomies WHERE slug = 'sejarah'), 'destination_category', '7371'),
 
   -- 7326 (Toraja Utara) -> Budaya, Heritage
-  ((SELECT id FROM directory.categories WHERE slug = 'budaya'), 'destination', '7326'),
-  ((SELECT id FROM directory.categories WHERE slug = 'heritage'), 'destination', '7326'),
+  ((SELECT id FROM directory.taxonomies WHERE slug = 'budaya'), 'destination_category', '7326'),
+  ((SELECT id FROM directory.taxonomies WHERE slug = 'heritage'), 'destination_category', '7326'),
 
   -- 7171 (Manado) -> Bahari, Kuliner
-  ((SELECT id FROM directory.categories WHERE slug = 'bahari'), 'destination', '7171'),
-  ((SELECT id FROM directory.categories WHERE slug = 'kuliner'), 'destination', '7171'),
+  ((SELECT id FROM directory.taxonomies WHERE slug = 'bahari'), 'destination_category', '7171'),
+  ((SELECT id FROM directory.taxonomies WHERE slug = 'kuliner'), 'destination_category', '7171'),
 
   -- 9108 (Raja Ampat) -> Bahari, Petualangan
-  ((SELECT id FROM directory.categories WHERE slug = 'bahari'), 'destination', '9108'),
-  ((SELECT id FROM directory.categories WHERE slug = 'petualangan'), 'destination', '9108'),
+  ((SELECT id FROM directory.taxonomies WHERE slug = 'bahari'), 'destination_category', '9108'),
+  ((SELECT id FROM directory.taxonomies WHERE slug = 'petualangan'), 'destination_category', '9108'),
 
   -- 9471 (Jayapura) -> Budaya, Alam
-  ((SELECT id FROM directory.categories WHERE slug = 'budaya'), 'destination', '9471'),
-  ((SELECT id FROM directory.categories WHERE slug = 'alam'), 'destination', '9471'),
+  ((SELECT id FROM directory.taxonomies WHERE slug = 'budaya'), 'destination_category', '9471'),
+  ((SELECT id FROM directory.taxonomies WHERE slug = 'alam'), 'destination_category', '9471'),
 
   -- 6471 (Balikpapan) -> Bahari, Kuliner
-  ((SELECT id FROM directory.categories WHERE slug = 'bahari'), 'destination', '6471'),
-  ((SELECT id FROM directory.categories WHERE slug = 'kuliner'), 'destination', '6471'),
+  ((SELECT id FROM directory.taxonomies WHERE slug = 'bahari'), 'destination_category', '6471'),
+  ((SELECT id FROM directory.taxonomies WHERE slug = 'kuliner'), 'destination_category', '6471'),
 
   -- 6371 (Banjarmasin) -> Kuliner
-  ((SELECT id FROM directory.categories WHERE slug = 'kuliner'), 'destination', '6371'),
+  ((SELECT id FROM directory.taxonomies WHERE slug = 'kuliner'), 'destination_category', '6371'),
 
   -- 8171 (Ambon) -> Bahari, Sejarah
-  ((SELECT id FROM directory.categories WHERE slug = 'bahari'), 'destination', '8171'),
-  ((SELECT id FROM directory.categories WHERE slug = 'sejarah'), 'destination', '8171'),
+  ((SELECT id FROM directory.taxonomies WHERE slug = 'bahari'), 'destination_category', '8171'),
+  ((SELECT id FROM directory.taxonomies WHERE slug = 'sejarah'), 'destination_category', '8171'),
 
   -- 8271 (Ternate) -> Heritage, Bahari
-  ((SELECT id FROM directory.categories WHERE slug = 'heritage'), 'destination', '8271'),
-  ((SELECT id FROM directory.categories WHERE slug = 'bahari'), 'destination', '8271')
-ON CONFLICT (category_id, entity_type, entity_id) DO NOTHING;
+  ((SELECT id FROM directory.taxonomies WHERE slug = 'heritage'), 'destination_category', '8271'),
+  ((SELECT id FROM directory.taxonomies WHERE slug = 'bahari'), 'destination_category', '8271')
+ON CONFLICT (taxonomy_id, entity_type, entity_id) DO NOTHING;
 
--- ── Seed Data: media ──────────────────────────────────────
+-- Ã¢â€â‚¬Ã¢â€â‚¬ Seed Data: media Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
 INSERT INTO directory.media (entity_type, entity_id, type, url, metadata, sort_order) VALUES
   (
     'destination', '5202', 'image',

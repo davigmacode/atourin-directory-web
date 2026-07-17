@@ -60,12 +60,12 @@ export const findController = new Elysia()
     if (category) {
       const { data: catData } = await supabaseAdmin
         .schema('directory')
-        .from('categories')
+        .from('taxonomies')
         .select('id')
         .or(`slug.ilike.${category},name->>id.ilike.${category},name->>en.ilike.${category}`);
 
-      const targetCategoryIds = catData ? catData.map((c) => c.id) : [];
-      if (targetCategoryIds.length === 0) {
+      const targetTaxonomyIds = catData ? catData.map((c) => c.id) : [];
+      if (targetTaxonomyIds.length === 0) {
         return {
           data: [],
           pagination: { page, limit, total: 0, totalPages: 0 }
@@ -74,10 +74,10 @@ export const findController = new Elysia()
 
       const { data: assData } = await supabaseAdmin
         .schema('directory')
-        .from('category_assignments')
+        .from('taxonomy_assignments')
         .select('entity_id')
-        .eq('entity_type', 'destination')
-        .in('category_id', targetCategoryIds);
+        .eq('entity_type', 'destination_category')
+        .in('taxonomy_id', targetTaxonomyIds);
 
       const matchedDestinationIds = assData ? assData.map((a) => a.entity_id) : [];
       if (matchedDestinationIds.length === 0) {
@@ -122,18 +122,18 @@ export const findController = new Elysia()
       };
     }
 
-    // Query category assignments (only for paged destinations)
+    // Query taxonomy assignments (only for paged destinations)
     const { data: assignmentsData, error: assignError } = await supabaseAdmin
       .schema('directory')
-      .from('category_assignments')
+      .from('taxonomy_assignments')
       .select(`
         entity_id,
-        category:categories (
+        taxonomy:taxonomies (
           slug,
           name
         )
       `)
-      .eq('entity_type', 'destination')
+      .eq('entity_type', 'destination_category')
       .in('entity_id', destinationIds);
 
     if (assignError) {
@@ -167,7 +167,7 @@ export const findController = new Elysia()
     const assignmentsMap: Record<string, { slug: string; name: string }[]> = {};
     (assignmentsData ?? []).forEach((row: any) => {
       const entityId = row.entity_id;
-      const cat = row.category;
+      const cat = row.taxonomy;
       if (!cat) return;
       const nameObj = cat.name;
       let tagName = '';

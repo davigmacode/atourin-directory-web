@@ -1,4 +1,4 @@
-export type Json =
+﻿export type Json =
   | string
   | number
   | boolean
@@ -9,68 +9,160 @@ export type Json =
 export type Database = {
   directory: {
     Tables: {
-      categories: {
+      attractions: {
+        Row: {
+          cover_image: Json
+          created_at: string
+          description: Json
+          destination_id: string
+          id: string
+          location_accessibility: Json
+          location_address: Json
+          location_directions: Json
+          location_latitude: number | null
+          location_longitude: number | null
+          min_price: number
+          name: string
+          opening_hours: Json
+          rating_average: number
+          reviews_count: number
+          slug: string
+          trekking: boolean
+          updated_at: string
+        }
+        Insert: {
+          cover_image: Json
+          created_at?: string
+          description?: Json
+          destination_id: string
+          id?: string
+          location_accessibility?: Json
+          location_address?: Json
+          location_directions?: Json
+          location_latitude?: number | null
+          location_longitude?: number | null
+          min_price?: number
+          name: string
+          opening_hours: Json
+          rating_average?: number
+          reviews_count?: number
+          slug: string
+          trekking?: boolean
+          updated_at?: string
+        }
+        Update: {
+          cover_image?: Json
+          created_at?: string
+          description?: Json
+          destination_id?: string
+          id?: string
+          location_accessibility?: Json
+          location_address?: Json
+          location_directions?: Json
+          location_latitude?: number | null
+          location_longitude?: number | null
+          min_price?: number
+          name?: string
+          opening_hours?: Json
+          rating_average?: number
+          reviews_count?: number
+          slug?: string
+          trekking?: boolean
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "attractions_destination_id_fkey"
+            columns: ["destination_id"]
+            isOneToOne: false
+            referencedRelation: "destinations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      certification_assignments: {
+        Row: {
+          certificate_url: string | null
+          certification_id: string
+          created_at: string
+          entity_id: string
+          entity_type: string
+          expires_at: string | null
+          issued_at: string | null
+          notes: string | null
+        }
+        Insert: {
+          certificate_url?: string | null
+          certification_id: string
+          created_at?: string
+          entity_id: string
+          entity_type: string
+          expires_at?: string | null
+          issued_at?: string | null
+          notes?: string | null
+        }
+        Update: {
+          certificate_url?: string | null
+          certification_id?: string
+          created_at?: string
+          entity_id?: string
+          entity_type?: string
+          expires_at?: string | null
+          issued_at?: string | null
+          notes?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "certification_assignments_certification_id_fkey"
+            columns: ["certification_id"]
+            isOneToOne: false
+            referencedRelation: "certifications"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      certifications: {
         Row: {
           created_at: string
+          entity_types: string[]
           id: string
+          issuer: string
           metadata: Json
           name: Json
           slug: string
+          type: string
           updated_at: string
         }
         Insert: {
           created_at?: string
+          entity_types?: string[]
           id?: string
+          issuer?: string
           metadata?: Json
           name?: Json
           slug: string
+          type: string
           updated_at?: string
         }
         Update: {
           created_at?: string
+          entity_types?: string[]
           id?: string
+          issuer?: string
           metadata?: Json
           name?: Json
           slug?: string
+          type?: string
           updated_at?: string
         }
         Relationships: []
-      }
-      category_assignments: {
-        Row: {
-          category_id: string
-          created_at: string
-          entity_id: string
-          entity_type: string
-        }
-        Insert: {
-          category_id: string
-          created_at?: string
-          entity_id: string
-          entity_type: string
-        }
-        Update: {
-          category_id?: string
-          created_at?: string
-          entity_id?: string
-          entity_type?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "category_assignments_category_id_fkey"
-            columns: ["category_id"]
-            isOneToOne: false
-            referencedRelation: "categories"
-            referencedColumns: ["id"]
-          },
-        ]
       }
       destinations: {
         Row: {
           attractions_count: number
           cover_image: Json
           created_at: string
-          descriptions: Json
+          description: Json
           id: string
           itineraries_count: number
           market_products_count: number
@@ -88,7 +180,7 @@ export type Database = {
           attractions_count?: number
           cover_image: Json
           created_at?: string
-          descriptions?: Json
+          description?: Json
           id: string
           itineraries_count?: number
           market_products_count?: number
@@ -106,7 +198,7 @@ export type Database = {
           attractions_count?: number
           cover_image?: Json
           created_at?: string
-          descriptions?: Json
+          description?: Json
           id?: string
           itineraries_count?: number
           market_products_count?: number
@@ -133,6 +225,7 @@ export type Database = {
       facilities: {
         Row: {
           created_at: string
+          entity_types: string[]
           id: string
           metadata: Json
           name: Json
@@ -141,6 +234,7 @@ export type Database = {
         }
         Insert: {
           created_at?: string
+          entity_types?: string[]
           id?: string
           metadata?: Json
           name?: Json
@@ -149,6 +243,7 @@ export type Database = {
         }
         Update: {
           created_at?: string
+          entity_types?: string[]
           id?: string
           metadata?: Json
           name?: Json
@@ -159,21 +254,18 @@ export type Database = {
       }
       facility_assignments: {
         Row: {
-          available: boolean
           created_at: string
           entity_id: string
           entity_type: string
           facility_id: string
         }
         Insert: {
-          available?: boolean
           created_at?: string
           entity_id: string
           entity_type: string
           facility_id: string
         }
         Update: {
-          available?: boolean
           created_at?: string
           entity_id?: string
           entity_type?: string
@@ -218,6 +310,7 @@ export type Database = {
       }
       media: {
         Row: {
+          caption: Json
           created_at: string
           entity_id: string
           entity_type: string
@@ -229,6 +322,7 @@ export type Database = {
           url: string
         }
         Insert: {
+          caption?: Json
           created_at?: string
           entity_id: string
           entity_type: string
@@ -240,6 +334,7 @@ export type Database = {
           url: string
         }
         Update: {
+          caption?: Json
           created_at?: string
           entity_id?: string
           entity_type?: string
@@ -249,6 +344,36 @@ export type Database = {
           type?: string
           updated_at?: string
           url?: string
+        }
+        Relationships: []
+      }
+      price_tiers: {
+        Row: {
+          created_at: string
+          entity_id: string
+          entity_type: string
+          id: string
+          name: Json
+          price: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          entity_id: string
+          entity_type: string
+          id?: string
+          name?: Json
+          price?: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          entity_id?: string
+          entity_type?: string
+          id?: string
+          name?: Json
+          price?: number
+          updated_at?: string
         }
         Relationships: []
       }
@@ -298,6 +423,340 @@ export type Database = {
             columns: ["island_id"]
             isOneToOne: false
             referencedRelation: "islands"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      taxonomies: {
+        Row: {
+          created_at: string
+          entity_types: string[]
+          id: string
+          metadata: Json
+          name: Json
+          slug: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          entity_types?: string[]
+          id?: string
+          metadata?: Json
+          name?: Json
+          slug: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          entity_types?: string[]
+          id?: string
+          metadata?: Json
+          name?: Json
+          slug?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      taxonomy_assignments: {
+        Row: {
+          created_at: string
+          entity_id: string
+          entity_type: string
+          metadata: Json
+          taxonomy_id: string
+        }
+        Insert: {
+          created_at?: string
+          entity_id: string
+          entity_type: string
+          metadata?: Json
+          taxonomy_id: string
+        }
+        Update: {
+          created_at?: string
+          entity_id?: string
+          entity_type?: string
+          metadata?: Json
+          taxonomy_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "taxonomy_assignments_taxonomy_id_fkey"
+            columns: ["taxonomy_id"]
+            isOneToOne: false
+            referencedRelation: "taxonomies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tour_guide_languages: {
+        Row: {
+          category_id: string
+          created_at: string
+          fluency: string
+          guide_id: string
+        }
+        Insert: {
+          category_id: string
+          created_at?: string
+          fluency?: string
+          guide_id: string
+        }
+        Update: {
+          category_id?: string
+          created_at?: string
+          fluency?: string
+          guide_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tour_guide_languages_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "taxonomies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tour_guide_languages_guide_id_fkey"
+            columns: ["guide_id"]
+            isOneToOne: false
+            referencedRelation: "tour_guides"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tour_guide_packages: {
+        Row: {
+          created_at: string
+          description: Json
+          duration_days: number
+          duration_nights: number
+          guide_id: string
+          highlights: Json
+          id: string
+          is_bestseller: boolean
+          max_pax: number
+          min_pax: number
+          price_note: string
+          price_per_pax: number
+          schedule_end: string
+          schedule_start: string
+          slug: string
+          sort_order: number
+          title: Json
+          transport_capacity: string
+          transport_type: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: Json
+          duration_days?: number
+          duration_nights?: number
+          guide_id: string
+          highlights?: Json
+          id?: string
+          is_bestseller?: boolean
+          max_pax?: number
+          min_pax?: number
+          price_note?: string
+          price_per_pax?: number
+          schedule_end?: string
+          schedule_start?: string
+          slug: string
+          sort_order?: number
+          title?: Json
+          transport_capacity?: string
+          transport_type?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: Json
+          duration_days?: number
+          duration_nights?: number
+          guide_id?: string
+          highlights?: Json
+          id?: string
+          is_bestseller?: boolean
+          max_pax?: number
+          min_pax?: number
+          price_note?: string
+          price_per_pax?: number
+          schedule_end?: string
+          schedule_start?: string
+          slug?: string
+          sort_order?: number
+          title?: Json
+          transport_capacity?: string
+          transport_type?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tour_guide_packages_guide_id_fkey"
+            columns: ["guide_id"]
+            isOneToOne: false
+            referencedRelation: "tour_guides"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tour_guides: {
+        Row: {
+          avatar: Json
+          cover_image: Json
+          created_at: string
+          daily_rate: number
+          description: Json
+          destination_id: string
+          id: string
+          name: string
+          rating_average: number
+          reviews_count: number
+          slug: string
+          trips_count: number
+          updated_at: string
+          verified: boolean
+          year_experience: number
+        }
+        Insert: {
+          avatar?: Json
+          cover_image?: Json
+          created_at?: string
+          daily_rate?: number
+          description?: Json
+          destination_id: string
+          id?: string
+          name: string
+          rating_average?: number
+          reviews_count?: number
+          slug: string
+          trips_count?: number
+          updated_at?: string
+          verified?: boolean
+          year_experience?: number
+        }
+        Update: {
+          avatar?: Json
+          cover_image?: Json
+          created_at?: string
+          daily_rate?: number
+          description?: Json
+          destination_id?: string
+          id?: string
+          name?: string
+          rating_average?: number
+          reviews_count?: number
+          slug?: string
+          trips_count?: number
+          updated_at?: string
+          verified?: boolean
+          year_experience?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tour_guides_destination_id_fkey"
+            columns: ["destination_id"]
+            isOneToOne: false
+            referencedRelation: "destinations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tourism_villages: {
+        Row: {
+          adwi_level_id: string | null
+          cover_image: Json
+          created_at: string
+          description: Json
+          destination_id: string
+          featured: boolean
+          homestay_count: number
+          homestay_min_price: number
+          id: string
+          location_accessibility: Json
+          location_address: Json
+          location_directions: Json
+          location_latitude: number | null
+          location_longitude: number | null
+          max_daily_visitor: number
+          name: string
+          rating_average: number
+          reviews_count: number
+          signature: string
+          slug: string
+          updated_at: string
+          village_theme_id: string | null
+        }
+        Insert: {
+          adwi_level_id?: string | null
+          cover_image: Json
+          created_at?: string
+          description?: Json
+          destination_id: string
+          featured?: boolean
+          homestay_count?: number
+          homestay_min_price?: number
+          id?: string
+          location_accessibility?: Json
+          location_address?: Json
+          location_directions?: Json
+          location_latitude?: number | null
+          location_longitude?: number | null
+          max_daily_visitor?: number
+          name: string
+          rating_average?: number
+          reviews_count?: number
+          signature?: string
+          slug: string
+          updated_at?: string
+          village_theme_id?: string | null
+        }
+        Update: {
+          adwi_level_id?: string | null
+          cover_image?: Json
+          created_at?: string
+          description?: Json
+          destination_id?: string
+          featured?: boolean
+          homestay_count?: number
+          homestay_min_price?: number
+          id?: string
+          location_accessibility?: Json
+          location_address?: Json
+          location_directions?: Json
+          location_latitude?: number | null
+          location_longitude?: number | null
+          max_daily_visitor?: number
+          name?: string
+          rating_average?: number
+          reviews_count?: number
+          signature?: string
+          slug?: string
+          updated_at?: string
+          village_theme_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tourism_villages_adwi_level_id_fkey"
+            columns: ["adwi_level_id"]
+            isOneToOne: false
+            referencedRelation: "taxonomies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tourism_villages_destination_id_fkey"
+            columns: ["destination_id"]
+            isOneToOne: false
+            referencedRelation: "destinations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tourism_villages_village_theme_id_fkey"
+            columns: ["village_theme_id"]
+            isOneToOne: false
+            referencedRelation: "taxonomies"
             referencedColumns: ["id"]
           },
         ]

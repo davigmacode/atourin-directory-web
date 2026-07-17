@@ -1,15 +1,15 @@
--- ── Seed Data: categories ─────────────────────────────────
-INSERT INTO directory.categories (slug, name, entity_types, metadata) VALUES
-  ('alam', '{"id": "Alam", "en": "Nature"}'::jsonb, ARRAY['attraction', 'destination', 'village', 'itinerary'], '{"icon": "🌿", "color": "#E6F7E6"}'),
-  ('budaya', '{"id": "Budaya", "en": "Culture"}'::jsonb, ARRAY['attraction', 'destination', 'village', 'itinerary'], '{"icon": "🎭", "color": "#EDE9FF"}'),
-  ('sejarah', '{"id": "Sejarah", "en": "History"}'::jsonb, ARRAY['attraction', 'destination', 'village', 'itinerary'], '{"icon": "🛣️", "color": "#FFF4D9"}'),
-  ('kuliner', '{"id": "Kuliner", "en": "Culinary"}'::jsonb, ARRAY['attraction', 'destination', 'village', 'itinerary'], '{"icon": "🌙", "color": "#FFE2E2"}'),
-  ('religi', '{"id": "Religi", "en": "Religious"}'::jsonb, ARRAY['attraction', 'destination', 'village', 'itinerary'], '{"icon": "🕌", "color": "#E2F1FF"}'),
-  ('petualangan', '{"id": "Petualangan", "en": "Adventure"}'::jsonb, ARRAY['attraction', 'destination', 'village', 'itinerary'], '{"icon": "⚽", "color": "#D9F2DA"}'),
-  ('heritage', '{"id": "Heritage", "en": "Heritage"}'::jsonb, ARRAY['attraction', 'destination', 'village', 'itinerary'], '{"icon": "🎯", "color": "#FFE9D6"}'),
-  ('bahari', '{"id": "Bahari", "en": "Marine"}'::jsonb, ARRAY['attraction', 'destination', 'village', 'itinerary'], '{"icon": "🌊", "color": "#D4ECF4"}'),
-  ('desa-wisata', '{"id": "Desa Wisata", "en": "Tourism Village"}'::jsonb, ARRAY['village'], '{"icon": "🌾", "color": "#F0FBE9"}'),
-  ('ecotourism', '{"id": "Ecotourism", "en": "Ecotourism"}'::jsonb, ARRAY['attraction', 'destination', 'village', 'itinerary'], '{"icon": "🌱", "color": "#E6F7E6"}'),
+-- ── Seed Data: taxonomies ─────────────────────────────────
+INSERT INTO directory.taxonomies (slug, name, entity_types, metadata) VALUES
+  ('alam', '{"id": "Alam", "en": "Nature"}'::jsonb, ARRAY['attraction_category', 'destination_category', 'village_category', 'itinerary_category'], '{"icon": "🌿", "color": "#E6F7E6"}'),
+  ('budaya', '{"id": "Budaya", "en": "Culture"}'::jsonb, ARRAY['attraction_category', 'destination_category', 'village_category', 'itinerary_category'], '{"icon": "🎭", "color": "#EDE9FF"}'),
+  ('sejarah', '{"id": "Sejarah", "en": "History"}'::jsonb, ARRAY['attraction_category', 'destination_category', 'village_category', 'itinerary_category'], '{"icon": "🛣️", "color": "#FFF4D9"}'),
+  ('kuliner', '{"id": "Kuliner", "en": "Culinary"}'::jsonb, ARRAY['attraction_category', 'destination_category', 'village_category', 'itinerary_category'], '{"icon": "🌙", "color": "#FFE2E2"}'),
+  ('religi', '{"id": "Religi", "en": "Religious"}'::jsonb, ARRAY['attraction_category', 'destination_category', 'village_category', 'itinerary_category'], '{"icon": "🕌", "color": "#E2F1FF"}'),
+  ('petualangan', '{"id": "Petualangan", "en": "Adventure"}'::jsonb, ARRAY['attraction_category', 'destination_category', 'village_category', 'itinerary_category'], '{"icon": "⚽", "color": "#D9F2DA"}'),
+  ('heritage', '{"id": "Heritage", "en": "Heritage"}'::jsonb, ARRAY['attraction_category', 'destination_category', 'village_category', 'itinerary_category'], '{"icon": "🎯", "color": "#FFE9D6"}'),
+  ('bahari', '{"id": "Bahari", "en": "Marine"}'::jsonb, ARRAY['attraction_category', 'destination_category', 'village_category', 'itinerary_category'], '{"icon": "🌊", "color": "#D4ECF4"}'),
+  ('desa-wisata', '{"id": "Desa Wisata", "en": "Tourism Village"}'::jsonb, ARRAY['village_category'], '{"icon": "🌾", "color": "#F0FBE9"}'),
+  ('ecotourism', '{"id": "Ecotourism", "en": "Ecotourism"}'::jsonb, ARRAY['attraction_category', 'destination_category', 'village_category', 'itinerary_category'], '{"icon": "🌱", "color": "#E6F7E6"}'),
   -- ADWI Levels (Anugerah Desa Wisata Indonesia) — entity_types = adwi_level
   ('adwi-rintisan', '{"id": "Rintisan", "en": "Rintisan"}'::jsonb, ARRAY['adwi_level'], '{"icon": "🌱", "color": "rgba(196,73,73,0.14)", "fg": "#C44949"}'),
   ('adwi-berkembang', '{"id": "Berkembang", "en": "Berkembang"}'::jsonb, ARRAY['adwi_level'], '{"icon": "🌿", "color": "rgba(31,111,176,0.14)", "fg": "#1F6FB0"}'),

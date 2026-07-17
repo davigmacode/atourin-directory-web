@@ -1,6 +1,6 @@
 import type { CoverImage } from './island';
 import type { Destination } from './destination';
-import type { Category } from './category';
+import type { Taxonomy } from './taxonomy';
 import type { FacilityAssignment } from './facility';
 import type { Media } from './media';
 
@@ -28,7 +28,7 @@ export interface TourismVillage {
   homestayMinPrice: number;
   dailyQuota: number;
   location: VillageLocation;
-  categories?: Category[];
+  categories?: Taxonomy[];
   facilities?: FacilityAssignment[];
   media?: Media[];
 }

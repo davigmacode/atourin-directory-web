@@ -1,6 +1,6 @@
 import { Elysia, t } from 'elysia';
 import { supabaseAdmin } from '@/lib/supabase';
-import type { Category } from '@/types/category';
+import type { Taxonomy } from '@/types/taxonomy';
 
 export const findController = new Elysia()
   .get('/', async ({ query, headers, set }) => {
@@ -19,12 +19,12 @@ export const findController = new Elysia()
     };
 
     if (entityType && entityId) {
-      // Query categories assigned to a specific entity
+      // Query taxonomies assigned to a specific entity
       const { data, error } = await supabaseAdmin
         .schema('directory')
-        .from('category_assignments')
+        .from('taxonomy_assignments')
         .select(`
-          category:categories (
+          taxonomy:taxonomies (
             id,
             slug,
             name,
@@ -41,8 +41,8 @@ export const findController = new Elysia()
         return { error: error.message };
       }
 
-      const categories = (data ?? [])
-        .map((row: any) => row.category)
+      const taxonomies = (data ?? [])
+        .map((row: any) => row.taxonomy)
         .filter((cat): cat is any => !!cat)
         .map((cat: any) => ({
           id: cat.id,
@@ -52,14 +52,14 @@ export const findController = new Elysia()
           metadata: cat.metadata || {},
         }));
 
-      return { data: categories };
+      return { data: taxonomies };
     }
 
     if (entityType) {
-      // Fetch only categories that are expected for this entity type
+      // Fetch only taxonomies that are expected for this entity type
       const { data, error } = await supabaseAdmin
         .schema('directory')
-        .from('categories')
+        .from('taxonomies')
         .select('id, slug, name, metadata, entity_types')
         .contains('entity_types', [entityType])
         .order('name->>id');
@@ -70,7 +70,7 @@ export const findController = new Elysia()
         return { error: error.message };
       }
 
-      const categories: Category[] = (data ?? []).map((row: any) => ({
+      const taxonomies: Taxonomy[] = (data ?? []).map((row: any) => ({
         id: row.id,
         slug: row.slug,
         name: resolveName(row.name),
@@ -78,15 +78,15 @@ export const findController = new Elysia()
         metadata: row.metadata || {},
       }));
 
-      return { data: categories };
+      return { data: taxonomies };
     }
 
-    // Default: Query all categories
+    // Default: Query all taxonomies
     const { data, error } = await supabaseAdmin
       .schema('directory')
-      .from('categories')
+      .from('taxonomies')
       .select('id, slug, name, metadata, entity_types')
-      .order('name->>id'); // Order by name text field in JSONB
+      .order('name->>id');
 
     if (error) {
       console.error('[api/categories GET all]', error.message);
@@ -94,7 +94,7 @@ export const findController = new Elysia()
       return { error: error.message };
     }
 
-    const categories: Category[] = (data ?? []).map((row: any) => ({
+    const taxonomies: Taxonomy[] = (data ?? []).map((row: any) => ({
       id: row.id,
       slug: row.slug,
       name: resolveName(row.name),
@@ -102,7 +102,7 @@ export const findController = new Elysia()
       metadata: row.metadata || {},
     }));
 
-    return { data: categories };
+    return { data: taxonomies };
   }, {
     query: t.Optional(t.Object({
       entity_type: t.Optional(t.String()),

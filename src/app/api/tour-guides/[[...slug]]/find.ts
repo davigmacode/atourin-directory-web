@@ -112,16 +112,16 @@ export const findController = new Elysia()
       }
     }
 
-    // 6. Specialism filter — via category_assignments (entity_type='guide')
+    // 6. Specialism filter — via taxonomy_assignments (entity_type='guide_category')
     if (specialism) {
       const { data: specCats } = await supabaseAdmin
         .schema('directory')
-        .from('categories')
+        .from('taxonomies')
         .select('id')
         .or(`slug.ilike.${specialism},name->>id.ilike.${specialism},name->>en.ilike.${specialism}`);
 
-      const targetCategoryIds = specCats ? specCats.map((c) => c.id) : [];
-      if (targetCategoryIds.length === 0) {
+      const targetTaxonomyIds = specCats ? specCats.map((c) => c.id) : [];
+      if (targetTaxonomyIds.length === 0) {
         return {
           data: [],
           pagination: { page, limit, total: 0, totalPages: 0 }
@@ -130,10 +130,10 @@ export const findController = new Elysia()
 
       const { data: assData } = await supabaseAdmin
         .schema('directory')
-        .from('category_assignments')
+        .from('taxonomy_assignments')
         .select('entity_id')
-        .eq('entity_type', 'guide')
-        .in('category_id', targetCategoryIds);
+        .eq('entity_type', 'guide_category')
+        .in('taxonomy_id', targetTaxonomyIds);
 
       const matchedIds = assData ? Array.from(new Set(assData.map((a) => a.entity_id))) : [];
       if (matchedIds.length === 0) {
@@ -145,11 +145,11 @@ export const findController = new Elysia()
       dbQuery = dbQuery.in('id', matchedIds);
     }
 
-    // 7. Language filter — via tour_guide_languages → category (guide_language)
+    // 7. Language filter — via tour_guide_languages → taxonomy (guide_language)
     if (language) {
       const { data: langCats } = await supabaseAdmin
         .schema('directory')
-        .from('categories')
+        .from('taxonomies')
         .select('id')
         .or(`slug.ilike.${language},name->>id.ilike.${language},name->>en.ilike.${language}`)
         .contains('entity_types', ['guide_language']);
@@ -251,17 +251,17 @@ export const findController = new Elysia()
     // 12. Fetch specialism assignments
     const { data: specialismData, error: specError } = await supabaseAdmin
       .schema('directory')
-      .from('category_assignments')
+      .from('taxonomy_assignments')
       .select(`
         entity_id,
-        category:categories (
+        taxonomy:taxonomies (
           id,
           slug,
           name,
           metadata
         )
       `)
-      .eq('entity_type', 'guide')
+      .eq('entity_type', 'guide_category')
       .in('entity_id', guideIds);
 
     if (specError) {
@@ -277,7 +277,7 @@ export const findController = new Elysia()
       .select(`
         guide_id,
         fluency,
-        category:categories (
+        category:taxonomies (
           id,
           slug,
           name,
@@ -320,7 +320,7 @@ export const findController = new Elysia()
     // Build lookup maps
     const specialismsMap: Record<string, any[]> = {};
     (specialismData ?? []).forEach((row: any) => {
-      const cat = row.category;
+      const cat = row.taxonomy;
       if (!cat) return;
       const nameObj = cat.name;
       let catName = '';

@@ -32,7 +32,7 @@ export const getController = new Elysia()
         cover_image,
         featured,
         adwi_level_id,
-        adwi_level:categories!adwi_level_id (
+        adwi_level:taxonomies!adwi_level_id (
           id,
           slug,
           name,
@@ -40,7 +40,7 @@ export const getController = new Elysia()
           metadata
         ),
         village_theme_id,
-        village_theme:categories!village_theme_id (
+        village_theme:taxonomies!village_theme_id (
           id,
           slug,
           name,
@@ -87,12 +87,12 @@ export const getController = new Elysia()
       return { error: 'Tourism village not found' };
     }
 
-    // 2. Fetch category assignments — include entity_types & metadata to resolve ADWI
+    // 2. Fetch taxonomy assignments — include entity_types & metadata to resolve ADWI
     const { data: assignmentsData, error: assignError } = await supabaseAdmin
       .schema('directory')
-      .from('category_assignments')
+      .from('taxonomy_assignments')
       .select(`
-        category:categories (
+        taxonomy:taxonomies (
           id,
           slug,
           name,
@@ -100,7 +100,7 @@ export const getController = new Elysia()
           metadata
         )
       `)
-      .eq('entity_type', 'village')
+      .eq('entity_type', 'village_category')
       .eq('entity_id', row.id);
 
     if (assignError) {
@@ -115,6 +115,7 @@ export const getController = new Elysia()
       .from('facilities')
       .select('id, slug, name, metadata')
       .contains('entity_types', ['village']);
+
 
     if (allFacsError) {
       console.error('[api/tourism-villages/[slug] GET expected facilities]', allFacsError.message);
@@ -158,7 +159,7 @@ export const getController = new Elysia()
 
     // Process categories — preserve entity_types and raw name for ADWI resolution
     const categories = (assignmentsData ?? []).map((ca: any) => {
-      const cat = ca.category;
+      const cat = ca.taxonomy;
       if (!cat) return null;
       const nameObj = cat.name;
       let catName = '';

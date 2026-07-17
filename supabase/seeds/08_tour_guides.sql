@@ -9,11 +9,11 @@ INSERT INTO directory.certifications (slug, name, type, issuer, entity_types, me
     'training',
     'Himpunan Pramuwisata Indonesia',
     ARRAY['guide'],
-    '{"icon": "🪪", "color": "#E2F1FF", "fg": "#1F6FB0"}'::jsonb
+    '{"icon": "ðŸªª", "color": "#E2F1FF", "fg": "#1F6FB0"}'::jsonb
   )
 ON CONFLICT (slug) DO NOTHING;
 
--- ── Guide 1: Welli Wilyanto (Labuan Bajo / Marine & Adventure) ──
+-- â”€â”€ Guide 1: Welli Wilyanto (Labuan Bajo / Marine & Adventure) â”€â”€
 INSERT INTO directory.tour_guides (id, slug, name, description, destination_id, avatar, cover_image, verified, rating_average, reviews_count, trips_count, year_experience, daily_rate) VALUES
   (
     'guide-welli-001', 'welli-wilyanto', 'Welli Wilyanto',
@@ -25,17 +25,17 @@ INSERT INTO directory.tour_guides (id, slug, name, description, destination_id, 
   )
 ON CONFLICT (slug) DO NOTHING;
 
-INSERT INTO directory.category_assignments (category_id, entity_type, entity_id)
-SELECT id, 'guide', 'guide-welli-001' FROM directory.categories
+INSERT INTO directory.taxonomy_assignments (taxonomy_id, entity_type, entity_id)
+SELECT id, 'guide_category', 'guide-welli-001' FROM directory.taxonomies
 WHERE slug IN ('spec-bahari', 'spec-petualangan')
 ON CONFLICT DO NOTHING;
 
 INSERT INTO directory.tour_guide_languages (guide_id, category_id, fluency)
-SELECT 'guide-welli-001', id, 'native'  FROM directory.categories WHERE slug = 'lang-id' ON CONFLICT DO NOTHING;
+SELECT 'guide-welli-001', id, 'native'  FROM directory.taxonomies WHERE slug = 'lang-id' ON CONFLICT DO NOTHING;
 INSERT INTO directory.tour_guide_languages (guide_id, category_id, fluency)
-SELECT 'guide-welli-001', id, 'fluent'  FROM directory.categories WHERE slug = 'lang-en' ON CONFLICT DO NOTHING;
+SELECT 'guide-welli-001', id, 'fluent'  FROM directory.taxonomies WHERE slug = 'lang-en' ON CONFLICT DO NOTHING;
 INSERT INTO directory.tour_guide_languages (guide_id, category_id, fluency)
-SELECT 'guide-welli-001', id, 'conversational' FROM directory.categories WHERE slug = 'lang-jp' ON CONFLICT DO NOTHING;
+SELECT 'guide-welli-001', id, 'conversational' FROM directory.taxonomies WHERE slug = 'lang-jp' ON CONFLICT DO NOTHING;
 
 INSERT INTO directory.certification_assignments (certification_id, entity_type, entity_id, issued_at)
 SELECT id, 'guide', 'guide-welli-001', '2019-01-01' FROM directory.certifications WHERE slug = 'hpi-membership' ON CONFLICT DO NOTHING;
@@ -78,7 +78,7 @@ INSERT INTO directory.media (entity_type, entity_id, type, url, metadata, sort_o
   ('guide', 'guide-welli-001', 'video', 'https://www.w3schools.com/html/mov_bbb.mp4', '{"duration": 12.0}'::jsonb, 3)
 ON CONFLICT DO NOTHING;
 
--- ── Guide 2: Putu Adi Wirawan (Ubud / Heritage & Spiritual) ───
+-- â”€â”€ Guide 2: Putu Adi Wirawan (Ubud / Heritage & Spiritual) â”€â”€â”€
 INSERT INTO directory.tour_guides (id, slug, name, description, destination_id, avatar, cover_image, verified, rating_average, reviews_count, trips_count, year_experience, daily_rate) VALUES
   (
     'guide-putu-002', 'putu-adi-wirawan', 'Putu Adi Wirawan',
@@ -90,17 +90,17 @@ INSERT INTO directory.tour_guides (id, slug, name, description, destination_id, 
   )
 ON CONFLICT (slug) DO NOTHING;
 
-INSERT INTO directory.category_assignments (category_id, entity_type, entity_id)
-SELECT id, 'guide', 'guide-putu-002' FROM directory.categories
+INSERT INTO directory.taxonomy_assignments (taxonomy_id, entity_type, entity_id)
+SELECT id, 'guide_category', 'guide-putu-002' FROM directory.taxonomies
 WHERE slug IN ('spec-heritage', 'spec-spiritual', 'spec-budaya')
 ON CONFLICT DO NOTHING;
 
 INSERT INTO directory.tour_guide_languages (guide_id, category_id, fluency)
-SELECT 'guide-putu-002', id, 'native' FROM directory.categories WHERE slug = 'lang-id' ON CONFLICT DO NOTHING;
+SELECT 'guide-putu-002', id, 'native' FROM directory.taxonomies WHERE slug = 'lang-id' ON CONFLICT DO NOTHING;
 INSERT INTO directory.tour_guide_languages (guide_id, category_id, fluency)
-SELECT 'guide-putu-002', id, 'fluent' FROM directory.categories WHERE slug = 'lang-en' ON CONFLICT DO NOTHING;
+SELECT 'guide-putu-002', id, 'fluent' FROM directory.taxonomies WHERE slug = 'lang-en' ON CONFLICT DO NOTHING;
 INSERT INTO directory.tour_guide_languages (guide_id, category_id, fluency)
-SELECT 'guide-putu-002', id, 'conversational' FROM directory.categories WHERE slug = 'lang-fr' ON CONFLICT DO NOTHING;
+SELECT 'guide-putu-002', id, 'conversational' FROM directory.taxonomies WHERE slug = 'lang-fr' ON CONFLICT DO NOTHING;
 
 INSERT INTO directory.certification_assignments (certification_id, entity_type, entity_id, issued_at)
 SELECT id, 'guide', 'guide-putu-002', '2014-05-10' FROM directory.certifications WHERE slug = 'hpi-membership' ON CONFLICT DO NOTHING;
@@ -134,7 +134,7 @@ INSERT INTO directory.media (entity_type, entity_id, type, url, metadata, sort_o
   ('guide', 'guide-putu-002', 'image', 'https://images.unsplash.com/photo-1570214476695-19bd467e6f7a?w=1200&auto=format&fit=crop&q=80', '{}'::jsonb, 2)
 ON CONFLICT DO NOTHING;
 
--- ── Guide 3: Sari Wibowo Putri (Yogyakarta / Heritage & Culinary) ──
+-- â”€â”€ Guide 3: Sari Wibowo Putri (Yogyakarta / Heritage & Culinary) â”€â”€
 INSERT INTO directory.tour_guides (id, slug, name, description, destination_id, avatar, cover_image, verified, rating_average, reviews_count, trips_count, year_experience, daily_rate) VALUES
   (
     'guide-sari-003', 'sari-wibowo-putri', 'Sari Wibowo Putri',
@@ -146,17 +146,17 @@ INSERT INTO directory.tour_guides (id, slug, name, description, destination_id, 
   )
 ON CONFLICT (slug) DO NOTHING;
 
-INSERT INTO directory.category_assignments (category_id, entity_type, entity_id)
-SELECT id, 'guide', 'guide-sari-003' FROM directory.categories
+INSERT INTO directory.taxonomy_assignments (taxonomy_id, entity_type, entity_id)
+SELECT id, 'guide_category', 'guide-sari-003' FROM directory.taxonomies
 WHERE slug IN ('spec-heritage', 'spec-kuliner', 'spec-budaya')
 ON CONFLICT DO NOTHING;
 
 INSERT INTO directory.tour_guide_languages (guide_id, category_id, fluency)
-SELECT 'guide-sari-003', id, 'native' FROM directory.categories WHERE slug = 'lang-id' ON CONFLICT DO NOTHING;
+SELECT 'guide-sari-003', id, 'native' FROM directory.taxonomies WHERE slug = 'lang-id' ON CONFLICT DO NOTHING;
 INSERT INTO directory.tour_guide_languages (guide_id, category_id, fluency)
-SELECT 'guide-sari-003', id, 'fluent' FROM directory.categories WHERE slug = 'lang-en' ON CONFLICT DO NOTHING;
+SELECT 'guide-sari-003', id, 'fluent' FROM directory.taxonomies WHERE slug = 'lang-en' ON CONFLICT DO NOTHING;
 INSERT INTO directory.tour_guide_languages (guide_id, category_id, fluency)
-SELECT 'guide-sari-003', id, 'conversational' FROM directory.categories WHERE slug = 'lang-de' ON CONFLICT DO NOTHING;
+SELECT 'guide-sari-003', id, 'conversational' FROM directory.taxonomies WHERE slug = 'lang-de' ON CONFLICT DO NOTHING;
 
 INSERT INTO directory.certification_assignments (certification_id, entity_type, entity_id, issued_at)
 SELECT id, 'guide', 'guide-sari-003', '2018-04-20' FROM directory.certifications WHERE slug = 'hpi-membership' ON CONFLICT DO NOTHING;
@@ -187,7 +187,7 @@ INSERT INTO directory.media (entity_type, entity_id, type, url, metadata, sort_o
   ('guide', 'guide-sari-003', 'image', 'https://images.unsplash.com/photo-1582967788606-a171c1080cb0?w=1200&auto=format&fit=crop&q=80', '{}'::jsonb, 1)
 ON CONFLICT DO NOTHING;
 
--- ── Guide 4: Catur Hidayat (Bromo / Adventure & Hiking) ───────
+-- â”€â”€ Guide 4: Catur Hidayat (Bromo / Adventure & Hiking) â”€â”€â”€â”€â”€â”€â”€
 INSERT INTO directory.tour_guides (id, slug, name, description, destination_id, avatar, cover_image, verified, rating_average, reviews_count, trips_count, year_experience, daily_rate) VALUES
   (
     'guide-catur-004', 'catur-hidayat', 'Catur Hidayat',
@@ -199,15 +199,15 @@ INSERT INTO directory.tour_guides (id, slug, name, description, destination_id, 
   )
 ON CONFLICT (slug) DO NOTHING;
 
-INSERT INTO directory.category_assignments (category_id, entity_type, entity_id)
-SELECT id, 'guide', 'guide-catur-004' FROM directory.categories
+INSERT INTO directory.taxonomy_assignments (taxonomy_id, entity_type, entity_id)
+SELECT id, 'guide_category', 'guide-catur-004' FROM directory.taxonomies
 WHERE slug IN ('spec-petualangan', 'spec-hiking', 'spec-fotografi')
 ON CONFLICT DO NOTHING;
 
 INSERT INTO directory.tour_guide_languages (guide_id, category_id, fluency)
-SELECT 'guide-catur-004', id, 'native' FROM directory.categories WHERE slug = 'lang-id' ON CONFLICT DO NOTHING;
+SELECT 'guide-catur-004', id, 'native' FROM directory.taxonomies WHERE slug = 'lang-id' ON CONFLICT DO NOTHING;
 INSERT INTO directory.tour_guide_languages (guide_id, category_id, fluency)
-SELECT 'guide-catur-004', id, 'fluent' FROM directory.categories WHERE slug = 'lang-en' ON CONFLICT DO NOTHING;
+SELECT 'guide-catur-004', id, 'fluent' FROM directory.taxonomies WHERE slug = 'lang-en' ON CONFLICT DO NOTHING;
 
 INSERT INTO directory.certification_assignments (certification_id, entity_type, entity_id, issued_at)
 SELECT id, 'guide', 'guide-catur-004', '2015-07-04' FROM directory.certifications WHERE slug = 'hpi-membership' ON CONFLICT DO NOTHING;
@@ -240,7 +240,7 @@ INSERT INTO directory.media (entity_type, entity_id, type, url, metadata, sort_o
   ('guide', 'guide-catur-004', 'image', 'https://images.unsplash.com/photo-1518684079-3c830dcef090?w=1200&auto=format&fit=crop&q=80', '{}'::jsonb, 1)
 ON CONFLICT DO NOTHING;
 
--- ── Guide 5: Komang Adi Susila (Sanur / Diving & Marine) ──────
+-- â”€â”€ Guide 5: Komang Adi Susila (Sanur / Diving & Marine) â”€â”€â”€â”€â”€â”€
 INSERT INTO directory.tour_guides (id, slug, name, description, destination_id, avatar, cover_image, verified, rating_average, reviews_count, trips_count, year_experience, daily_rate) VALUES
   (
     'guide-komang-005', 'komang-adi-susila', 'Komang Adi Susila',
@@ -252,17 +252,17 @@ INSERT INTO directory.tour_guides (id, slug, name, description, destination_id, 
   )
 ON CONFLICT (slug) DO NOTHING;
 
-INSERT INTO directory.category_assignments (category_id, entity_type, entity_id)
-SELECT id, 'guide', 'guide-komang-005' FROM directory.categories
+INSERT INTO directory.taxonomy_assignments (taxonomy_id, entity_type, entity_id)
+SELECT id, 'guide_category', 'guide-komang-005' FROM directory.taxonomies
 WHERE slug IN ('spec-bahari', 'spec-fotografi')
 ON CONFLICT DO NOTHING;
 
 INSERT INTO directory.tour_guide_languages (guide_id, category_id, fluency)
-SELECT 'guide-komang-005', id, 'native' FROM directory.categories WHERE slug = 'lang-id' ON CONFLICT DO NOTHING;
+SELECT 'guide-komang-005', id, 'native' FROM directory.taxonomies WHERE slug = 'lang-id' ON CONFLICT DO NOTHING;
 INSERT INTO directory.tour_guide_languages (guide_id, category_id, fluency)
-SELECT 'guide-komang-005', id, 'fluent' FROM directory.categories WHERE slug = 'lang-en' ON CONFLICT DO NOTHING;
+SELECT 'guide-komang-005', id, 'fluent' FROM directory.taxonomies WHERE slug = 'lang-en' ON CONFLICT DO NOTHING;
 INSERT INTO directory.tour_guide_languages (guide_id, category_id, fluency)
-SELECT 'guide-komang-005', id, 'fluent' FROM directory.categories WHERE slug = 'lang-jp' ON CONFLICT DO NOTHING;
+SELECT 'guide-komang-005', id, 'fluent' FROM directory.taxonomies WHERE slug = 'lang-jp' ON CONFLICT DO NOTHING;
 
 INSERT INTO directory.certification_assignments (certification_id, entity_type, entity_id, issued_at)
 SELECT id, 'guide', 'guide-komang-005', '2016-02-12' FROM directory.certifications WHERE slug = 'bnsp-dive-guide' ON CONFLICT DO NOTHING;
@@ -295,7 +295,7 @@ INSERT INTO directory.media (entity_type, entity_id, type, url, metadata, sort_o
   ('guide', 'guide-komang-005', 'image', 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=1200&auto=format&fit=crop&q=80', '{}'::jsonb, 1)
 ON CONFLICT DO NOTHING;
 
--- ── Guide 6: Andreyan Saputra (Lombok Tengah / Surf & Adventure) ──
+-- â”€â”€ Guide 6: Andreyan Saputra (Lombok Tengah / Surf & Adventure) â”€â”€
 INSERT INTO directory.tour_guides (id, slug, name, description, destination_id, avatar, cover_image, verified, rating_average, reviews_count, trips_count, year_experience, daily_rate) VALUES
   (
     'guide-andreyan-006', 'andreyan-saputra', 'Andreyan Saputra',
@@ -307,15 +307,15 @@ INSERT INTO directory.tour_guides (id, slug, name, description, destination_id, 
   )
 ON CONFLICT (slug) DO NOTHING;
 
-INSERT INTO directory.category_assignments (category_id, entity_type, entity_id)
-SELECT id, 'guide', 'guide-andreyan-006' FROM directory.categories
+INSERT INTO directory.taxonomy_assignments (taxonomy_id, entity_type, entity_id)
+SELECT id, 'guide_category', 'guide-andreyan-006' FROM directory.taxonomies
 WHERE slug IN ('spec-petualangan', 'spec-bahari')
 ON CONFLICT DO NOTHING;
 
 INSERT INTO directory.tour_guide_languages (guide_id, category_id, fluency)
-SELECT 'guide-andreyan-006', id, 'native' FROM directory.categories WHERE slug = 'lang-id' ON CONFLICT DO NOTHING;
+SELECT 'guide-andreyan-006', id, 'native' FROM directory.taxonomies WHERE slug = 'lang-id' ON CONFLICT DO NOTHING;
 INSERT INTO directory.tour_guide_languages (guide_id, category_id, fluency)
-SELECT 'guide-andreyan-006', id, 'fluent' FROM directory.categories WHERE slug = 'lang-en' ON CONFLICT DO NOTHING;
+SELECT 'guide-andreyan-006', id, 'fluent' FROM directory.taxonomies WHERE slug = 'lang-en' ON CONFLICT DO NOTHING;
 
 INSERT INTO directory.certification_assignments (certification_id, entity_type, entity_id, issued_at)
 SELECT id, 'guide', 'guide-andreyan-006', '2020-05-15' FROM directory.certifications WHERE slug = 'hpi-membership' ON CONFLICT DO NOTHING;
@@ -346,7 +346,7 @@ INSERT INTO directory.media (entity_type, entity_id, type, url, metadata, sort_o
   ('guide', 'guide-andreyan-006', 'image', 'https://images.unsplash.com/photo-1518684079-3c830dcef090?w=1200&auto=format&fit=crop&q=80', '{}'::jsonb, 1)
 ON CONFLICT DO NOTHING;
 
--- ── Guide 7: Andini Mahardika (Raja Ampat / Marine & Diving) ──
+-- â”€â”€ Guide 7: Andini Mahardika (Raja Ampat / Marine & Diving) â”€â”€
 INSERT INTO directory.tour_guides (id, slug, name, description, destination_id, avatar, cover_image, verified, rating_average, reviews_count, trips_count, year_experience, daily_rate) VALUES
   (
     'guide-andini-007', 'andini-mahardika', 'Andini Mahardika',
@@ -358,15 +358,15 @@ INSERT INTO directory.tour_guides (id, slug, name, description, destination_id, 
   )
 ON CONFLICT (slug) DO NOTHING;
 
-INSERT INTO directory.category_assignments (category_id, entity_type, entity_id)
-SELECT id, 'guide', 'guide-andini-007' FROM directory.categories
+INSERT INTO directory.taxonomy_assignments (taxonomy_id, entity_type, entity_id)
+SELECT id, 'guide_category', 'guide-andini-007' FROM directory.taxonomies
 WHERE slug IN ('spec-bahari', 'spec-fotografi')
 ON CONFLICT DO NOTHING;
 
 INSERT INTO directory.tour_guide_languages (guide_id, category_id, fluency)
-SELECT 'guide-andini-007', id, 'native' FROM directory.categories WHERE slug = 'lang-id' ON CONFLICT DO NOTHING;
+SELECT 'guide-andini-007', id, 'native' FROM directory.taxonomies WHERE slug = 'lang-id' ON CONFLICT DO NOTHING;
 INSERT INTO directory.tour_guide_languages (guide_id, category_id, fluency)
-SELECT 'guide-andini-007', id, 'fluent' FROM directory.categories WHERE slug = 'lang-en' ON CONFLICT DO NOTHING;
+SELECT 'guide-andini-007', id, 'fluent' FROM directory.taxonomies WHERE slug = 'lang-en' ON CONFLICT DO NOTHING;
 
 INSERT INTO directory.certification_assignments (certification_id, entity_type, entity_id, issued_at)
 SELECT id, 'guide', 'guide-andini-007', '2017-03-22' FROM directory.certifications WHERE slug = 'bnsp-dive-guide' ON CONFLICT DO NOTHING;
@@ -399,7 +399,7 @@ INSERT INTO directory.media (entity_type, entity_id, type, url, metadata, sort_o
   ('guide', 'guide-andini-007', 'image', 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=1200&auto=format&fit=crop&q=80', '{}'::jsonb, 1)
 ON CONFLICT DO NOTHING;
 
--- ── Guide 8: Dian Permatasari (Bandung / Heritage & Photography) ──
+-- â”€â”€ Guide 8: Dian Permatasari (Bandung / Heritage & Photography) â”€â”€
 INSERT INTO directory.tour_guides (id, slug, name, description, destination_id, avatar, cover_image, verified, rating_average, reviews_count, trips_count, year_experience, daily_rate) VALUES
   (
     'guide-dian-008', 'dian-permatasari', 'Dian Permatasari',
@@ -411,17 +411,17 @@ INSERT INTO directory.tour_guides (id, slug, name, description, destination_id, 
   )
 ON CONFLICT (slug) DO NOTHING;
 
-INSERT INTO directory.category_assignments (category_id, entity_type, entity_id)
-SELECT id, 'guide', 'guide-dian-008' FROM directory.categories
+INSERT INTO directory.taxonomy_assignments (taxonomy_id, entity_type, entity_id)
+SELECT id, 'guide_category', 'guide-dian-008' FROM directory.taxonomies
 WHERE slug IN ('spec-heritage', 'spec-fotografi', 'spec-budaya')
 ON CONFLICT DO NOTHING;
 
 INSERT INTO directory.tour_guide_languages (guide_id, category_id, fluency)
-SELECT 'guide-dian-008', id, 'native' FROM directory.categories WHERE slug = 'lang-id' ON CONFLICT DO NOTHING;
+SELECT 'guide-dian-008', id, 'native' FROM directory.taxonomies WHERE slug = 'lang-id' ON CONFLICT DO NOTHING;
 INSERT INTO directory.tour_guide_languages (guide_id, category_id, fluency)
-SELECT 'guide-dian-008', id, 'fluent' FROM directory.categories WHERE slug = 'lang-en' ON CONFLICT DO NOTHING;
+SELECT 'guide-dian-008', id, 'fluent' FROM directory.taxonomies WHERE slug = 'lang-en' ON CONFLICT DO NOTHING;
 INSERT INTO directory.tour_guide_languages (guide_id, category_id, fluency)
-SELECT 'guide-dian-008', id, 'conversational' FROM directory.categories WHERE slug = 'lang-fr' ON CONFLICT DO NOTHING;
+SELECT 'guide-dian-008', id, 'conversational' FROM directory.taxonomies WHERE slug = 'lang-fr' ON CONFLICT DO NOTHING;
 
 INSERT INTO directory.certification_assignments (certification_id, entity_type, entity_id, issued_at)
 SELECT id, 'guide', 'guide-dian-008', '2018-06-18' FROM directory.certifications WHERE slug = 'hpi-membership' ON CONFLICT DO NOTHING;

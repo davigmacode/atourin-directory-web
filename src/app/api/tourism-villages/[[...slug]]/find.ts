@@ -54,7 +54,7 @@ export const findController = new Elysia()
         cover_image,
         featured,
         adwi_level_id,
-        adwi_level:categories!adwi_level_id (
+        adwi_level:taxonomies!adwi_level_id (
           id,
           slug,
           name,
@@ -62,7 +62,7 @@ export const findController = new Elysia()
           metadata
         ),
         village_theme_id,
-        village_theme:categories!village_theme_id (
+        village_theme:taxonomies!village_theme_id (
           id,
           slug,
           name,
@@ -111,7 +111,7 @@ export const findController = new Elysia()
       const adwiSlug = `adwi-${adwi.toLowerCase()}`;
       const { data: adwiCat } = await supabaseAdmin
         .schema('directory')
-        .from('categories')
+        .from('taxonomies')
         .select('id')
         .eq('slug', adwiSlug)
         .maybeSingle();
@@ -129,7 +129,7 @@ export const findController = new Elysia()
     if (theme) {
       const { data: themeCat } = await supabaseAdmin
         .schema('directory')
-        .from('categories')
+        .from('taxonomies')
         .select('id')
         .or(`slug.eq.tema-${theme.toLowerCase()},slug.ilike.${theme},name->id.ilike.${theme},name->en.ilike.${theme}`)
         .maybeSingle();
@@ -147,7 +147,7 @@ export const findController = new Elysia()
     if (activity) {
       const { data: catData } = await supabaseAdmin
         .schema('directory')
-        .from('categories')
+        .from('taxonomies')
         .select('id')
         .or(`slug.ilike.${activity},name->id.ilike.${activity},name->en.ilike.${activity}`);
 
@@ -165,10 +165,10 @@ export const findController = new Elysia()
       if (catIds.length > 0) {
         const { data: assData } = await supabaseAdmin
           .schema('directory')
-          .from('category_assignments')
+          .from('taxonomy_assignments')
           .select('entity_id')
-          .eq('entity_type', 'village')
-          .in('category_id', catIds);
+          .eq('entity_type', 'village_category')
+          .in('taxonomy_id', catIds);
         if (assData) {
           matchedVillageIds = matchedVillageIds.concat(assData.map((a) => a.entity_id));
         }
@@ -243,13 +243,13 @@ export const findController = new Elysia()
       };
     }
 
-    // Fetch categories assignments — include entity_types & metadata to resolve ADWI
+    // Fetch taxonomy assignments — include entity_types & metadata to resolve ADWI
     const { data: assignmentsData } = await supabaseAdmin
       .schema('directory')
-      .from('category_assignments')
+      .from('taxonomy_assignments')
       .select(`
         entity_id,
-        category:categories (
+        taxonomy:taxonomies (
           id,
           slug,
           name,
@@ -257,7 +257,7 @@ export const findController = new Elysia()
           metadata
         )
       `)
-      .eq('entity_type', 'village')
+      .eq('entity_type', 'village_category')
       .in('entity_id', villageIds);
 
     // Fetch facilities assignments
@@ -279,7 +279,7 @@ export const findController = new Elysia()
     const categoriesMap: Record<string, any[]> = {};
     (assignmentsData ?? []).forEach((row: any) => {
       const entityId = row.entity_id;
-      const cat = row.category;
+      const cat = row.taxonomy;
       if (!cat) return;
       categoriesMap[entityId] = categoriesMap[entityId] || [];
       categoriesMap[entityId].push(cat);

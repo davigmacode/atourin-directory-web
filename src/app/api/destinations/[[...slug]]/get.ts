@@ -51,17 +51,17 @@ export const getController = new Elysia()
       return { error: 'Destination not found' };
     }
 
-    // 2. Fetch category assignments
+    // 2. Fetch taxonomy assignments
     const { data: assignmentsData, error: assignError } = await supabaseAdmin
       .schema('directory')
-      .from('category_assignments')
+      .from('taxonomy_assignments')
       .select(`
-        category:categories (
+        taxonomy:taxonomies (
           slug,
           name
         )
       `)
-      .eq('entity_type', 'destination')
+      .eq('entity_type', 'destination_category')
       .eq('entity_id', row.id);
 
     if (assignError) {
@@ -92,7 +92,7 @@ export const getController = new Elysia()
 
     const tags = (assignmentsData ?? [])
       .map((ca: any) => {
-        const category = ca.category;
+        const category = ca.taxonomy;
         if (!category) return null;
         const nameObj = category.name;
         let tagName = '';

@@ -58,19 +58,20 @@ export const getController = new Elysia()
       return { error: 'Attraction not found' };
     }
 
-    // 2. Fetch category assignments
+    // 2. Fetch taxonomy assignments
     const { data: assignmentsData, error: assignError } = await supabaseAdmin
       .schema('directory')
-      .from('category_assignments')
+      .from('taxonomy_assignments')
       .select(`
-        category:categories (
+        taxonomy:taxonomies (
           id,
           slug,
           name,
-          metadata
+          metadata,
+          entity_types
         )
       `)
-      .eq('entity_type', 'attraction')
+      .eq('entity_type', 'attraction_category')
       .eq('entity_id', row.id);
 
     if (assignError) {
@@ -141,9 +142,9 @@ export const getController = new Elysia()
       return { error: mediaError.message };
     }
 
-    // Process categories
+    // Process taxonomies
     const categories = (assignmentsData ?? []).map((ca: any) => {
-      const cat = ca.category;
+      const cat = ca.taxonomy;
       if (!cat) return null;
       const nameObj = cat.name;
       let catName = '';
@@ -156,6 +157,7 @@ export const getController = new Elysia()
         id: cat.id,
         slug: cat.slug,
         name: catName,
+        entity_types: cat.entity_types,
         metadata: cat.metadata || {},
       };
     }).filter((c) => c !== null);

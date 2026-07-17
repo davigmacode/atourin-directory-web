@@ -1,14 +1,14 @@
-export interface CategoryMetadata {
+export interface TaxonomyMetadata {
   icon?: string;
   color?: string;
 }
 
-export interface Category {
+export interface Taxonomy {
   id: string;
   slug: string;
   name: string;
   entity_types?: string[];
-  metadata: CategoryMetadata;
+  metadata: TaxonomyMetadata;
   createdAt?: string;
   updatedAt?: string;
 }

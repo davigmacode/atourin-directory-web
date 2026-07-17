@@ -44,7 +44,7 @@ CREATE TRIGGER tour_guides_updated_at
 -- This join table adds fluency rating per guide per language.
 CREATE TABLE IF NOT EXISTS directory.tour_guide_languages (
   guide_id     text NOT NULL REFERENCES directory.tour_guides(id) ON DELETE CASCADE,
-  category_id  text NOT NULL REFERENCES directory.categories(id) ON DELETE CASCADE,
+  category_id  text NOT NULL REFERENCES directory.taxonomies(id) ON DELETE CASCADE,
   fluency      text NOT NULL DEFAULT 'conversational',
   created_at   timestamptz NOT NULL DEFAULT now(),
   PRIMARY KEY (guide_id, category_id),
