@@ -115,11 +115,11 @@ export const findController = new Elysia()
 
     // 5. Category Filter
     if (category) {
-      // Find taxonomy IDs matching slug or name
       const { data: catData } = await supabaseAdmin
         .schema('directory')
         .from('taxonomies')
         .select('id')
+        .eq('type', 'category')
         .or(`slug.ilike.${category},name->>id.ilike.${category},name->>en.ilike.${category}`);
 
       const targetTaxonomyIds = catData ? catData.map((c) => c.id) : [];
@@ -130,15 +130,13 @@ export const findController = new Elysia()
         };
       }
 
-      // Query taxonomy assignments
       const { data: assData } = await supabaseAdmin
         .schema('directory')
-        .from('taxonomy_assignments')
-        .select('entity_id')
-        .eq('entity_type', 'attraction_category')
+        .from('attraction_categories')
+        .select('attraction_id')
         .in('taxonomy_id', targetTaxonomyIds);
 
-      const matchedAttractionIds = assData ? assData.map((a) => a.entity_id) : [];
+      const matchedAttractionIds = assData ? assData.map((a) => a.attraction_id) : [];
       if (matchedAttractionIds.length === 0) {
         return {
           data: [],
@@ -234,21 +232,21 @@ export const findController = new Elysia()
       };
     }
 
-    // 10. Fetch taxonomy assignments for paged attractions
+    // 10. Fetch category assignments for paged attractions
     const { data: assignmentsData, error: assignError } = await supabaseAdmin
       .schema('directory')
-      .from('taxonomy_assignments')
+      .from('attraction_categories')
       .select(`
-        entity_id,
+        attraction_id,
         taxonomy:taxonomies (
           id,
           slug,
           name,
+          type,
           metadata
         )
       `)
-      .eq('entity_type', 'attraction_category')
-      .in('entity_id', attractionIds);
+      .in('attraction_id', attractionIds);
 
     if (assignError) {
       console.error('[api/attractions GET assignments]', assignError.message);
@@ -319,7 +317,7 @@ export const findController = new Elysia()
     // Process taxonomies lookup map
     const categoriesMap: Record<string, Taxonomy[]> = {};
     (assignmentsData ?? []).forEach((row: any) => {
-      const entityId = row.entity_id;
+      const entityId = row.attraction_id;
       const cat = row.taxonomy;
       if (!cat) return;
 
@@ -338,7 +336,7 @@ export const findController = new Elysia()
         id: cat.id,
         slug: cat.slug,
         name: catName,
-        entity_types: cat.entity_types,
+        type: cat.type,
         metadata: cat.metadata || {},
       });
     });

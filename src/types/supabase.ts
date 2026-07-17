@@ -9,6 +9,39 @@
 export type Database = {
   directory: {
     Tables: {
+      attraction_categories: {
+        Row: {
+          attraction_id: string
+          created_at: string
+          taxonomy_id: string
+        }
+        Insert: {
+          attraction_id: string
+          created_at?: string
+          taxonomy_id: string
+        }
+        Update: {
+          attraction_id?: string
+          created_at?: string
+          taxonomy_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "attraction_categories_attraction_id_fkey"
+            columns: ["attraction_id"]
+            isOneToOne: false
+            referencedRelation: "attractions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "attraction_categories_taxonomy_id_fkey"
+            columns: ["taxonomy_id"]
+            isOneToOne: false
+            referencedRelation: "taxonomies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       attractions: {
         Row: {
           cover_image: Json
@@ -157,6 +190,39 @@ export type Database = {
         }
         Relationships: []
       }
+      destination_categories: {
+        Row: {
+          created_at: string
+          destination_id: string
+          taxonomy_id: string
+        }
+        Insert: {
+          created_at?: string
+          destination_id: string
+          taxonomy_id: string
+        }
+        Update: {
+          created_at?: string
+          destination_id?: string
+          taxonomy_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "destination_categories_destination_id_fkey"
+            columns: ["destination_id"]
+            isOneToOne: false
+            referencedRelation: "destinations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "destination_categories_taxonomy_id_fkey"
+            columns: ["taxonomy_id"]
+            isOneToOne: false
+            referencedRelation: "taxonomies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       destinations: {
         Row: {
           attractions_count: number
@@ -277,6 +343,42 @@ export type Database = {
             columns: ["facility_id"]
             isOneToOne: false
             referencedRelation: "facilities"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      guide_categories: {
+        Row: {
+          created_at: string
+          guide_id: string
+          is_primary: boolean
+          taxonomy_id: string
+        }
+        Insert: {
+          created_at?: string
+          guide_id: string
+          is_primary?: boolean
+          taxonomy_id: string
+        }
+        Update: {
+          created_at?: string
+          guide_id?: string
+          is_primary?: boolean
+          taxonomy_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "guide_categories_guide_id_fkey"
+            columns: ["guide_id"]
+            isOneToOne: false
+            referencedRelation: "tour_guides"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "guide_categories_taxonomy_id_fkey"
+            columns: ["taxonomy_id"]
+            isOneToOne: false
+            referencedRelation: "taxonomies"
             referencedColumns: ["id"]
           },
         ]
@@ -430,82 +532,53 @@ export type Database = {
       taxonomies: {
         Row: {
           created_at: string
-          entity_types: string[]
           id: string
           metadata: Json
           name: Json
           slug: string
+          type: string
           updated_at: string
         }
         Insert: {
           created_at?: string
-          entity_types?: string[]
           id?: string
           metadata?: Json
           name?: Json
           slug: string
+          type: string
           updated_at?: string
         }
         Update: {
           created_at?: string
-          entity_types?: string[]
           id?: string
           metadata?: Json
           name?: Json
           slug?: string
+          type?: string
           updated_at?: string
         }
         Relationships: []
-      }
-      taxonomy_assignments: {
-        Row: {
-          created_at: string
-          entity_id: string
-          entity_type: string
-          metadata: Json
-          taxonomy_id: string
-        }
-        Insert: {
-          created_at?: string
-          entity_id: string
-          entity_type: string
-          metadata?: Json
-          taxonomy_id: string
-        }
-        Update: {
-          created_at?: string
-          entity_id?: string
-          entity_type?: string
-          metadata?: Json
-          taxonomy_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "taxonomy_assignments_taxonomy_id_fkey"
-            columns: ["taxonomy_id"]
-            isOneToOne: false
-            referencedRelation: "taxonomies"
-            referencedColumns: ["id"]
-          },
-        ]
       }
       tour_guide_languages: {
         Row: {
           category_id: string
           created_at: string
           fluency: string
+          fluency_rate: number | null
           guide_id: string
         }
         Insert: {
           category_id: string
           created_at?: string
           fluency?: string
+          fluency_rate?: number | null
           guide_id: string
         }
         Update: {
           category_id?: string
           created_at?: string
           fluency?: string
+          fluency_rate?: number | null
           guide_id?: string
         }
         Relationships: [
@@ -757,6 +830,72 @@ export type Database = {
             columns: ["village_theme_id"]
             isOneToOne: false
             referencedRelation: "taxonomies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      village_activities: {
+        Row: {
+          created_at: string
+          taxonomy_id: string
+          village_id: string
+        }
+        Insert: {
+          created_at?: string
+          taxonomy_id: string
+          village_id: string
+        }
+        Update: {
+          created_at?: string
+          taxonomy_id?: string
+          village_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "village_activities_taxonomy_id_fkey"
+            columns: ["taxonomy_id"]
+            isOneToOne: false
+            referencedRelation: "taxonomies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "village_activities_village_id_fkey"
+            columns: ["village_id"]
+            isOneToOne: false
+            referencedRelation: "tourism_villages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      village_categories: {
+        Row: {
+          created_at: string
+          taxonomy_id: string
+          village_id: string
+        }
+        Insert: {
+          created_at?: string
+          taxonomy_id: string
+          village_id: string
+        }
+        Update: {
+          created_at?: string
+          taxonomy_id?: string
+          village_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "village_categories_taxonomy_id_fkey"
+            columns: ["taxonomy_id"]
+            isOneToOne: false
+            referencedRelation: "taxonomies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "village_categories_village_id_fkey"
+            columns: ["village_id"]
+            isOneToOne: false
+            referencedRelation: "tourism_villages"
             referencedColumns: ["id"]
           },
         ]

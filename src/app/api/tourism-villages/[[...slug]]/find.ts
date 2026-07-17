@@ -58,7 +58,7 @@ export const findController = new Elysia()
           id,
           slug,
           name,
-          entity_types,
+          type,
           metadata
         ),
         village_theme_id,
@@ -66,7 +66,7 @@ export const findController = new Elysia()
           id,
           slug,
           name,
-          entity_types,
+          type,
           metadata
         ),
         rating_average,
@@ -108,12 +108,12 @@ export const findController = new Elysia()
 
     // 3. ADWI Level Filter
     if (adwi) {
-      const adwiSlug = `adwi-${adwi.toLowerCase()}`;
       const { data: adwiCat } = await supabaseAdmin
         .schema('directory')
         .from('taxonomies')
         .select('id')
-        .eq('slug', adwiSlug)
+        .eq('type', 'adwi_level')
+        .eq('slug', adwi.toLowerCase())
         .maybeSingle();
 
       if (!adwiCat) {
@@ -131,7 +131,8 @@ export const findController = new Elysia()
         .schema('directory')
         .from('taxonomies')
         .select('id')
-        .or(`slug.eq.tema-${theme.toLowerCase()},slug.ilike.${theme},name->id.ilike.${theme},name->en.ilike.${theme}`)
+        .eq('type', 'village_theme')
+        .or(`slug.eq.${theme.toLowerCase()},slug.ilike.${theme},name->id.ilike.${theme},name->en.ilike.${theme}`)
         .maybeSingle();
 
       if (!themeCat) {
@@ -149,6 +150,7 @@ export const findController = new Elysia()
         .schema('directory')
         .from('taxonomies')
         .select('id')
+        .eq('type', 'village_activity')
         .or(`slug.ilike.${activity},name->id.ilike.${activity},name->en.ilike.${activity}`);
 
       const { data: facData } = await supabaseAdmin
@@ -165,12 +167,11 @@ export const findController = new Elysia()
       if (catIds.length > 0) {
         const { data: assData } = await supabaseAdmin
           .schema('directory')
-          .from('taxonomy_assignments')
-          .select('entity_id')
-          .eq('entity_type', 'village_category')
+          .from('village_activities')
+          .select('village_id')
           .in('taxonomy_id', catIds);
         if (assData) {
-          matchedVillageIds = matchedVillageIds.concat(assData.map((a) => a.entity_id));
+          matchedVillageIds = matchedVillageIds.concat(assData.map((a) => a.village_id));
         }
       }
 
@@ -243,22 +244,37 @@ export const findController = new Elysia()
       };
     }
 
-    // Fetch taxonomy assignments — include entity_types & metadata to resolve ADWI
+    // Fetch category assignments
     const { data: assignmentsData } = await supabaseAdmin
       .schema('directory')
-      .from('taxonomy_assignments')
+      .from('village_categories')
       .select(`
-        entity_id,
+        village_id,
         taxonomy:taxonomies (
           id,
           slug,
           name,
-          entity_types,
+          type,
           metadata
         )
       `)
-      .eq('entity_type', 'village_category')
-      .in('entity_id', villageIds);
+      .in('village_id', villageIds);
+
+    // Fetch activity assignments
+    const { data: activitiesData } = await supabaseAdmin
+      .schema('directory')
+      .from('village_activities')
+      .select(`
+        village_id,
+        taxonomy:taxonomies (
+          id,
+          slug,
+          name,
+          type,
+          metadata
+        )
+      `)
+      .in('village_id', villageIds);
 
     // Fetch facilities assignments
     const { data: facilityData } = await supabaseAdmin
@@ -278,11 +294,20 @@ export const findController = new Elysia()
     // Map helpers
     const categoriesMap: Record<string, any[]> = {};
     (assignmentsData ?? []).forEach((row: any) => {
-      const entityId = row.entity_id;
+      const entityId = row.village_id;
       const cat = row.taxonomy;
       if (!cat) return;
       categoriesMap[entityId] = categoriesMap[entityId] || [];
       categoriesMap[entityId].push(cat);
+    });
+
+    const activitiesMap: Record<string, any[]> = {};
+    (activitiesData ?? []).forEach((row: any) => {
+      const entityId = row.village_id;
+      const act = row.taxonomy;
+      if (!act) return;
+      activitiesMap[entityId] = activitiesMap[entityId] || [];
+      activitiesMap[entityId].push(act);
     });
 
     const facilitiesMap: Record<string, any[]> = {};
@@ -297,11 +322,12 @@ export const findController = new Elysia()
     // Map output data to frontend format
     const output = (dbData ?? []).map((row: any) => {
       const cats = categoriesMap[row.id] || [];
+      const acts = activitiesMap[row.id] || [];
       const facs = facilitiesMap[row.id] || [];
 
       // Determine village theme from joined relation
       const themeCat = Array.isArray(row.village_theme) ? row.village_theme[0] : row.village_theme;
-      const themeVal = themeCat?.slug?.replace('tema-', '') || 'desa-wisata';
+      const themeVal = themeCat?.slug || 'desa-wisata';
       let themeStr = 'Desa Wisata';
       if (themeCat) {
         const nameObj = themeCat.name;
@@ -312,28 +338,25 @@ export const findController = new Elysia()
         }
       }
 
-      // Activities compilation — resolve from category_assignments (entity_types contains 'village_activity')
-      const activities: { id: string; slug: string; name: string; entityTypes: string[]; metadata: Record<string, any> }[] = [];
-      cats.forEach((c) => {
-        if (Array.isArray(c.entity_types) && c.entity_types.includes('village_activity')) {
-          const nameObj = c.name;
-          let actName = '';
-          if (typeof nameObj === 'string') {
-            actName = nameObj;
-          } else if (nameObj && typeof nameObj === 'object') {
-            actName = nameObj[lang] || nameObj.id || nameObj.en || '';
-          }
-          if (actName) activities.push({
-            id: c.id,
-            slug: c.slug,
-            name: actName,
-            entityTypes: c.entity_types,
-            metadata: c.metadata || {}
-          });
+      // Activities compilation — from village_activities table
+      const activities: { id: string; slug: string; name: string; type: string; metadata: Record<string, any> }[] = acts.map((c: any) => {
+        const nameObj = c.name;
+        let actName = '';
+        if (typeof nameObj === 'string') {
+          actName = nameObj;
+        } else if (nameObj && typeof nameObj === 'object') {
+          actName = nameObj[lang] || nameObj.id || nameObj.en || '';
         }
+        return {
+          id: c.id,
+          slug: c.slug,
+          name: actName,
+          type: c.type,
+          metadata: c.metadata || {}
+        };
       });
       if (activities.length === 0) {
-        activities.push({ id: '', slug: 'homestay', name: 'Homestay', entityTypes: ['village_activity'], metadata: {} });
+        activities.push({ id: '', slug: 'homestay', name: 'Homestay', type: 'village_activity', metadata: {} });
       }
 
       const rawDestination = Array.isArray(row.destination)
@@ -365,7 +388,7 @@ export const findController = new Elysia()
 
       // Determine ADWI level from joined relation
       const adwiCat = Array.isArray(row.adwi_level) ? row.adwi_level[0] : row.adwi_level;
-      const adwiVal = adwiCat?.slug?.replace('adwi-', '') || 'mandiri';
+      const adwiVal = adwiCat?.slug || 'mandiri';
       let adwiCapitalized = 'Mandiri';
       if (adwiCat) {
         const nameObj = adwiCat.name;

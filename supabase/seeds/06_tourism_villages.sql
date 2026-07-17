@@ -9,7 +9,7 @@ INSERT INTO directory.tourism_villages (
     'desa-wae-rebo', 'Desa Wae Rebo', '5315',
     '{"url": "https://images.unsplash.com/photo-1570214476695-19bd467e6f7a?w=800&auto=format&fit=crop&q=60"}'::jsonb,
     '{"id": "Desa adat terpencil di pegunungan Manggarai dengan rumah adat kerucut Mbaru Niang yang legendaris.", "en": "A remote traditional village in the Manggarai mountains featuring the legendary conical Mbaru Niang houses."}'::jsonb,
-    true, (SELECT id FROM directory.taxonomies WHERE slug = 'adwi-mandiri'), (SELECT id FROM directory.taxonomies WHERE slug = 'tema-budaya'), 4.95, 245,
+    true, (SELECT id FROM directory.taxonomies WHERE slug = 'mandiri' AND type = 'adwi_level'), (SELECT id FROM directory.taxonomies WHERE slug = 'budaya' AND type = 'village_theme'), 4.95, 245,
     7, 350000, 50, 'Mbaru Niang',
     '{"id": "Kecamatan Satarmese Barat, Kabupaten Manggarai, Nusa Tenggara Timur", "en": "West Satarmese District, Manggarai Regency, East Nusa Tenggara"}'::jsonb,
     '{"id": "Terletak di pegunungan terpencil. Akses jalan aspal hanya sampai ke pos Denge, dilanjutkan dengan trekking mendaki bukit terjal hutan hujan sekitar 2-3 jam. Tidak ramah kursi roda.", "en": "Located in remote highlands. Road access only reaches Denge post, followed by a steep rainforest uphill trek of about 2-3 hours. Not wheelchair accessible."}'::jsonb,
@@ -20,7 +20,7 @@ INSERT INTO directory.tourism_villages (
     'desa-penglipuran', 'Desa Penglipuran', '5104',
     '{"url": "https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=800&auto=format&fit=crop&q=60"}'::jsonb,
     '{"id": "Salah satu desa paling bersih di dunia dengan tata ruang adat Bali kuno yang sangat asri dan tertata rapi.", "en": "One of the cleanest villages in the world boasting pristine ancient Balinese traditional layout and architecture."}'::jsonb,
-    true, (SELECT id FROM directory.taxonomies WHERE slug = 'adwi-mandiri'), (SELECT id FROM directory.taxonomies WHERE slug = 'tema-budaya'), 4.88, 512,
+    true, (SELECT id FROM directory.taxonomies WHERE slug = 'mandiri' AND type = 'adwi_level'), (SELECT id FROM directory.taxonomies WHERE slug = 'budaya' AND type = 'village_theme'), 4.88, 512,
     76, 200000, 300, 'Pekarangan seragam',
     '{"id": "Kecamatan Bangli, Kabupaten Bangli, Bali", "en": "Bangli District, Bangli Regency, Bali"}'::jsonb,
     '{"id": "Sangat ramah disabilitas. Seluruh area jalan desa dilapisi paving block datar tanpa tanjakan terjal, bebas kendaraan bermotor.", "en": "Very wheelchair friendly. The entire village paths are paved flat block, with no steep climbs, and completely motor vehicle free."}'::jsonb,
@@ -31,7 +31,7 @@ INSERT INTO directory.tourism_villages (
     'desa-nglanggeran', 'Desa Nglanggeran', '3404',
     '{"url": "https://images.unsplash.com/photo-1555400038-63f5ba517a47?w=800&auto=format&fit=crop&q=60"}'::jsonb,
     '{"id": "Desa wisata terbaik ASEAN dengan keunikan situs Gunung Api Purba dan budidaya cokelat lokal.", "en": "Best ASEAN tourism village featuring the unique Ancient Volcano site and local cocoa farming tours."}'::jsonb,
-    false, (SELECT id FROM directory.taxonomies WHERE slug = 'adwi-maju'), (SELECT id FROM directory.taxonomies WHERE slug = 'tema-alam'), 4.82, 189,
+    false, (SELECT id FROM directory.taxonomies WHERE slug = 'maju' AND type = 'adwi_level'), (SELECT id FROM directory.taxonomies WHERE slug = 'alam' AND type = 'village_theme'), 4.82, 189,
     38, 175000, 150, 'Gunung api purba',
     '{"id": "Kecamatan Patuk, Kabupaten Gunungkidul, DI Yogyakarta", "en": "Patuk District, Gunungkidul Regency, DI Yogyakarta"}'::jsonb,
     '{"id": "Kawasan desa berbukit-bukit. Akses ke puncak gunung api purba berupa jalur trekking tanah dan batuan terjal berundak yang tidak ramah disabilitas.", "en": "Hilly village terrain. Access to the summit of the ancient volcano is via steep dirt and rock trekking paths not suitable for disabled access."}'::jsonb,
@@ -42,7 +42,7 @@ INSERT INTO directory.tourism_villages (
     'desa-pemuteran', 'Desa Pemuteran', '5103',
     '{"url": "https://images.unsplash.com/photo-1604999333679-b86d54738315?w=800&auto=format&fit=crop&q=60"}'::jsonb,
     '{"id": "Desa pesisir Bali barat yang mendunia berkat pelestarian terumbu karang berbasis teknologi Biorock.", "en": "West Bali coastal village globally acclaimed for its community-based Biorock technology coral reef conservation."}'::jsonb,
-    false, (SELECT id FROM directory.taxonomies WHERE slug = 'adwi-maju'), (SELECT id FROM directory.taxonomies WHERE slug = 'tema-bahari'), 4.85, 134,
+    false, (SELECT id FROM directory.taxonomies WHERE slug = 'maju' AND type = 'adwi_level'), (SELECT id FROM directory.taxonomies WHERE slug = 'bahari' AND type = 'village_theme'), 4.85, 134,
     24, 250000, 100, 'Bio-rock coral',
     '{"id": "Kecamatan Gerokgak, Kabupaten Buleleng, Bali", "en": "Gerokgak District, Buleleng Regency, Bali"}'::jsonb,
     '{"id": "Sangat mudah diakses di tepi jalan raya utama Bali Utara. Area pantai landai berpasir hitam yang mudah dijelajahi.", "en": "Very accessible on the main North Bali highway. Flat sandy beachfront area that is easy to explore."}'::jsonb,
@@ -53,7 +53,7 @@ INSERT INTO directory.tourism_villages (
     'desa-pentingsari', 'Desa Pentingsari', '3404',
     '{"url": "https://images.unsplash.com/photo-1518684079-3c830dcef090?w=800&auto=format&fit=crop&q=60"}'::jsonb,
     '{"id": "Desa wisata perintis di lereng Merapi dengan program interaksi budaya pedesaan dan pertanian tradisional.", "en": "Pioneering tourism village on the slopes of Merapi offering rural cultural interactions and traditional farming."}'::jsonb,
-    false, (SELECT id FROM directory.taxonomies WHERE slug = 'adwi-mandiri'), (SELECT id FROM directory.taxonomies WHERE slug = 'tema-pertanian'), 4.78, 98,
+    false, (SELECT id FROM directory.taxonomies WHERE slug = 'mandiri' AND type = 'adwi_level'), (SELECT id FROM directory.taxonomies WHERE slug = 'pertanian' AND type = 'village_theme'), 4.78, 98,
     48, 165000, 200, 'Sawah terasering',
     '{"id": "Kecamatan Cangkringan, Kabupaten Sleman, DI Yogyakarta", "en": "Cangkringan District, Sleman Regency, DI Yogyakarta"}'::jsonb,
     '{"id": "Area perumahan warga datar dan mudah diakses. Sebagian jalur persawahan berundak tanah liat yang licin saat hujan.", "en": "Residential areas are flat and easy to access. Some paddy field trails are terraced clay paths that get slippery when raining."}'::jsonb,
@@ -64,7 +64,7 @@ INSERT INTO directory.tourism_villages (
     'desa-sasak-sade', 'Desa Sasak Sade', '5202',
     '{"url": "https://images.unsplash.com/photo-1589394815804-964ed0be2eb5?w=800&auto=format&fit=crop&q=60"}'::jsonb,
     '{"id": "Desa adat suku Sasak Lombok yang mempertahankan rumah jerami beralas kotoran kerbau dan tradisi tenun ikat.", "en": "Sasak tribe traditional village in Lombok maintaining thatched houses with clay-dung floors and ikat weaving tradition."}'::jsonb,
-    false, (SELECT id FROM directory.taxonomies WHERE slug = 'adwi-berkembang'), (SELECT id FROM directory.taxonomies WHERE slug = 'tema-budaya'), 4.70, 320,
+    false, (SELECT id FROM directory.taxonomies WHERE slug = 'berkembang' AND type = 'adwi_level'), (SELECT id FROM directory.taxonomies WHERE slug = 'budaya' AND type = 'village_theme'), 4.70, 320,
     150, 0, 250, 'Rumah Sasak adat',
     '{"id": "Kecamatan Pujut, Kabupaten Lombok Tengah, Nusa Tenggara Barat", "en": "Pujut District, Central Lombok Regency, West Nusa Tenggara"}'::jsonb,
     '{"id": "Akses jalan desa berupa undakan tanah berundak dan gang sempit beraspal. Sedikit menyulitkan pengguna kursi roda.", "en": "Village access is earthen steps and narrow paved alleyways. Slightly challenging for wheelchair users."}'::jsonb,
@@ -75,7 +75,7 @@ INSERT INTO directory.tourism_villages (
     'desa-wisata-alam-endah', 'Desa Wisata Alam Endah', '3273',
     '{"url": "https://images.unsplash.com/photo-1596422846543-75c6fc197f07?w=800&auto=format&fit=crop&q=60"}'::jsonb,
     '{"id": "Desa agrowisata subur di kawasan wisata Ciwidey dikelilingi kebun strawberry dan kebun teh berhawa sejuk.", "en": "Fertile agrotourism village in the Ciwidey area surrounded by strawberry farms and cool highland tea plantations."}'::jsonb,
-    false, (SELECT id FROM directory.taxonomies WHERE slug = 'adwi-maju'), (SELECT id FROM directory.taxonomies WHERE slug = 'tema-pertanian'), 4.75, 112,
+    false, (SELECT id FROM directory.taxonomies WHERE slug = 'maju' AND type = 'adwi_level'), (SELECT id FROM directory.taxonomies WHERE slug = 'pertanian' AND type = 'village_theme'), 4.75, 112,
     28, 175000, 150, 'Kawah Putih & Ranca Upas',
     '{"id": "Kecamatan Rancabali, Kabupaten Bandung, Jawa Barat", "en": "Rancabali District, Bandung Regency, West Java"}'::jsonb,
     '{"id": "Jalur aspal mulus masuk ke pusat desa. Ramah kendaraan roda empat dan bus sedang. Jalur ke kebun strawberry datar.", "en": "Smooth paved roads into the village center. Accessible by cars and mid-sized buses. Trails to strawberry farms are flat."}'::jsonb,
@@ -86,7 +86,7 @@ INSERT INTO directory.tourism_villages (
     'desa-wisata-ciptagelar', 'Desa Wisata Ciptagelar', '3273',
     '{"url": "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=800&auto=format&fit=crop&q=60"}'::jsonb,
     '{"id": "Kampung adat Kasepuhan Banten Kidul yang memegang kuat adat bertani padi tradisional dan kemandirian pangan.", "en": "Traditional Kasepuhan Banten Kidul settlement firmly upholding ancestral paddy farming rituals and food self-sufficiency."}'::jsonb,
-    false, (SELECT id FROM directory.taxonomies WHERE slug = 'adwi-mandiri'), (SELECT id FROM directory.taxonomies WHERE slug = 'tema-budaya'), 4.85, 76,
+    false, (SELECT id FROM directory.taxonomies WHERE slug = 'mandiri' AND type = 'adwi_level'), (SELECT id FROM directory.taxonomies WHERE slug = 'budaya' AND type = 'village_theme'), 4.85, 76,
     12, 250000, 80, 'Kasepuhan adat Sunda',
     '{"id": "Kecamatan Cisolok, Kabupaten Sukabumi, Jawa Barat", "en": "Cisolok District, Sukabumi Regency, West Java"}'::jsonb,
     '{"id": "Medan perbukitan sangat terjal berbatu. Direkomendasikan menggunakan kendaraan 4WD (Jip) untuk masuk ke desa. Sangat tidak ramah kursi roda.", "en": "Extremely steep and rocky mountainous terrain. 4WD vehicles (Jeep) are highly recommended to enter. Not wheelchair friendly."}'::jsonb,
@@ -95,39 +95,39 @@ INSERT INTO directory.tourism_villages (
   );
 
 -- Ã¢â€â‚¬Ã¢â€â‚¬ 2. Category Assignments Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
-INSERT INTO directory.taxonomy_assignments (taxonomy_id, entity_type, entity_id) VALUES
+INSERT INTO directory.village_activities (village_id, taxonomy_id) VALUES
   -- Wae Rebo
-  ((SELECT id FROM directory.taxonomies WHERE slug = 'aktivitas-tarian'), 'village_category', (SELECT id FROM directory.tourism_villages WHERE slug = 'desa-wae-rebo')),
-  ((SELECT id FROM directory.taxonomies WHERE slug = 'aktivitas-workshop'), 'village_category', (SELECT id FROM directory.tourism_villages WHERE slug = 'desa-wae-rebo')),
-  ((SELECT id FROM directory.taxonomies WHERE slug = 'aktivitas-homestay'), 'village_category', (SELECT id FROM directory.tourism_villages WHERE slug = 'desa-wae-rebo')),
+  ((SELECT id FROM directory.tourism_villages WHERE slug = 'desa-wae-rebo'), (SELECT id FROM directory.taxonomies WHERE slug = 'tarian' AND type = 'village_activity')),
+  ((SELECT id FROM directory.tourism_villages WHERE slug = 'desa-wae-rebo'), (SELECT id FROM directory.taxonomies WHERE slug = 'workshop' AND type = 'village_activity')),
+  ((SELECT id FROM directory.tourism_villages WHERE slug = 'desa-wae-rebo'), (SELECT id FROM directory.taxonomies WHERE slug = 'homestay' AND type = 'village_activity')),
 
   -- Penglipuran
-  ((SELECT id FROM directory.taxonomies WHERE slug = 'aktivitas-workshop'), 'village_category', (SELECT id FROM directory.tourism_villages WHERE slug = 'desa-penglipuran')),
-  ((SELECT id FROM directory.taxonomies WHERE slug = 'aktivitas-homestay'), 'village_category', (SELECT id FROM directory.tourism_villages WHERE slug = 'desa-penglipuran')),
+  ((SELECT id FROM directory.tourism_villages WHERE slug = 'desa-penglipuran'), (SELECT id FROM directory.taxonomies WHERE slug = 'workshop' AND type = 'village_activity')),
+  ((SELECT id FROM directory.tourism_villages WHERE slug = 'desa-penglipuran'), (SELECT id FROM directory.taxonomies WHERE slug = 'homestay' AND type = 'village_activity')),
 
   -- Nglanggeran
-  ((SELECT id FROM directory.taxonomies WHERE slug = 'aktivitas-trekking'), 'village_category', (SELECT id FROM directory.tourism_villages WHERE slug = 'desa-nglanggeran')),
-  ((SELECT id FROM directory.taxonomies WHERE slug = 'aktivitas-homestay'), 'village_category', (SELECT id FROM directory.tourism_villages WHERE slug = 'desa-nglanggeran')),
+  ((SELECT id FROM directory.tourism_villages WHERE slug = 'desa-nglanggeran'), (SELECT id FROM directory.taxonomies WHERE slug = 'trekking' AND type = 'village_activity')),
+  ((SELECT id FROM directory.tourism_villages WHERE slug = 'desa-nglanggeran'), (SELECT id FROM directory.taxonomies WHERE slug = 'homestay' AND type = 'village_activity')),
 
   -- Pemuteran
-  ((SELECT id FROM directory.taxonomies WHERE slug = 'aktivitas-snorkel'), 'village_category', (SELECT id FROM directory.tourism_villages WHERE slug = 'desa-pemuteran')),
-  ((SELECT id FROM directory.taxonomies WHERE slug = 'aktivitas-homestay'), 'village_category', (SELECT id FROM directory.tourism_villages WHERE slug = 'desa-pemuteran')),
+  ((SELECT id FROM directory.tourism_villages WHERE slug = 'desa-pemuteran'), (SELECT id FROM directory.taxonomies WHERE slug = 'snorkel' AND type = 'village_activity')),
+  ((SELECT id FROM directory.tourism_villages WHERE slug = 'desa-pemuteran'), (SELECT id FROM directory.taxonomies WHERE slug = 'homestay' AND type = 'village_activity')),
 
   -- Pentingsari
-  ((SELECT id FROM directory.taxonomies WHERE slug = 'aktivitas-kuliner'), 'village_category', (SELECT id FROM directory.tourism_villages WHERE slug = 'desa-pentingsari')),
-  ((SELECT id FROM directory.taxonomies WHERE slug = 'aktivitas-homestay'), 'village_category', (SELECT id FROM directory.tourism_villages WHERE slug = 'desa-pentingsari')),
+  ((SELECT id FROM directory.tourism_villages WHERE slug = 'desa-pentingsari'), (SELECT id FROM directory.taxonomies WHERE slug = 'kuliner' AND type = 'village_activity')),
+  ((SELECT id FROM directory.tourism_villages WHERE slug = 'desa-pentingsari'), (SELECT id FROM directory.taxonomies WHERE slug = 'homestay' AND type = 'village_activity')),
 
   -- Sasak Sade
-  ((SELECT id FROM directory.taxonomies WHERE slug = 'aktivitas-tarian'), 'village_category', (SELECT id FROM directory.tourism_villages WHERE slug = 'desa-sasak-sade')),
-  ((SELECT id FROM directory.taxonomies WHERE slug = 'aktivitas-workshop'), 'village_category', (SELECT id FROM directory.tourism_villages WHERE slug = 'desa-sasak-sade')),
+  ((SELECT id FROM directory.tourism_villages WHERE slug = 'desa-sasak-sade'), (SELECT id FROM directory.taxonomies WHERE slug = 'tarian' AND type = 'village_activity')),
+  ((SELECT id FROM directory.tourism_villages WHERE slug = 'desa-sasak-sade'), (SELECT id FROM directory.taxonomies WHERE slug = 'workshop' AND type = 'village_activity')),
 
   -- Alam Endah
-  ((SELECT id FROM directory.taxonomies WHERE slug = 'aktivitas-kuliner'), 'village_category', (SELECT id FROM directory.tourism_villages WHERE slug = 'desa-wisata-alam-endah')),
-  ((SELECT id FROM directory.taxonomies WHERE slug = 'aktivitas-homestay'), 'village_category', (SELECT id FROM directory.tourism_villages WHERE slug = 'desa-wisata-alam-endah')),
+  ((SELECT id FROM directory.tourism_villages WHERE slug = 'desa-wisata-alam-endah'), (SELECT id FROM directory.taxonomies WHERE slug = 'kuliner' AND type = 'village_activity')),
+  ((SELECT id FROM directory.tourism_villages WHERE slug = 'desa-wisata-alam-endah'), (SELECT id FROM directory.taxonomies WHERE slug = 'homestay' AND type = 'village_activity')),
 
   -- Ciptagelar
-  ((SELECT id FROM directory.taxonomies WHERE slug = 'aktivitas-workshop'), 'village_category', (SELECT id FROM directory.tourism_villages WHERE slug = 'desa-wisata-ciptagelar')),
-  ((SELECT id FROM directory.taxonomies WHERE slug = 'aktivitas-homestay'), 'village_category', (SELECT id FROM directory.tourism_villages WHERE slug = 'desa-wisata-ciptagelar'));
+  ((SELECT id FROM directory.tourism_villages WHERE slug = 'desa-wisata-ciptagelar'), (SELECT id FROM directory.taxonomies WHERE slug = 'workshop' AND type = 'village_activity')),
+  ((SELECT id FROM directory.tourism_villages WHERE slug = 'desa-wisata-ciptagelar'), (SELECT id FROM directory.taxonomies WHERE slug = 'homestay' AND type = 'village_activity'));
 
 -- Ã¢â€â‚¬Ã¢â€â‚¬ 3. Facility Assignments Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
 INSERT INTO directory.facility_assignments (facility_id, entity_type, entity_id) VALUES

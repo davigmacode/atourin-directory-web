@@ -62,6 +62,7 @@ export const findController = new Elysia()
         .schema('directory')
         .from('taxonomies')
         .select('id')
+        .eq('type', 'category')
         .or(`slug.ilike.${category},name->>id.ilike.${category},name->>en.ilike.${category}`);
 
       const targetTaxonomyIds = catData ? catData.map((c) => c.id) : [];
@@ -74,12 +75,11 @@ export const findController = new Elysia()
 
       const { data: assData } = await supabaseAdmin
         .schema('directory')
-        .from('taxonomy_assignments')
-        .select('entity_id')
-        .eq('entity_type', 'destination_category')
+        .from('destination_categories')
+        .select('destination_id')
         .in('taxonomy_id', targetTaxonomyIds);
 
-      const matchedDestinationIds = assData ? assData.map((a) => a.entity_id) : [];
+      const matchedDestinationIds = assData ? assData.map((a) => a.destination_id) : [];
       if (matchedDestinationIds.length === 0) {
         return {
           data: [],
@@ -122,19 +122,19 @@ export const findController = new Elysia()
       };
     }
 
-    // Query taxonomy assignments (only for paged destinations)
+    // Query category assignments (only for paged destinations)
     const { data: assignmentsData, error: assignError } = await supabaseAdmin
       .schema('directory')
-      .from('taxonomy_assignments')
+      .from('destination_categories')
       .select(`
-        entity_id,
+        destination_id,
         taxonomy:taxonomies (
           slug,
-          name
+          name,
+          type
         )
       `)
-      .eq('entity_type', 'destination_category')
-      .in('entity_id', destinationIds);
+      .in('destination_id', destinationIds);
 
     if (assignError) {
       console.error('[api/destinations GET assignments]', assignError.message);
@@ -166,7 +166,7 @@ export const findController = new Elysia()
     // Process assignments into a lookup map
     const assignmentsMap: Record<string, { slug: string; name: string }[]> = {};
     (assignmentsData ?? []).forEach((row: any) => {
-      const entityId = row.entity_id;
+      const entityId = row.destination_id;
       const cat = row.taxonomy;
       if (!cat) return;
       const nameObj = cat.name;

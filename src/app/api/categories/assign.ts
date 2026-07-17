@@ -1,18 +1,33 @@
 import { Elysia, t } from 'elysia';
 import { supabaseAdmin } from '@/lib/supabase';
 
+const TABLE_BY_TYPE: Record<string, { table: string; fkColumn: string }> = {
+  category:            { table: 'attraction_categories',   fkColumn: 'attraction_id' },
+  guide_specialism:    { table: 'guide_categories',       fkColumn: 'guide_id' },
+  village_activity:    { table: 'village_activities',     fkColumn: 'village_id' },
+};
+
 export const assignController = new Elysia()
   .post('/', async ({ body, set }) => {
-    const payload = body as { entity_type: string; entity_id: string; taxonomy_ids?: string[] };
-    const { entity_type: entityType, entity_id: entityId, taxonomy_ids: taxonomyIds } = payload;
+    const payload = body as {
+      type: string;
+      entity_id: string;
+      taxonomy_ids?: string[];
+    };
+    const { type, entity_id: entityId, taxonomy_ids: taxonomyIds } = payload;
 
-    // 1. Delete all existing taxonomy assignments for this entity
+    const target = TABLE_BY_TYPE[type];
+    if (!target) {
+      set.status = 400;
+      return { error: `Unsupported type: ${type}` };
+    }
+
+    // 1. Delete all existing assignments for this entity
     const { error: deleteError } = await supabaseAdmin
       .schema('directory')
-      .from('taxonomy_assignments')
+      .from(target.table)
       .delete()
-      .eq('entity_type', entityType)
-      .eq('entity_id', entityId);
+      .eq(target.fkColumn, entityId);
 
     if (deleteError) {
       console.error('[api/categories POST delete]', deleteError.message);
@@ -20,17 +35,16 @@ export const assignController = new Elysia()
       return { error: deleteError.message };
     }
 
-    // 2. Insert new taxonomy assignments if any are provided
+    // 2. Insert new assignments if any are provided
     if (Array.isArray(taxonomyIds) && taxonomyIds.length > 0) {
       const records = taxonomyIds.map((taxId: string) => ({
+        [target.fkColumn]: entityId,
         taxonomy_id: taxId,
-        entity_type: entityType,
-        entity_id: entityId,
       }));
 
       const { error: insertError } = await supabaseAdmin
         .schema('directory')
-        .from('taxonomy_assignments')
+        .from(target.table)
         .insert(records);
 
       if (insertError) {
@@ -43,7 +57,7 @@ export const assignController = new Elysia()
     return { success: true };
   }, {
     body: t.Object({
-      entity_type: t.String(),
+      type: t.String(),
       entity_id: t.String(),
       taxonomy_ids: t.Optional(t.Array(t.String())),
     })

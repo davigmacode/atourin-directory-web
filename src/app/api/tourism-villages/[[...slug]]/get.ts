@@ -36,7 +36,7 @@ export const getController = new Elysia()
           id,
           slug,
           name,
-          entity_types,
+          type,
           metadata
         ),
         village_theme_id,
@@ -44,7 +44,7 @@ export const getController = new Elysia()
           id,
           slug,
           name,
-          entity_types,
+          type,
           metadata
         ),
         rating_average,
@@ -87,21 +87,35 @@ export const getController = new Elysia()
       return { error: 'Tourism village not found' };
     }
 
-    // 2. Fetch taxonomy assignments — include entity_types & metadata to resolve ADWI
+    // 2. Fetch category assignments
     const { data: assignmentsData, error: assignError } = await supabaseAdmin
       .schema('directory')
-      .from('taxonomy_assignments')
+      .from('village_categories')
       .select(`
         taxonomy:taxonomies (
           id,
           slug,
           name,
-          entity_types,
+          type,
           metadata
         )
       `)
-      .eq('entity_type', 'village_category')
-      .eq('entity_id', row.id);
+      .eq('village_id', row.id);
+
+    // 2b. Fetch activity assignments
+    const { data: activitiesData, error: actError } = await supabaseAdmin
+      .schema('directory')
+      .from('village_activities')
+      .select(`
+        taxonomy:taxonomies (
+          id,
+          slug,
+          name,
+          type,
+          metadata
+        )
+      `)
+      .eq('village_id', row.id);
 
     if (assignError) {
       console.error('[api/tourism-villages/[slug] GET assignments]', assignError.message);
@@ -115,7 +129,6 @@ export const getController = new Elysia()
       .from('facilities')
       .select('id, slug, name, metadata')
       .contains('entity_types', ['village']);
-
 
     if (allFacsError) {
       console.error('[api/tourism-villages/[slug] GET expected facilities]', allFacsError.message);
@@ -157,7 +170,7 @@ export const getController = new Elysia()
       return { error: mediaError.message };
     }
 
-    // Process categories — preserve entity_types and raw name for ADWI resolution
+    // Process categories — preserve type and raw name for ADWI resolution
     const categories = (assignmentsData ?? []).map((ca: any) => {
       const cat = ca.taxonomy;
       if (!cat) return null;
@@ -172,9 +185,28 @@ export const getController = new Elysia()
         id: cat.id,
         slug: cat.slug,
         name: catName,
-        // Keep raw name obj and entity_types for ADWI badge resolution
         rawName: cat.name,
-        entity_types: cat.entity_types || [],
+        type: cat.type,
+        metadata: cat.metadata || {},
+      };
+    }).filter((c) => c !== null);
+
+    // Process activities
+    const activities = (activitiesData ?? []).map((ca: any) => {
+      const cat = ca.taxonomy;
+      if (!cat) return null;
+      const nameObj = cat.name;
+      let catName = '';
+      if (typeof nameObj === 'string') {
+        catName = nameObj;
+      } else if (nameObj && typeof nameObj === 'object') {
+        catName = nameObj[lang] || nameObj.id || nameObj.en || '';
+      }
+      return {
+        id: cat.id,
+        slug: cat.slug,
+        name: catName,
+        type: cat.type,
         metadata: cat.metadata || {},
       };
     }).filter((c) => c !== null);
@@ -262,7 +294,7 @@ export const getController = new Elysia()
 
     // Compile ADWI level from joined relation
     const adwiCat = Array.isArray(row.adwi_level) ? row.adwi_level[0] : row.adwi_level;
-    const adwiVal = adwiCat?.slug?.replace('adwi-', '') || 'mandiri';
+    const adwiVal = adwiCat?.slug || 'mandiri';
     const adwiCapitalized = adwiCat
       ? (adwiCat.name?.[lang] || adwiCat.name?.id || adwiCat.name?.en || adwiVal)
       : 'Mandiri';
@@ -271,7 +303,7 @@ export const getController = new Elysia()
 
     // Determine village theme from joined relation
     const themeCat = Array.isArray(rowAny.village_theme) ? rowAny.village_theme[0] : rowAny.village_theme;
-    const themeVal = themeCat?.slug?.replace('tema-', '') || 'desa-wisata';
+    const themeVal = themeCat?.slug || 'desa-wisata';
     let themeStr = 'Desa Wisata';
     if (themeCat) {
       const nameObj = themeCat.name;
@@ -282,28 +314,9 @@ export const getController = new Elysia()
       }
     }
 
-    // Activities compilation — from categories with entity_types containing 'village_activity'
-    const activities: { id: string; slug: string; name: string; entityTypes: string[]; metadata: Record<string, any> }[] = [];
-    categories.forEach((c: any) => {
-      if (Array.isArray(c.entity_types) && c.entity_types.includes('village_activity')) {
-        const nameObj = c.name;
-        let actName = '';
-        if (typeof nameObj === 'string') {
-          actName = nameObj;
-        } else if (nameObj && typeof nameObj === 'object') {
-          actName = nameObj[lang] || nameObj.id || nameObj.en || '';
-        }
-        if (actName) activities.push({
-          id: c.id,
-          slug: c.slug,
-          name: actName,
-          entityTypes: c.entity_types,
-          metadata: c.metadata || {}
-        });
-      }
-    });
+    // Activities compilation — from village_activities table
     if (activities.length === 0) {
-      activities.push({ id: '', slug: 'homestay', name: 'Homestay', entityTypes: ['village_activity'], metadata: {} });
+      activities.push({ id: '', slug: 'homestay', name: 'Homestay', type: 'village_activity', metadata: {} });
     }
 
     const village = {

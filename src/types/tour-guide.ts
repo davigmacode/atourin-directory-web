@@ -6,6 +6,7 @@ export interface TourGuideLanguage {
   name: string;
   code: string;
   fluency: FluencyLevel;
+  fluencyRate?: number | null;
 }
 
 export interface TourGuideSpecialismMetadata {
@@ -18,6 +19,7 @@ export interface TourGuideSpecialism {
   id: string;
   slug: string;
   name: string;
+  isPrimary?: boolean;
   metadata: TourGuideSpecialismMetadata;
 }
 

@@ -112,12 +112,13 @@ export const findController = new Elysia()
       }
     }
 
-    // 6. Specialism filter — via taxonomy_assignments (entity_type='guide_category')
+    // 6. Specialism filter — via guide_categories (taxonomy type='guide_specialism')
     if (specialism) {
       const { data: specCats } = await supabaseAdmin
         .schema('directory')
         .from('taxonomies')
         .select('id')
+        .eq('type', 'guide_specialism')
         .or(`slug.ilike.${specialism},name->>id.ilike.${specialism},name->>en.ilike.${specialism}`);
 
       const targetTaxonomyIds = specCats ? specCats.map((c) => c.id) : [];
@@ -130,12 +131,11 @@ export const findController = new Elysia()
 
       const { data: assData } = await supabaseAdmin
         .schema('directory')
-        .from('taxonomy_assignments')
-        .select('entity_id')
-        .eq('entity_type', 'guide_category')
+        .from('guide_categories')
+        .select('guide_id')
         .in('taxonomy_id', targetTaxonomyIds);
 
-      const matchedIds = assData ? Array.from(new Set(assData.map((a) => a.entity_id))) : [];
+      const matchedIds = assData ? Array.from(new Set(assData.map((a) => a.guide_id))) : [];
       if (matchedIds.length === 0) {
         return {
           data: [],
@@ -145,14 +145,14 @@ export const findController = new Elysia()
       dbQuery = dbQuery.in('id', matchedIds);
     }
 
-    // 7. Language filter — via tour_guide_languages → taxonomy (guide_language)
+    // 7. Language filter — via tour_guide_languages → taxonomy (type='guide_language')
     if (language) {
       const { data: langCats } = await supabaseAdmin
         .schema('directory')
         .from('taxonomies')
         .select('id')
-        .or(`slug.ilike.${language},name->>id.ilike.${language},name->>en.ilike.${language}`)
-        .contains('entity_types', ['guide_language']);
+        .eq('type', 'guide_language')
+        .or(`slug.ilike.${language},name->>id.ilike.${language},name->>en.ilike.${language}`);
 
       const targetLangIds = langCats ? langCats.map((c) => c.id) : [];
       if (targetLangIds.length === 0) {
@@ -251,18 +251,19 @@ export const findController = new Elysia()
     // 12. Fetch specialism assignments
     const { data: specialismData, error: specError } = await supabaseAdmin
       .schema('directory')
-      .from('taxonomy_assignments')
+      .from('guide_categories')
       .select(`
-        entity_id,
+        guide_id,
+        is_primary,
         taxonomy:taxonomies (
           id,
           slug,
           name,
+          type,
           metadata
         )
       `)
-      .eq('entity_type', 'guide_category')
-      .in('entity_id', guideIds);
+      .in('guide_id', guideIds);
 
     if (specError) {
       console.error('[api/tour-guides GET specialisms]', specError.message);
@@ -329,8 +330,8 @@ export const findController = new Elysia()
       } else if (nameObj && typeof nameObj === 'object') {
         catName = nameObj[lang] || nameObj.id || nameObj.en || '';
       }
-      specialismsMap[row.entity_id] = specialismsMap[row.entity_id] || [];
-      specialismsMap[row.entity_id].push({
+      specialismsMap[row.guide_id] = specialismsMap[row.guide_id] || [];
+      specialismsMap[row.guide_id].push({
         id: cat.id,
         slug: cat.slug,
         name: catName,
@@ -357,6 +358,7 @@ export const findController = new Elysia()
         name: langName,
         code,
         fluency: row.fluency,
+        fluencyRate: row.fluency_rate != null ? Number(row.fluency_rate) : null,
       });
     });
 

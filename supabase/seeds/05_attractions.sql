@@ -160,39 +160,39 @@ INSERT INTO directory.price_tiers (entity_type, entity_id, name, price) VALUES
 ON CONFLICT (entity_type, entity_id, name) DO NOTHING;
 
 -- ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ Seed Data: category_assignments (for category relations) 
-INSERT INTO directory.taxonomy_assignments (taxonomy_id, entity_type, entity_id) VALUES
-  ((SELECT id FROM directory.taxonomies WHERE slug = 'alam'), 'attraction_category', (SELECT id FROM directory.attractions WHERE slug = 'pulau-padar-viewpoint')),
-  ((SELECT id FROM directory.taxonomies WHERE slug = 'petualangan'), 'attraction_category', (SELECT id FROM directory.attractions WHERE slug = 'pulau-padar-viewpoint')),
+INSERT INTO directory.attraction_categories (attraction_id, taxonomy_id) VALUES
+  ((SELECT id FROM directory.attractions WHERE slug = 'pulau-padar-viewpoint'), (SELECT id FROM directory.taxonomies WHERE slug = 'alam' AND type = 'category')),
+  ((SELECT id FROM directory.attractions WHERE slug = 'pulau-padar-viewpoint'), (SELECT id FROM directory.taxonomies WHERE slug = 'petualangan' AND type = 'category')),
   
-  ((SELECT id FROM directory.taxonomies WHERE slug = 'sejarah'), 'attraction_category', (SELECT id FROM directory.attractions WHERE slug = 'candi-borobudur')),
-  ((SELECT id FROM directory.taxonomies WHERE slug = 'heritage'), 'attraction_category', (SELECT id FROM directory.attractions WHERE slug = 'candi-borobudur')),
-  ((SELECT id FROM directory.taxonomies WHERE slug = 'budaya'), 'attraction_category', (SELECT id FROM directory.attractions WHERE slug = 'candi-borobudur')),
+  ((SELECT id FROM directory.attractions WHERE slug = 'candi-borobudur'), (SELECT id FROM directory.taxonomies WHERE slug = 'sejarah' AND type = 'category')),
+  ((SELECT id FROM directory.attractions WHERE slug = 'candi-borobudur'), (SELECT id FROM directory.taxonomies WHERE slug = 'heritage' AND type = 'category')),
+  ((SELECT id FROM directory.attractions WHERE slug = 'candi-borobudur'), (SELECT id FROM directory.taxonomies WHERE slug = 'budaya' AND type = 'category')),
   
-  ((SELECT id FROM directory.taxonomies WHERE slug = 'alam'), 'attraction_category', (SELECT id FROM directory.attractions WHERE slug = 'gunung-bromo')),
-  ((SELECT id FROM directory.taxonomies WHERE slug = 'petualangan'), 'attraction_category', (SELECT id FROM directory.attractions WHERE slug = 'gunung-bromo')),
+  ((SELECT id FROM directory.attractions WHERE slug = 'gunung-bromo'), (SELECT id FROM directory.taxonomies WHERE slug = 'alam' AND type = 'category')),
+  ((SELECT id FROM directory.attractions WHERE slug = 'gunung-bromo'), (SELECT id FROM directory.taxonomies WHERE slug = 'petualangan' AND type = 'category')),
   
-  ((SELECT id FROM directory.taxonomies WHERE slug = 'religi'), 'attraction_category', (SELECT id FROM directory.attractions WHERE slug = 'pura-ulun-danu-beratan')),
-  ((SELECT id FROM directory.taxonomies WHERE slug = 'budaya'), 'attraction_category', (SELECT id FROM directory.attractions WHERE slug = 'pura-ulun-danu-beratan')),
+  ((SELECT id FROM directory.attractions WHERE slug = 'pura-ulun-danu-beratan'), (SELECT id FROM directory.taxonomies WHERE slug = 'religi' AND type = 'category')),
+  ((SELECT id FROM directory.attractions WHERE slug = 'pura-ulun-danu-beratan'), (SELECT id FROM directory.taxonomies WHERE slug = 'budaya' AND type = 'category')),
   
-  ((SELECT id FROM directory.taxonomies WHERE slug = 'bahari'), 'attraction_category', (SELECT id FROM directory.attractions WHERE slug = 'pantai-tanjung-aan')),
-  ((SELECT id FROM directory.taxonomies WHERE slug = 'alam'), 'attraction_category', (SELECT id FROM directory.attractions WHERE slug = 'pantai-tanjung-aan')),
+  ((SELECT id FROM directory.attractions WHERE slug = 'pantai-tanjung-aan'), (SELECT id FROM directory.taxonomies WHERE slug = 'bahari' AND type = 'category')),
+  ((SELECT id FROM directory.attractions WHERE slug = 'pantai-tanjung-aan'), (SELECT id FROM directory.taxonomies WHERE slug = 'alam' AND type = 'category')),
   
-  ((SELECT id FROM directory.taxonomies WHERE slug = 'sejarah'), 'attraction_category', (SELECT id FROM directory.attractions WHERE slug = 'candi-prambanan')),
-  ((SELECT id FROM directory.taxonomies WHERE slug = 'heritage'), 'attraction_category', (SELECT id FROM directory.attractions WHERE slug = 'candi-prambanan')),
-  ((SELECT id FROM directory.taxonomies WHERE slug = 'budaya'), 'attraction_category', (SELECT id FROM directory.attractions WHERE slug = 'candi-prambanan')),
+  ((SELECT id FROM directory.attractions WHERE slug = 'candi-prambanan'), (SELECT id FROM directory.taxonomies WHERE slug = 'sejarah' AND type = 'category')),
+  ((SELECT id FROM directory.attractions WHERE slug = 'candi-prambanan'), (SELECT id FROM directory.taxonomies WHERE slug = 'heritage' AND type = 'category')),
+  ((SELECT id FROM directory.attractions WHERE slug = 'candi-prambanan'), (SELECT id FROM directory.taxonomies WHERE slug = 'budaya' AND type = 'category')),
   
-  ((SELECT id FROM directory.taxonomies WHERE slug = 'alam'), 'attraction_category', (SELECT id FROM directory.attractions WHERE slug = 'danau-toba')),
-  ((SELECT id FROM directory.taxonomies WHERE slug = 'bahari'), 'attraction_category', (SELECT id FROM directory.attractions WHERE slug = 'danau-toba')),
+  ((SELECT id FROM directory.attractions WHERE slug = 'danau-toba'), (SELECT id FROM directory.taxonomies WHERE slug = 'alam' AND type = 'category')),
+  ((SELECT id FROM directory.attractions WHERE slug = 'danau-toba'), (SELECT id FROM directory.taxonomies WHERE slug = 'bahari' AND type = 'category')),
   
-  ((SELECT id FROM directory.taxonomies WHERE slug = 'alam'), 'attraction_category', (SELECT id FROM directory.attractions WHERE slug = 'wayag-viewpoint')),
-  ((SELECT id FROM directory.taxonomies WHERE slug = 'bahari'), 'attraction_category', (SELECT id FROM directory.attractions WHERE slug = 'wayag-viewpoint')),
-  ((SELECT id FROM directory.taxonomies WHERE slug = 'petualangan'), 'attraction_category', (SELECT id FROM directory.attractions WHERE slug = 'wayag-viewpoint')),
+  ((SELECT id FROM directory.attractions WHERE slug = 'wayag-viewpoint'), (SELECT id FROM directory.taxonomies WHERE slug = 'alam' AND type = 'category')),
+  ((SELECT id FROM directory.attractions WHERE slug = 'wayag-viewpoint'), (SELECT id FROM directory.taxonomies WHERE slug = 'bahari' AND type = 'category')),
+  ((SELECT id FROM directory.attractions WHERE slug = 'wayag-viewpoint'), (SELECT id FROM directory.taxonomies WHERE slug = 'petualangan' AND type = 'category')),
   
-  ((SELECT id FROM directory.taxonomies WHERE slug = 'alam'), 'attraction_category', (SELECT id FROM directory.attractions WHERE slug = 'air-terjun-tiu-kelep')),
-  ((SELECT id FROM directory.taxonomies WHERE slug = 'petualangan'), 'attraction_category', (SELECT id FROM directory.attractions WHERE slug = 'air-terjun-tiu-kelep')),
+  ((SELECT id FROM directory.attractions WHERE slug = 'air-terjun-tiu-kelep'), (SELECT id FROM directory.taxonomies WHERE slug = 'alam' AND type = 'category')),
+  ((SELECT id FROM directory.attractions WHERE slug = 'air-terjun-tiu-kelep'), (SELECT id FROM directory.taxonomies WHERE slug = 'petualangan' AND type = 'category')),
   
-  ((SELECT id FROM directory.taxonomies WHERE slug = 'alam'), 'attraction_category', (SELECT id FROM directory.attractions WHERE slug = 'kawah-putih-ciwidey'))
-ON CONFLICT (taxonomy_id, entity_type, entity_id) DO NOTHING;
+  ((SELECT id FROM directory.attractions WHERE slug = 'kawah-putih-ciwidey'), (SELECT id FROM directory.taxonomies WHERE slug = 'alam' AND type = 'category'))
+ON CONFLICT (attraction_id, taxonomy_id) DO NOTHING;
 
 -- ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ Seed Data: facility_assignments (for facility relations)
 INSERT INTO directory.facility_assignments (facility_id, entity_type, entity_id) VALUES

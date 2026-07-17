@@ -54,17 +54,18 @@ export const getController = new Elysia()
     // 2. Fetch specialism assignments
     const { data: specialismData, error: specError } = await supabaseAdmin
       .schema('directory')
-      .from('taxonomy_assignments')
+      .from('guide_categories')
       .select(`
+        is_primary,
         taxonomy:taxonomies (
           id,
           slug,
           name,
+          type,
           metadata
         )
       `)
-      .eq('entity_type', 'guide_category')
-      .eq('entity_id', row.id);
+      .eq('guide_id', row.id);
 
     if (specError) {
       console.error('[api/tour-guides/[slug] GET specialisms]', specError.message);
@@ -78,10 +79,12 @@ export const getController = new Elysia()
       .from('tour_guide_languages')
       .select(`
         fluency,
+        fluency_rate,
         category:taxonomies (
           id,
           slug,
           name,
+          type,
           metadata
         )
       `)
@@ -206,6 +209,7 @@ export const getController = new Elysia()
         name: langName,
         code: cat.metadata?.code || '',
         fluency: l.fluency,
+        fluencyRate: l.fluency_rate != null ? Number(l.fluency_rate) : null,
       };
     }).filter((l) => l !== null);
 
