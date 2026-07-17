@@ -20,23 +20,26 @@ function Pin() {
 }
 
 export default function VillageHeader({ village }) {
-  const statusBg = village.adwiBg || "rgba(81,176,84,0.16)";
-  const statusFg = village.adwiFg || "#2D8838";
-  const statusName = village.adwi || "Mandiri";
+  const adwiLevel = village.adwiLevel || village.adwi_level;
+  const statusBg = adwiLevel?.metadata?.color || village.adwiBg || "rgba(81,176,84,0.16)";
+  const statusFg = adwiLevel?.metadata?.fg || village.adwiFg || "#2D8838";
+  const statusName = adwiLevel?.name || village.adwi || "Mandiri";
 
-  const regionParts = village.region ? village.region.split(",") : [];
-  const kota = regionParts[0] ? regionParts[0].trim() : "Manggarai";
-  const provinsi = regionParts[1] ? regionParts[1].trim() : "Nusa Tenggara Timur";
+  const dest = village.destination;
+  const kota = dest?.name || (village.region ? village.region.split(",")[0]?.trim() : "Manggarai");
+  const provinsi = dest?.province?.name || (village.region ? village.region.split(",")[1]?.trim() : "Nusa Tenggara Timur");
 
   const foundedYear = village.founded || 2012;
-  const ratingValue = village.rating || 4.8;
-  const reviewsCount = village.reviewsCount || village.reviews || 124;
+  const ratingValue = village.ratingAverage ?? village.rating_average ?? village.rating ?? 4.8;
+  const reviewsCount = village.reviewsCount ?? village.reviews_count ?? village.reviews ?? 124;
 
   const shortDesc =
     village.shortDesc ||
+    village.description ||
     `${village.name} merupakan destinasi Desa Wisata unggulan yang menyuguhkan keunikan adat, kelestarian alam, serta kebudayaan yang kental khas ${provinsi}.`;
 
-  const tags = village.tags || [village.theme, "Wisata", "PesonaIndonesia"].filter(Boolean);
+  const themeName = village.villageTheme?.name || village.village_theme?.name || village.theme || "Desa Wisata";
+  const tags = village.tags || [themeName, "Wisata", "PesonaIndonesia"].filter(Boolean);
 
   return (
     <section style={ds.section}>
@@ -85,8 +88,8 @@ export default function VillageHeader({ village }) {
         <span style={ds.hdrMetaItem}>
           <Pin /> {kota}, {provinsi}
         </span>
-        <a
-          href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(village.name + " " + village.region)}`}
+      <a
+          href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(village.name + " " + (kota + ", " + provinsi))}`}
           target="_blank"
           rel="noopener noreferrer"
           style={ds.hdrMetaLink}

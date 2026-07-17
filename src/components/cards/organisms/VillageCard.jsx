@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Link from "next/link";
 import cs from "@/styles/card-styles";
 import CardCover from "../molecules/CardCover";
 import CardBody from "../molecules/CardBody";
@@ -65,13 +66,20 @@ export default function VillageCard({ d }) {
     },
   ];
 
+  const finalSlug = d.slug || d.id || (d.name || "")
+    .toLowerCase()
+    .replace(/[^a-z0-9\s]/g, "")
+    .replace(/\s+/g, "-");
+
   return (
-    <article
+    <Link
+      href={`/explore/tourism-villages/${finalSlug}`}
       style={{
         ...cs.desaCard,
         textDecoration: "none",
         color: "inherit",
         cursor: "pointer",
+        display: "block",
       }}
     >
       <CardCover src={imgUrl} alt="" badges={badges} />
@@ -105,6 +113,6 @@ export default function VillageCard({ d }) {
           <button style={cs.atrCta}>Lihat profil →</button>
         </div>
       </CardBody>
-    </article>
+    </Link>
   );
 }

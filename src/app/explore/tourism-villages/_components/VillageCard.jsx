@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { SafeImage } from "@/components/cards";
 import { cardStyles } from "@/styles/attraction-styles";
 
@@ -54,7 +54,6 @@ export default function VillageCard({
   id,
 }) {
   const [hover, setHover] = useState(false);
-  const router = useRouter();
 
   // Resolve mapping variations
   const displayImg = coverImage?.url || img;
@@ -75,9 +74,13 @@ export default function VillageCard({
     .replace(/\s+/g, "-");
 
   return (
-    <article
+    <Link
+      href={`/explore/tourism-villages/${finalSlug}`}
       style={{
         ...cardStyles.card,
+        textDecoration: "none",
+        color: "inherit",
+        display: "block",
         ...(hover
           ? {
               transform: "translateY(-3px)",
@@ -88,7 +91,6 @@ export default function VillageCard({
       }}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
-      onClick={() => router.push(`/explore/tourism-villages/${finalSlug}`)}
     >
       <div style={cardStyles.cardImgWrap}>
         <SafeImage src={displayImg} alt="" style={cardStyles.cardImg} />
@@ -221,6 +223,6 @@ export default function VillageCard({
           </div>
         </div>
       </div>
-    </article>
+    </Link>
   );
 }

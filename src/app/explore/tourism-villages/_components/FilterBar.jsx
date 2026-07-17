@@ -6,11 +6,11 @@ import { dirStyles } from "@/styles/attraction-styles";
 import { VIL_FILTERS, VIL_FILTER_OPTIONS, SORT_OPTIONS } from "@/data/villages";
 
 const FILTER_KEY_MAP = {
-  Provinsi: "provinsi",
-  "Kategori ADWI": "adwi_kategori",
-  "Tema utama": "tema",
-  Aktivitas: "aktivitas",
-  "Harga homestay": "harga",
+  Provinsi: "province",
+  "Kategori ADWI": "adwi",
+  "Tema utama": "theme",
+  Aktivitas: "activity",
+  "Harga homestay": "price",
 };
 
 
@@ -103,11 +103,11 @@ export default function FilterBar({
             <button
               onClick={() =>
                 setFilters({
-                  provinsi: "",
-                  adwi_kategori: "",
-                  tema: "",
-                  aktivitas: "",
-                  harga: "",
+                  province: "",
+                  adwi: "",
+                  theme: "",
+                  activity: "",
+                  price: "",
                   sort: filters.sort,
                 })
               }

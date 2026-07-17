@@ -132,7 +132,11 @@ const ACTIVITY_INFOS = {
 };
 
 export default function VillageActivities({ village }) {
-  const activities = village.activities || ["Homestay", "Tarian", "Trekking"];
+  const rawActivities = village.activities || ["Homestay", "Tarian", "Trekking"];
+  // Normalize: support both string[] and object[] from API
+  const activities = rawActivities.map((a) =>
+    typeof a === "object" ? a.name || "" : a
+  ).filter(Boolean);
 
   return (
     <section style={ds.section}>

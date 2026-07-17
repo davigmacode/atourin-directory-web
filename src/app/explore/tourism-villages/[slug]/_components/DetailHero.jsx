@@ -92,8 +92,8 @@ export default function DetailHero({ village }) {
     village.img ||
     "https://images.unsplash.com/photo-1604999333679-b86d54738315?w=1800&auto=format&fit=crop&q=80";
 
-  const statusName = village.adwi || "Mandiri";
-  const statusFg = village.adwiFg || "#2D8838";
+  const statusName = village.adwiLevel?.name || village.adwi_level?.name || village.adwi || "Mandiri";
+  const statusFg = village.adwiLevel?.metadata?.fg || village.adwi_level?.metadata?.fg || village.adwiFg || "#2D8838";
 
   const galleryImages = [
     coverUrl,
