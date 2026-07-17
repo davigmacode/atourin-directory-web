@@ -132,7 +132,7 @@ export const findController = new Elysia()
         .from('taxonomies')
         .select('id')
         .eq('type', 'village_theme')
-        .or(`slug.eq.${theme.toLowerCase()},slug.ilike.${theme},name->id.ilike.${theme},name->en.ilike.${theme}`)
+        .or(`slug.eq.${theme.toLowerCase()},slug.ilike.${theme},name->>id.ilike.${theme},name->>en.ilike.${theme}`)
         .maybeSingle();
 
       if (!themeCat) {
@@ -151,13 +151,13 @@ export const findController = new Elysia()
         .from('taxonomies')
         .select('id')
         .eq('type', 'village_activity')
-        .or(`slug.ilike.${activity},name->id.ilike.${activity},name->en.ilike.${activity}`);
+        .or(`slug.ilike.${activity},name->>id.ilike.${activity},name->>en.ilike.${activity}`);
 
       const { data: facData } = await supabaseAdmin
         .schema('directory')
         .from('facilities')
         .select('id')
-        .or(`slug.ilike.${activity},name->id.ilike.${activity},name->en.ilike.${activity}`);
+        .or(`slug.ilike.${activity},name->>id.ilike.${activity},name->>en.ilike.${activity}`);
 
       const catIds = catData ? catData.map((c) => c.id) : [];
       const facIds = facData ? facData.map((f) => f.id) : [];
