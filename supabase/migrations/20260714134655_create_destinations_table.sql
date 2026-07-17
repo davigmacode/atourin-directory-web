@@ -48,14 +48,17 @@ CREATE TABLE IF NOT EXISTS directory.media (
   entity_id    text NOT NULL,
   type         text NOT NULL CHECK (type IN ('image', 'video')),
   url          text NOT NULL,
+  caption      jsonb NOT NULL DEFAULT '{"id": "", "en": ""}'::jsonb,
   metadata     jsonb NOT NULL DEFAULT '{}'::jsonb, -- holds width, height, blurhash, base64, duration, etc.
   sort_order   integer NOT NULL DEFAULT 0,
   created_at   timestamptz NOT NULL DEFAULT now(),
   updated_at   timestamptz NOT NULL DEFAULT now(),
-  CONSTRAINT media_entity_type_check CHECK (entity_type IN ('destination', 'attraction', 'village', 'itinerary'))
+  CONSTRAINT media_entity_type_check CHECK (entity_type IN ('destination', 'attraction', 'village', 'itinerary', 'guide'))
 );
 
-CREATE INDEX IF NOT EXISTS media_entity_idx ON directory.media (entity_type, entity_id);
+CREATE INDEX IF NOT EXISTS media_entity_idx    ON directory.media (entity_type, entity_id);
+CREATE INDEX IF NOT EXISTS media_caption_id_idx ON directory.media ((caption->>'id'));
+CREATE INDEX IF NOT EXISTS media_caption_en_idx ON directory.media ((caption->>'en'));
 
 -- Trigger for media updated_at
 CREATE TRIGGER media_updated_at
