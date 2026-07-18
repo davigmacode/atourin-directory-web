@@ -246,7 +246,7 @@ const cs = {
   guideMeta: { display: "flex", alignItems: "center", gap: 10, fontSize: 12, color: "var(--atr-text-muted)", marginTop: "auto", paddingTop: 6 },
   guideBio: { fontSize: 12, color: "var(--atr-text-muted)", lineHeight: 1.5, display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" },
   guidePriceRow: { padding: "10px 14px", borderTop: "1px solid var(--atr-outline)", display: "flex", alignItems: "center", justifyContent: "space-between" },
-  guidePrice: { fontSize: 16, fontWeight: 700, color: "var(--atr-text)" },
+  guidePrice: { fontSize: 16, fontWeight: 700, color: "var(--atr-purple)" },
   guideCerts: { display: "flex", gap: 4, padding: "0 14px 10px", flexWrap: "wrap" },
   guideCert: { fontSize: 10, color: "var(--atr-arti)", background: "#EEF7EE", padding: "2px 8px", borderRadius: 999, fontWeight: 600 },
   guideCtas: { display: "flex", gap: 8, padding: "0 14px 14px" },

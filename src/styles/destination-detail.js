@@ -429,11 +429,14 @@ const dh = {
     overflow: "hidden",
   },
   infoTitle: {
-    fontSize: 18,
+    fontSize: 22,
     fontWeight: 700,
+    letterSpacing: "-0.01em",
     color: "var(--atr-text)",
     marginBottom: 16,
-    letterSpacing: "-0.01em",
+    display: "flex",
+    alignItems: "center",
+    gap: 10,
   },
   infoBody: { fontSize: 14, color: "var(--atr-text)", lineHeight: 1.7 },
 
