@@ -31,11 +31,11 @@ SELECT 'guide-welli-001', id FROM directory.taxonomies
 ON CONFLICT DO NOTHING;
 
 INSERT INTO directory.tour_guide_languages (guide_id, category_id, fluency, fluency_rate)
-SELECT 'guide-welli-001', id, 'native', 1.00 FROM directory.taxonomies WHERE slug = 'id' AND type = 'guide_language' ON CONFLICT DO NOTHING;
+SELECT 'guide-welli-001', id, 'native', 1.00 FROM directory.taxonomies WHERE slug = 'id' AND type = 'language' ON CONFLICT DO NOTHING;
 INSERT INTO directory.tour_guide_languages (guide_id, category_id, fluency, fluency_rate)
-SELECT 'guide-welli-001', id, 'fluent', 0.85 FROM directory.taxonomies WHERE slug = 'en' AND type = 'guide_language' ON CONFLICT DO NOTHING;
+SELECT 'guide-welli-001', id, 'fluent', 0.85 FROM directory.taxonomies WHERE slug = 'en' AND type = 'language' ON CONFLICT DO NOTHING;
 INSERT INTO directory.tour_guide_languages (guide_id, category_id, fluency, fluency_rate)
-SELECT 'guide-welli-001', id, 'conversational', 0.65 FROM directory.taxonomies WHERE slug = 'jp' AND type = 'guide_language' ON CONFLICT DO NOTHING;
+SELECT 'guide-welli-001', id, 'conversational', 0.65 FROM directory.taxonomies WHERE slug = 'jp' AND type = 'language' ON CONFLICT DO NOTHING;
 
 INSERT INTO directory.tour_guide_certifications (certification_id, tour_guide_id, issued_at)
 SELECT id, 'guide-welli-001', '2019-01-01' FROM directory.certifications WHERE slug = 'hpi-membership' ON CONFLICT DO NOTHING;
@@ -96,11 +96,11 @@ SELECT 'guide-putu-002', id FROM directory.taxonomies
 ON CONFLICT DO NOTHING;
 
 INSERT INTO directory.tour_guide_languages (guide_id, category_id, fluency, fluency_rate)
-SELECT 'guide-putu-002', id, 'native', 1.00 FROM directory.taxonomies WHERE slug = 'id' AND type = 'guide_language' ON CONFLICT DO NOTHING;
+SELECT 'guide-putu-002', id, 'native', 1.00 FROM directory.taxonomies WHERE slug = 'id' AND type = 'language' ON CONFLICT DO NOTHING;
 INSERT INTO directory.tour_guide_languages (guide_id, category_id, fluency, fluency_rate)
-SELECT 'guide-putu-002', id, 'fluent', 0.85 FROM directory.taxonomies WHERE slug = 'en' AND type = 'guide_language' ON CONFLICT DO NOTHING;
+SELECT 'guide-putu-002', id, 'fluent', 0.85 FROM directory.taxonomies WHERE slug = 'en' AND type = 'language' ON CONFLICT DO NOTHING;
 INSERT INTO directory.tour_guide_languages (guide_id, category_id, fluency, fluency_rate)
-SELECT 'guide-putu-002', id, 'conversational', 0.65 FROM directory.taxonomies WHERE slug = 'fr' AND type = 'guide_language' ON CONFLICT DO NOTHING;
+SELECT 'guide-putu-002', id, 'conversational', 0.65 FROM directory.taxonomies WHERE slug = 'fr' AND type = 'language' ON CONFLICT DO NOTHING;
 
 INSERT INTO directory.tour_guide_certifications (certification_id, tour_guide_id, issued_at)
 SELECT id, 'guide-putu-002', '2014-05-10' FROM directory.certifications WHERE slug = 'hpi-membership' ON CONFLICT DO NOTHING;
@@ -152,11 +152,11 @@ SELECT 'guide-sari-003', id FROM directory.taxonomies
 ON CONFLICT DO NOTHING;
 
 INSERT INTO directory.tour_guide_languages (guide_id, category_id, fluency, fluency_rate)
-SELECT 'guide-sari-003', id, 'native', 1.00 FROM directory.taxonomies WHERE slug = 'id' AND type = 'guide_language' ON CONFLICT DO NOTHING;
+SELECT 'guide-sari-003', id, 'native', 1.00 FROM directory.taxonomies WHERE slug = 'id' AND type = 'language' ON CONFLICT DO NOTHING;
 INSERT INTO directory.tour_guide_languages (guide_id, category_id, fluency, fluency_rate)
-SELECT 'guide-sari-003', id, 'fluent', 0.85 FROM directory.taxonomies WHERE slug = 'en' AND type = 'guide_language' ON CONFLICT DO NOTHING;
+SELECT 'guide-sari-003', id, 'fluent', 0.85 FROM directory.taxonomies WHERE slug = 'en' AND type = 'language' ON CONFLICT DO NOTHING;
 INSERT INTO directory.tour_guide_languages (guide_id, category_id, fluency, fluency_rate)
-SELECT 'guide-sari-003', id, 'conversational', 0.65 FROM directory.taxonomies WHERE slug = 'de' AND type = 'guide_language' ON CONFLICT DO NOTHING;
+SELECT 'guide-sari-003', id, 'conversational', 0.65 FROM directory.taxonomies WHERE slug = 'de' AND type = 'language' ON CONFLICT DO NOTHING;
 
 INSERT INTO directory.tour_guide_certifications (certification_id, tour_guide_id, issued_at)
 SELECT id, 'guide-sari-003', '2018-04-20' FROM directory.certifications WHERE slug = 'hpi-membership' ON CONFLICT DO NOTHING;
@@ -205,9 +205,9 @@ SELECT 'guide-catur-004', id FROM directory.taxonomies
 ON CONFLICT DO NOTHING;
 
 INSERT INTO directory.tour_guide_languages (guide_id, category_id, fluency, fluency_rate)
-SELECT 'guide-catur-004', id, 'native', 1.00 FROM directory.taxonomies WHERE slug = 'id' AND type = 'guide_language' ON CONFLICT DO NOTHING;
+SELECT 'guide-catur-004', id, 'native', 1.00 FROM directory.taxonomies WHERE slug = 'id' AND type = 'language' ON CONFLICT DO NOTHING;
 INSERT INTO directory.tour_guide_languages (guide_id, category_id, fluency, fluency_rate)
-SELECT 'guide-catur-004', id, 'fluent', 0.85 FROM directory.taxonomies WHERE slug = 'en' AND type = 'guide_language' ON CONFLICT DO NOTHING;
+SELECT 'guide-catur-004', id, 'fluent', 0.85 FROM directory.taxonomies WHERE slug = 'en' AND type = 'language' ON CONFLICT DO NOTHING;
 
 INSERT INTO directory.tour_guide_certifications (certification_id, tour_guide_id, issued_at)
 SELECT id, 'guide-catur-004', '2015-07-04' FROM directory.certifications WHERE slug = 'hpi-membership' ON CONFLICT DO NOTHING;
@@ -258,11 +258,11 @@ SELECT 'guide-komang-005', id FROM directory.taxonomies
 ON CONFLICT DO NOTHING;
 
 INSERT INTO directory.tour_guide_languages (guide_id, category_id, fluency, fluency_rate)
-SELECT 'guide-komang-005', id, 'native', 1.00 FROM directory.taxonomies WHERE slug = 'id' AND type = 'guide_language' ON CONFLICT DO NOTHING;
+SELECT 'guide-komang-005', id, 'native', 1.00 FROM directory.taxonomies WHERE slug = 'id' AND type = 'language' ON CONFLICT DO NOTHING;
 INSERT INTO directory.tour_guide_languages (guide_id, category_id, fluency, fluency_rate)
-SELECT 'guide-komang-005', id, 'fluent', 0.85 FROM directory.taxonomies WHERE slug = 'en' AND type = 'guide_language' ON CONFLICT DO NOTHING;
+SELECT 'guide-komang-005', id, 'fluent', 0.85 FROM directory.taxonomies WHERE slug = 'en' AND type = 'language' ON CONFLICT DO NOTHING;
 INSERT INTO directory.tour_guide_languages (guide_id, category_id, fluency, fluency_rate)
-SELECT 'guide-komang-005', id, 'fluent', 0.85 FROM directory.taxonomies WHERE slug = 'jp' AND type = 'guide_language' ON CONFLICT DO NOTHING;
+SELECT 'guide-komang-005', id, 'fluent', 0.85 FROM directory.taxonomies WHERE slug = 'jp' AND type = 'language' ON CONFLICT DO NOTHING;
 
 INSERT INTO directory.tour_guide_certifications (certification_id, tour_guide_id, issued_at)
 SELECT id, 'guide-komang-005', '2016-02-12' FROM directory.certifications WHERE slug = 'bnsp-dive-guide' ON CONFLICT DO NOTHING;
@@ -313,9 +313,9 @@ SELECT 'guide-andreyan-006', id FROM directory.taxonomies
 ON CONFLICT DO NOTHING;
 
 INSERT INTO directory.tour_guide_languages (guide_id, category_id, fluency, fluency_rate)
-SELECT 'guide-andreyan-006', id, 'native', 1.00 FROM directory.taxonomies WHERE slug = 'id' AND type = 'guide_language' ON CONFLICT DO NOTHING;
+SELECT 'guide-andreyan-006', id, 'native', 1.00 FROM directory.taxonomies WHERE slug = 'id' AND type = 'language' ON CONFLICT DO NOTHING;
 INSERT INTO directory.tour_guide_languages (guide_id, category_id, fluency, fluency_rate)
-SELECT 'guide-andreyan-006', id, 'fluent', 0.85 FROM directory.taxonomies WHERE slug = 'en' AND type = 'guide_language' ON CONFLICT DO NOTHING;
+SELECT 'guide-andreyan-006', id, 'fluent', 0.85 FROM directory.taxonomies WHERE slug = 'en' AND type = 'language' ON CONFLICT DO NOTHING;
 
 INSERT INTO directory.tour_guide_certifications (certification_id, tour_guide_id, issued_at)
 SELECT id, 'guide-andreyan-006', '2020-05-15' FROM directory.certifications WHERE slug = 'hpi-membership' ON CONFLICT DO NOTHING;
@@ -364,9 +364,9 @@ SELECT 'guide-andini-007', id FROM directory.taxonomies
 ON CONFLICT DO NOTHING;
 
 INSERT INTO directory.tour_guide_languages (guide_id, category_id, fluency, fluency_rate)
-SELECT 'guide-andini-007', id, 'native', 1.00 FROM directory.taxonomies WHERE slug = 'id' AND type = 'guide_language' ON CONFLICT DO NOTHING;
+SELECT 'guide-andini-007', id, 'native', 1.00 FROM directory.taxonomies WHERE slug = 'id' AND type = 'language' ON CONFLICT DO NOTHING;
 INSERT INTO directory.tour_guide_languages (guide_id, category_id, fluency, fluency_rate)
-SELECT 'guide-andini-007', id, 'fluent', 0.85 FROM directory.taxonomies WHERE slug = 'en' AND type = 'guide_language' ON CONFLICT DO NOTHING;
+SELECT 'guide-andini-007', id, 'fluent', 0.85 FROM directory.taxonomies WHERE slug = 'en' AND type = 'language' ON CONFLICT DO NOTHING;
 
 INSERT INTO directory.tour_guide_certifications (certification_id, tour_guide_id, issued_at)
 SELECT id, 'guide-andini-007', '2017-03-22' FROM directory.certifications WHERE slug = 'bnsp-dive-guide' ON CONFLICT DO NOTHING;
@@ -417,11 +417,11 @@ SELECT 'guide-dian-008', id FROM directory.taxonomies
 ON CONFLICT DO NOTHING;
 
 INSERT INTO directory.tour_guide_languages (guide_id, category_id, fluency, fluency_rate)
-SELECT 'guide-dian-008', id, 'native', 1.00 FROM directory.taxonomies WHERE slug = 'id' AND type = 'guide_language' ON CONFLICT DO NOTHING;
+SELECT 'guide-dian-008', id, 'native', 1.00 FROM directory.taxonomies WHERE slug = 'id' AND type = 'language' ON CONFLICT DO NOTHING;
 INSERT INTO directory.tour_guide_languages (guide_id, category_id, fluency, fluency_rate)
-SELECT 'guide-dian-008', id, 'fluent', 0.85 FROM directory.taxonomies WHERE slug = 'en' AND type = 'guide_language' ON CONFLICT DO NOTHING;
+SELECT 'guide-dian-008', id, 'fluent', 0.85 FROM directory.taxonomies WHERE slug = 'en' AND type = 'language' ON CONFLICT DO NOTHING;
 INSERT INTO directory.tour_guide_languages (guide_id, category_id, fluency, fluency_rate)
-SELECT 'guide-dian-008', id, 'conversational', 0.65 FROM directory.taxonomies WHERE slug = 'fr' AND type = 'guide_language' ON CONFLICT DO NOTHING;
+SELECT 'guide-dian-008', id, 'conversational', 0.65 FROM directory.taxonomies WHERE slug = 'fr' AND type = 'language' ON CONFLICT DO NOTHING;
 
 INSERT INTO directory.tour_guide_certifications (certification_id, tour_guide_id, issued_at)
 SELECT id, 'guide-dian-008', '2018-06-18' FROM directory.certifications WHERE slug = 'hpi-membership' ON CONFLICT DO NOTHING;
@@ -445,3 +445,4 @@ INSERT INTO directory.media (entity_type, entity_id, type, url, metadata, sort_o
   ('guide', 'guide-dian-008', 'image', 'https://images.unsplash.com/photo-1596422846543-75c6fc197f07?w=1200&auto=format&fit=crop&q=80', '{}'::jsonb, 0),
   ('guide', 'guide-dian-008', 'image', 'https://images.unsplash.com/photo-1582967788606-a171c1080cb0?w=1200&auto=format&fit=crop&q=80', '{}'::jsonb, 1)
 ON CONFLICT DO NOTHING;
+

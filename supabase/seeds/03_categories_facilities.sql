@@ -37,17 +37,17 @@ INSERT INTO directory.taxonomies (slug, name, type, metadata) VALUES
   ('workshop',     '{"id": "Workshop", "en": "Traditional Workshop"}'::jsonb, 'village_activity', '{"icon": "🔨"}'),
   ('homestay',     '{"id": "Homestay", "en": "Local Stay Experience"}'::jsonb, 'village_activity', '{"icon": "🏡"}'),
 
-  -- ── Guide Languages ───────────────────────────────────
-  ('id',  '{"id": "Indonesia", "en": "Indonesian"}'::jsonb, 'guide_language', '{"icon": "🇮🇩", "code": "ID"}'),
-  ('en',  '{"id": "Inggris",   "en": "English"}'::jsonb,    'guide_language', '{"icon": "🇬🇧", "code": "EN"}'),
-  ('jp',  '{"id": "Jepang",    "en": "Japanese"}'::jsonb,   'guide_language', '{"icon": "🇯🇵", "code": "JP"}'),
-  ('fr',  '{"id": "Prancis",   "en": "French"}'::jsonb,     'guide_language', '{"icon": "🇫🇷", "code": "FR"}'),
-  ('de',  '{"id": "Jerman",    "en": "German"}'::jsonb,     'guide_language', '{"icon": "🇩🇪", "code": "DE"}'),
-  ('ko',  '{"id": "Korea",     "en": "Korean"}'::jsonb,     'guide_language', '{"icon": "🇰🇷", "code": "KO"}'),
-  ('zh',  '{"id": "Mandarin",  "en": "Mandarin"}'::jsonb,   'guide_language', '{"icon": "🇨🇳", "code": "ZH"}'),
-  ('ar',  '{"id": "Arab",      "en": "Arabic"}'::jsonb,     'guide_language', '{"icon": "🇸🇦", "code": "AR"}'),
-  ('nl',  '{"id": "Belanda",   "en": "Dutch"}'::jsonb,      'guide_language', '{"icon": "🇳🇱", "code": "NL"}'),
-  ('es',  '{"id": "Spanyol",   "en": "Spanish"}'::jsonb,    'guide_language', '{"icon": "🇪🇸", "code": "ES"}'),
+  -- ── Languages (renamed from guide_language — now shared across guides & itineraries)
+  ('id',  '{"id": "Indonesia", "en": "Indonesian"}'::jsonb, 'language', '{"icon": "🇮🇩", "code": "ID"}'),
+  ('en',  '{"id": "Inggris",   "en": "English"}'::jsonb,    'language', '{"icon": "🇬🇧", "code": "EN"}'),
+  ('jp',  '{"id": "Jepang",    "en": "Japanese"}'::jsonb,   'language', '{"icon": "🇯🇵", "code": "JP"}'),
+  ('fr',  '{"id": "Prancis",   "en": "French"}'::jsonb,     'language', '{"icon": "🇫🇷", "code": "FR"}'),
+  ('de',  '{"id": "Jerman",    "en": "German"}'::jsonb,     'language', '{"icon": "🇩🇪", "code": "DE"}'),
+  ('ko',  '{"id": "Korea",     "en": "Korean"}'::jsonb,     'language', '{"icon": "🇰🇷", "code": "KO"}'),
+  ('zh',  '{"id": "Mandarin",  "en": "Mandarin"}'::jsonb,   'language', '{"icon": "🇨🇳", "code": "ZH"}'),
+  ('ar',  '{"id": "Arab",      "en": "Arabic"}'::jsonb,     'language', '{"icon": "🇸🇦", "code": "AR"}'),
+  ('nl',  '{"id": "Belanda",   "en": "Dutch"}'::jsonb,      'language', '{"icon": "🇳🇱", "code": "NL"}'),
+  ('es',  '{"id": "Spanyol",   "en": "Spanish"}'::jsonb,    'language', '{"icon": "🇪🇸", "code": "ES"}'),
 
   -- ── Guide Specialisms ─────────────────────────────────
   ('bahari',       '{"id": "Bahari",      "en": "Marine"}'::jsonb,      'guide_specialism', '{"icon": "🤿", "color": "#D4ECF4", "fg": "#1F6FB0"}'),
