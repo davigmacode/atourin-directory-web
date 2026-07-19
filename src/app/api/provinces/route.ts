@@ -19,6 +19,9 @@ const app = new Elysia({ prefix: '/api/provinces' })
         destinations_count,
         attractions_count,
         villages_count,
+        itineraries_count,
+        tour_guides_count,
+        journals_count,
         cover_image,
         popularity_score,
         island:islands (
@@ -49,6 +52,9 @@ const app = new Elysia({ prefix: '/api/provinces' })
       destinationsCount: row.destinations_count,
       attractionsCount: row.attractions_count,
       villagesCount: row.villages_count,
+      itinerariesCount: row.itineraries_count,
+      tourGuidesCount: row.tour_guides_count,
+      journalsCount: row.journals_count,
       coverImage: {
         url: row.cover_image?.url ?? '',
         blurhash: row.cover_image?.blurhash ?? null,

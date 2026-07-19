@@ -313,9 +313,21 @@ export const findController = new Elysia()
           id: rawProvince.id,
           slug: rawProvince.slug,
           name: rawProvince.name,
+          destinationsCount: 0,
+          attractionsCount: 0,
+          villagesCount: 0,
+          itinerariesCount: 0,
+          tourGuidesCount: 0,
+          journalsCount: 0,
+          coverImage: { url: '', blurhash: null, base64: null },
+          popularityScore: 0,
+          islandId: rawIsland?.id || '',
           island: rawIsland ? {
             id: rawIsland.id,
-            name: rawIsland.name
+            slug: rawIsland.id,
+            name: rawIsland.name,
+            provincesCount: 0,
+            coverImage: { url: '', blurhash: null, base64: null }
           } : undefined
         } : undefined
       } : null;

@@ -9,6 +9,9 @@ export interface Province {
   destinationsCount: number;
   attractionsCount: number;
   villagesCount: number;
+  itinerariesCount: number;
+  tourGuidesCount: number;
+  journalsCount: number;
   coverImage: CoverImage;
   popularityScore: number;
 }
