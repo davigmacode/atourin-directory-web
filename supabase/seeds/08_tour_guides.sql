@@ -446,3 +446,234 @@ INSERT INTO directory.media (entity_type, entity_id, type, url, metadata, sort_o
   ('guide', 'guide-dian-008', 'image', 'https://images.unsplash.com/photo-1582967788606-a171c1080cb0?w=1200&auto=format&fit=crop&q=80', '{}'::jsonb, 1)
 ON CONFLICT DO NOTHING;
 
+-- ── Guide 9: Rizky Pratama (Malang / Hiking & Adventure) ──
+INSERT INTO directory.tour_guides (id, slug, name, description, destination_id, avatar, cover_image, verified, rating_average, reviews_count, trips_count, year_experience, daily_rate) VALUES
+  (
+    'guide-rizky-009', 'rizky-pratama', 'Rizky Pratama',
+    '{"id": "Pemandu gunung Malang dengan keahlian hiking dan eksplorasi pegunungan Jawa Timur.", "en": "Malang mountain guide specializing in hiking and East Java mountain exploration."}'::jsonb,
+    (SELECT id FROM directory.destinations WHERE slug = 'malang' LIMIT 1),
+    '{"url": "https://i.pravatar.cc/200?img=32", "blurhash": null}'::jsonb,
+    '{"url": "https://images.unsplash.com/photo-1585409677983-0f6c41ca9c3b?w=1200&auto=format&fit=crop&q=80", "blurhash": null}'::jsonb,
+    true, 4.87, 118, 204, 7, 600000
+  )
+ON CONFLICT (slug) DO NOTHING;
+
+INSERT INTO directory.tour_guide_specialism (guide_id, taxonomy_id)
+SELECT 'guide-rizky-009', id FROM directory.taxonomies
+  WHERE slug IN ('hiking', 'petualangan', 'fotografi') AND type = 'guide_specialism'
+ON CONFLICT DO NOTHING;
+
+INSERT INTO directory.tour_guide_languages (guide_id, category_id, fluency, fluency_rate)
+SELECT 'guide-rizky-009', id, 'native', 1.00 FROM directory.taxonomies WHERE slug = 'id' AND type = 'language' ON CONFLICT DO NOTHING;
+INSERT INTO directory.tour_guide_languages (guide_id, category_id, fluency, fluency_rate)
+SELECT 'guide-rizky-009', id, 'fluent', 0.85 FROM directory.taxonomies WHERE slug = 'en' AND type = 'language' ON CONFLICT DO NOTHING;
+
+INSERT INTO directory.tour_guide_certifications (certification_id, tour_guide_id, issued_at)
+SELECT id, 'guide-rizky-009', '2019-02-14' FROM directory.certifications WHERE slug = 'hpi-membership' ON CONFLICT DO NOTHING;
+INSERT INTO directory.tour_guide_certifications (certification_id, tour_guide_id, issued_at)
+SELECT id, 'guide-rizky-009', '2020-08-19' FROM directory.certifications WHERE slug = 'bnsp-mountain-guide' ON CONFLICT DO NOTHING;
+INSERT INTO directory.tour_guide_certifications (certification_id, tour_guide_id, issued_at)
+SELECT id, 'guide-rizky-009', '2021-05-11' FROM directory.certifications WHERE slug = 'bnsp-first-aid' ON CONFLICT DO NOTHING;
+
+INSERT INTO directory.tour_guide_packages (id, guide_id, slug, title, is_bestseller, duration_days, duration_nights, schedule_start, schedule_end, min_pax, max_pax, transport_type, transport_capacity, price_per_pax, price_note, highlights, sort_order) VALUES
+  (
+    'pkg-rizky-001', 'guide-rizky-009', 'malang-bromo-sunrise-hike',
+    '{"id": "Bromo Sunrise Hike dari Malang", "en": "Bromo Sunrise Hike from Malang"}'::jsonb,
+    true, 1, 0, '03.00', '12.00', 2, 8, 'Jeep 4WD', '8 pax',
+    750000, 'sarapan dan kopi',
+    '[{"id": "Bukit Penanjakan", "en": "Penanjakan Hill"}, {"id": "Kawah Bromo", "en": "Bromo Crater"}, {"id": "Pasir Berbisik", "en": "Whispering Sand"}, {"id": "Padang Savana", "en": "Savanna Field"}]'::jsonb,
+    1
+  ),
+  (
+    'pkg-rizky-002', 'guide-rizky-009', 'malang-waterfall-tour',
+    '{"id": "Malang Waterfall Exploration", "en": "Malang Waterfall Exploration"}'::jsonb,
+    false, 1, 0, '07.00', '17.00', 2, 6, 'Minivan AC', '6 pax',
+    550000, 'makan siang included',
+    '[{"id": "Coban Rondo", "en": "Coban Rondo"}, {"id": "Coban Rais", "en": "Coban Rais"}, {"id": "Kebun Teh Wonosari", "en": "Wonosari Tea Plantation"}, {"id": "Coban Talun", "en": "Coban Talun"}]'::jsonb,
+    2
+  ),
+  (
+    'pkg-rizky-003', 'guide-rizky-009', 'malang-tumpak-sewu-2d1n',
+    '{"id": "Tumpak Sewu & Semuru 2H1M", "en": "Tumpak Sewu & Semuru 2D1N"}'::jsonb,
+    false, 2, 1, '06.00', '14.00', 2, 8, 'Jeep 4WD', '8 pax',
+    2100000, 'camping gear, makan 4x',
+    '[{"id": "Air Terjun Tumpak Sewu", "en": "Tumpak Sewu Waterfall"}, {"id": "Ranukumbolo", "en": "Ranukumbolo Lake"}, {"id": "Puncak Semuru", "en": "Semuru Peak"}, {"id": "Desa Ngadas", "en": "Ngadas Village"}]'::jsonb,
+    3
+  )
+ON CONFLICT (slug) DO NOTHING;
+
+INSERT INTO directory.media (entity_type, entity_id, type, url, metadata, sort_order) VALUES
+  ('guide', 'guide-rizky-009', 'image', 'https://images.unsplash.com/photo-1585409677983-0f6c41ca9c3b?w=1200&auto=format&fit=crop&q=80', '{}'::jsonb, 0),
+  ('guide', 'guide-rizky-009', 'image', 'https://images.unsplash.com/photo-1518173946687-a4f8892bb1e1?w=1200&auto=format&fit=crop&q=80', '{}'::jsonb, 1),
+  ('guide', 'guide-rizky-009', 'image', 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&auto=format&fit=crop&q=80', '{}'::jsonb, 2)
+ON CONFLICT DO NOTHING;
+
+-- ── Guide 10: Dewi Kusuma Wardani (Banyuwangi / Nature & Culture) ──
+INSERT INTO directory.tour_guides (id, slug, name, description, destination_id, avatar, cover_image, verified, rating_average, reviews_count, trips_count, year_experience, daily_rate) VALUES
+  (
+    'guide-dewi-010', 'dewi-kusuma-wardani', 'Dewi Kusuma Wardani',
+    '{"id": "Pemandu alam Banyuwangi yang ahli dalam wisata kawah Ijen dan budaya Using.", "en": "Banyuwangi nature guide skilled in Ijen crater tours and Using traditional culture."}'::jsonb,
+    (SELECT id FROM directory.destinations WHERE slug = 'banyuwangi' LIMIT 1),
+    '{"url": "https://i.pravatar.cc/200?img=28", "blurhash": null}'::jsonb,
+    '{"url": "https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=1200&auto=format&fit=crop&q=80", "blurhash": null}'::jsonb,
+    true, 4.83, 96, 178, 5, 500000
+  )
+ON CONFLICT (slug) DO NOTHING;
+
+INSERT INTO directory.tour_guide_specialism (guide_id, taxonomy_id)
+SELECT 'guide-dewi-010', id FROM directory.taxonomies
+  WHERE slug IN ('petualangan', 'budaya', 'heritage') AND type = 'guide_specialism'
+ON CONFLICT DO NOTHING;
+
+INSERT INTO directory.tour_guide_languages (guide_id, category_id, fluency, fluency_rate)
+SELECT 'guide-dewi-010', id, 'native', 1.00 FROM directory.taxonomies WHERE slug = 'id' AND type = 'language' ON CONFLICT DO NOTHING;
+INSERT INTO directory.tour_guide_languages (guide_id, category_id, fluency, fluency_rate)
+SELECT 'guide-dewi-010', id, 'fluent', 0.85 FROM directory.taxonomies WHERE slug = 'en' AND type = 'language' ON CONFLICT DO NOTHING;
+INSERT INTO directory.tour_guide_languages (guide_id, category_id, fluency, fluency_rate)
+SELECT 'guide-dewi-010', id, 'conversational', 0.65 FROM directory.taxonomies WHERE slug = 'jp' AND type = 'language' ON CONFLICT DO NOTHING;
+
+INSERT INTO directory.tour_guide_certifications (certification_id, tour_guide_id, issued_at)
+SELECT id, 'guide-dewi-010', '2019-06-10' FROM directory.certifications WHERE slug = 'hpi-membership' ON CONFLICT DO NOTHING;
+INSERT INTO directory.tour_guide_certifications (certification_id, tour_guide_id, issued_at)
+SELECT id, 'guide-dewi-010', '2020-12-03' FROM directory.certifications WHERE slug = 'bnsp-guide-level-2' ON CONFLICT DO NOTHING;
+INSERT INTO directory.tour_guide_certifications (certification_id, tour_guide_id, issued_at)
+SELECT id, 'guide-dewi-010', '2021-07-21' FROM directory.certifications WHERE slug = 'cultural-heritage-training' ON CONFLICT DO NOTHING;
+
+INSERT INTO directory.tour_guide_packages (id, guide_id, slug, title, is_bestseller, duration_days, duration_nights, schedule_start, schedule_end, min_pax, max_pax, transport_type, transport_capacity, price_per_pax, price_note, highlights, sort_order) VALUES
+  (
+    'pkg-dewi-001', 'guide-dewi-010', 'ijen-bluefire-midnight-hike',
+    '{"id": "Ijen Blue Fire Midnight Hike", "en": "Ijen Blue Fire Midnight Hike"}'::jsonb,
+    true, 1, 0, '01.00', '12.00', 2, 8, 'Minivan AC', '8 pax',
+    600000, 'headlamp, masker',
+    '[{"id": "Blue Fire", "en": "Blue Fire"}, {"id": "Kawah Ijen", "en": "Ijen Crater"}, {"id": "Pohon Suren", "en": "Suren Trees"}, {"id": "Paltuding", "en": "Paltuding Basecamp"}]'::jsonb,
+    1
+  ),
+  (
+    'pkg-dewi-002', 'guide-dewi-010', 'banyuwangi-using-culture',
+    '{"id": "Banyuwangi Using Culture Day", "en": "Banyuwangi Using Culture Day"}'::jsonb,
+    false, 1, 0, '08.00', '17.00', 2, 10, 'Minivan AC', '10 pax',
+    450000, 'makan siang tradisional',
+    '[{"id": "Kampung Using", "en": "Using Village"}, {"id": "Tari Gandrung", "en": "Gandrung Dance"}, {"id": "Pulau Tabuhan", "en": "Tabuhan Island"}, {"id": "Pantai Boom", "en": "Boom Beach"}]'::jsonb,
+    2
+  ),
+  (
+    'pkg-dewi-003', 'guide-dewi-010', 'ijen-banyuwangi-2d1n-combo',
+    '{"id": "Ijen & Banyuwangi 2H1M", "en": "Ijen & Banyuwangi 2D1N"}'::jsonb,
+    false, 2, 1, '01.00', '16.00', 2, 8, 'Minivan AC', '8 pax',
+    1500000, 'penginapan, makan 3x',
+    '[{"id": "Blue Fire Ijen", "en": "Ijen Blue Fire"}, {"id": "Baluran Savannah", "en": "Baluran Savannah"}, {"id": "Pantai Bama", "en": "Bama Beach"}, {"id": "Kampung Using", "en": "Using Village"}]'::jsonb,
+    3
+  )
+ON CONFLICT (slug) DO NOTHING;
+
+INSERT INTO directory.media (entity_type, entity_id, type, url, metadata, sort_order) VALUES
+  ('guide', 'guide-dewi-010', 'image', 'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=1200&auto=format&fit=crop&q=80', '{}'::jsonb, 0),
+  ('guide', 'guide-dewi-010', 'image', 'https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=1200&auto=format&fit=crop&q=80', '{}'::jsonb, 1),
+  ('guide', 'guide-dewi-010', 'image', 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=1200&auto=format&fit=crop&q=80', '{}'::jsonb, 2)
+ON CONFLICT DO NOTHING;
+
+-- ── Guide 11: Togar Situmorang (Toba Samosir / Batak Culture) ──
+INSERT INTO directory.tour_guides (id, slug, name, description, destination_id, avatar, cover_image, verified, rating_average, reviews_count, trips_count, year_experience, daily_rate) VALUES
+  (
+    'guide-togar-011', 'togar-situmorang', 'Togar Situmorang',
+    '{"id": "Pemandu budaya Batak Toba yang mendalami sejarah Danau Toba dan tradisi Batak.", "en": "Batak Toba cultural guide deeply rooted in Lake Toba history and Batak traditions."}'::jsonb,
+    (SELECT id FROM directory.destinations WHERE slug = 'toba-samosir' LIMIT 1),
+    '{"url": "https://i.pravatar.cc/200?img=60", "blurhash": null}'::jsonb,
+    '{"url": "https://images.unsplash.com/photo-1511497584788-876760111969?w=1200&auto=format&fit=crop&q=80", "blurhash": null}'::jsonb,
+    true, 4.91, 74, 132, 8, 450000
+  )
+ON CONFLICT (slug) DO NOTHING;
+
+INSERT INTO directory.tour_guide_specialism (guide_id, taxonomy_id)
+SELECT 'guide-togar-011', id FROM directory.taxonomies
+  WHERE slug IN ('budaya', 'heritage', 'fotografi') AND type = 'guide_specialism'
+ON CONFLICT DO NOTHING;
+
+INSERT INTO directory.tour_guide_languages (guide_id, category_id, fluency, fluency_rate)
+SELECT 'guide-togar-011', id, 'native', 1.00 FROM directory.taxonomies WHERE slug = 'id' AND type = 'language' ON CONFLICT DO NOTHING;
+INSERT INTO directory.tour_guide_languages (guide_id, category_id, fluency, fluency_rate)
+SELECT 'guide-togar-011', id, 'fluent', 0.85 FROM directory.taxonomies WHERE slug = 'en' AND type = 'language' ON CONFLICT DO NOTHING;
+
+INSERT INTO directory.tour_guide_certifications (certification_id, tour_guide_id, issued_at)
+SELECT id, 'guide-togar-011', '2016-09-01' FROM directory.certifications WHERE slug = 'hpi-membership' ON CONFLICT DO NOTHING;
+INSERT INTO directory.tour_guide_certifications (certification_id, tour_guide_id, issued_at)
+SELECT id, 'guide-togar-011', '2018-04-12' FROM directory.certifications WHERE slug = 'bnsp-guide-level-2' ON CONFLICT DO NOTHING;
+INSERT INTO directory.tour_guide_certifications (certification_id, tour_guide_id, issued_at)
+SELECT id, 'guide-togar-011', '2019-11-05' FROM directory.certifications WHERE slug = 'sapta-pesona-training' ON CONFLICT DO NOTHING;
+
+INSERT INTO directory.tour_guide_packages (id, guide_id, slug, title, is_bestseller, duration_days, duration_nights, schedule_start, schedule_end, min_pax, max_pax, transport_type, transport_capacity, price_per_pax, price_note, highlights, sort_order) VALUES
+  (
+    'pkg-togar-001', 'guide-togar-011', 'toba-batak-culture-day',
+    '{"id": "Danau Toba & Budaya Batak 1 Hari", "en": "Lake Toba & Batak Culture 1 Day"}'::jsonb,
+    true, 1, 0, '08.00', '17.00', 2, 8, 'Minivan AC', '8 pax',
+    500000, 'makan siang khas Batak',
+    '[{"id": "Rumah Bolon", "en": "Bolon Traditional House"}, {"id": "Tomok Village", "en": "Tomok Village"}, {"id": "Makam Raja Sidabutar", "en": "King Sidabutar Tomb"}, {"id": "Air Terjun Efrata", "en": "Efrata Waterfall"}]'::jsonb,
+    1
+  ),
+  (
+    'pkg-togar-002', 'guide-togar-011', 'toba-island-explore-2d1n',
+    '{"id": "Samosir Island Explore 2H1M", "en": "Samosir Island Explore 2D1N"}'::jsonb,
+    false, 2, 1, '08.00', '15.00', 2, 6, 'Ferry + Minivan', '6 pax',
+    1200000, 'penginapan, makan 4x',
+    '[{"id": "Pulau Samosir", "en": "Samosir Island"}, {"id": "Desa Ambarita", "en": "Ambarita Village"}, {"id": "Huta Siallagan", "en": "Siallagan Village"}, {"id": "Bukit Holbung", "en": "Holbung Hill"}, {"id": "Aek Rangat", "en": "Aek Rangat Hot Spring"}]'::jsonb,
+    2
+  )
+ON CONFLICT (slug) DO NOTHING;
+
+INSERT INTO directory.media (entity_type, entity_id, type, url, metadata, sort_order) VALUES
+  ('guide', 'guide-togar-011', 'image', 'https://images.unsplash.com/photo-1511497584788-876760111969?w=1200&auto=format&fit=crop&q=80', '{}'::jsonb, 0),
+  ('guide', 'guide-togar-011', 'image', 'https://images.unsplash.com/photo-1433086966358-54859d0ed716?w=1200&auto=format&fit=crop&q=80', '{}'::jsonb, 1),
+  ('guide', 'guide-togar-011', 'image', 'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=1200&auto=format&fit=crop&q=80', '{}'::jsonb, 2)
+ON CONFLICT DO NOTHING;
+
+-- ── Guide 12: Yosep Kala'bi' (Toraja Utara / Culture & Heritage) ──
+INSERT INTO directory.tour_guides (id, slug, name, description, destination_id, avatar, cover_image, verified, rating_average, reviews_count, trips_count, year_experience, daily_rate) VALUES
+  (
+    'guide-yosep-012', 'yosep-kalabi', 'Yosep Kala''bi''',
+    '{"id": "Pemandu budaya Toraja yang ahli dalam adat Rambu Solo'' dan arsitektur Tongkonan.", "en": "Toraja cultural guide expert in Rambu Solo'' ceremonies and Tongkonan architecture."}'::jsonb,
+    (SELECT id FROM directory.destinations WHERE slug = 'toraja-utara' LIMIT 1),
+    '{"url": "https://i.pravatar.cc/200?img=55", "blurhash": null}'::jsonb,
+    '{"url": "https://images.unsplash.com/photo-1509233725247-49e657c542a7?w=1200&auto=format&fit=crop&q=80", "blurhash": null}'::jsonb,
+    true, 4.89, 56, 98, 10, 400000
+  )
+ON CONFLICT (slug) DO NOTHING;
+
+INSERT INTO directory.tour_guide_specialism (guide_id, taxonomy_id)
+SELECT 'guide-yosep-012', id FROM directory.taxonomies
+  WHERE slug IN ('budaya', 'heritage', 'spiritual') AND type = 'guide_specialism'
+ON CONFLICT DO NOTHING;
+
+INSERT INTO directory.tour_guide_languages (guide_id, category_id, fluency, fluency_rate)
+SELECT 'guide-yosep-012', id, 'native', 1.00 FROM directory.taxonomies WHERE slug = 'id' AND type = 'language' ON CONFLICT DO NOTHING;
+INSERT INTO directory.tour_guide_languages (guide_id, category_id, fluency, fluency_rate)
+SELECT 'guide-yosep-012', id, 'conversational', 0.65 FROM directory.taxonomies WHERE slug = 'en' AND type = 'language' ON CONFLICT DO NOTHING;
+
+INSERT INTO directory.tour_guide_certifications (certification_id, tour_guide_id, issued_at)
+SELECT id, 'guide-yosep-012', '2014-12-08' FROM directory.certifications WHERE slug = 'hpi-membership' ON CONFLICT DO NOTHING;
+INSERT INTO directory.tour_guide_certifications (certification_id, tour_guide_id, issued_at)
+SELECT id, 'guide-yosep-012', '2016-05-20' FROM directory.certifications WHERE slug = 'cultural-heritage-training' ON CONFLICT DO NOTHING;
+
+INSERT INTO directory.tour_guide_packages (id, guide_id, slug, title, is_bestseller, duration_days, duration_nights, schedule_start, schedule_end, min_pax, max_pax, transport_type, transport_capacity, price_per_pax, price_note, highlights, sort_order) VALUES
+  (
+    'pkg-yosep-001', 'guide-yosep-012', 'toraja-heritage-day',
+    '{"id": "Toraja Heritage 1 Hari", "en": "Toraja Heritage 1 Day"}'::jsonb,
+    true, 1, 0, '08.00', '17.00', 2, 8, 'Minivan AC', '8 pax',
+    450000, 'tiket masuk objek wisata',
+    '[{"id": "Tongkonan Ke''te'' Kesu''", "en": "Ke''te'' Kesu'' Tongkonan"}, {"id": "Lemo Graves", "en": "Lemo Graves"}, {"id": "Londa", "en": "Londa"}, {"id": "Batu Tumonga", "en": "Batu Tumonga"}]'::jsonb,
+    1
+  ),
+  (
+    'pkg-yosep-002', 'guide-yosep-012', 'toraja-rambu-solo-2d1n',
+    '{"id": "Rambu Solo'' Ceremony 2H1M", "en": "Rambu Solo'' Ceremony 2D1N"}'::jsonb,
+    false, 2, 1, '07.00', '18.00', 2, 10, 'Minivan AC', '10 pax',
+    1800000, 'souvenir, akomodasi',
+    '[{"id": "Upacara Rambu Solo''", "en": "Rambu Solo'' Ceremony"}, {"id": "Desa Kete Kesu", "en": "Kete Kesu Village"}, {"id": "Makam Batu Lemo", "en": "Lemo Stone Graves"}, {"id": "Pasar Bolu", "en": "Bolu Traditional Market"}, {"id": "Tongkonan", "en": "Tongkonan Houses"}]'::jsonb,
+    2
+  )
+ON CONFLICT (slug) DO NOTHING;
+
+INSERT INTO directory.media (entity_type, entity_id, type, url, metadata, sort_order) VALUES
+  ('guide', 'guide-yosep-012', 'image', 'https://images.unsplash.com/photo-1509233725247-49e657c542a7?w=1200&auto=format&fit=crop&q=80', '{}'::jsonb, 0),
+  ('guide', 'guide-yosep-012', 'image', 'https://images.unsplash.com/photo-1497436072909-60f360e1d4b1?w=1200&auto=format&fit=crop&q=80', '{}'::jsonb, 1)
+ON CONFLICT DO NOTHING;
+
