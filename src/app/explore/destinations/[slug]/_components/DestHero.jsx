@@ -89,8 +89,8 @@ export default function DestHero({ dest, covers }) {
         </div>
         <div style={dh.heroTagRow}>
           {(dest.tags || []).map((t) => (
-            <span key={t} style={dh.heroTag}>
-              {t}
+            <span key={t.slug} style={dh.heroTag}>
+              {t.name}
             </span>
           ))}
         </div>

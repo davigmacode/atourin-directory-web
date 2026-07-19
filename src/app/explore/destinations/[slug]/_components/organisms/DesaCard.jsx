@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Link from "next/link";
 import tc from "../tab-card-styles";
 import CardImageWithBadge from "../molecules/CardImageWithBadge";
 import StatusDot from "../atoms/StatusDot";
@@ -30,7 +31,7 @@ export default function DesaCard({ d }) {
   ];
 
   return (
-    <a
+    <Link
       href={`/explore/tourism-villages/${slugify(d.name)}`}
       style={{ ...tc.desaCard, textDecoration: "none", color: "inherit" }}
     >
@@ -53,6 +54,6 @@ export default function DesaCard({ d }) {
           <button style={tc.cardCta}>Lihat profil →</button>
         </div>
       </div>
-    </a>
+    </Link>
   );
 }

@@ -2,18 +2,14 @@
 
 import React, { useState, useEffect, useCallback } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import useSWR from "swr";
 import { TopNav, SiteFooter } from "@/components/layout";
-import { DESTINATIONS } from "@/data/destinations";
 import { cat } from "@/lib/i18n";
 import dh from "@/styles/destination-detail";
-
-
-function slugify(text) {
-  return text
-    .toLowerCase()
-    .replace(/[^a-z0-9\s]/g, "")
-    .replace(/\s+/g, "-");
-}
+import DestHero from "./_components/DestHero";
+import DestTabs from "./_components/DestTabs";
+import DestSidebar from "./_components/DestSidebar";
+import { AtraksiTab, DesaTab, ItineraryTab, PemanduTab, CeritaTab, InfoTab } from "./_components/TabPanels";
 
 /* ── Default cover images for hero slider ────────────── */
 const FALLBACK_COVERS = [
@@ -23,34 +19,39 @@ const FALLBACK_COVERS = [
 ];
 
 const WEATHER_ICONS = ["☀️", "⛅", "🌤️", "🌦️", "☁️"];
-const WEATHER_COND = [
-  "Cerah",
-  "Cerah berawan",
-  "Berawan",
-  "Hujan ringan",
-  "Mendung",
-];
+const WEATHER_COND = ["Cerah", "Cerah berawan", "Berawan", "Hujan ringan", "Mendung"];
 
-/* ── Tab definitions ──────────────────────────────────── */
 function getTabs(dest) {
   return [
-    { id: "atraksi", label: cat("attraction", "Atraksi"), count: dest.attr },
-    { id: "desa", label: cat("village", "Desa Wisata"), count: dest.desa },
-    { id: "itinerary", label: cat("itinerary", "Itinerary"), count: dest.itin },
-    { id: "pemandu", label: cat("guide", "Pemandu"), count: dest.guide },
-    { id: "cerita", label: "Cerita Wisatawan" },
-    { id: "info", label: "Travel Info & Tips" },
+    { id: "atraksi",   label: cat("attraction", "Atraksi"),     count: dest.attractionsCount ?? dest.attr ?? 0 },
+    { id: "desa",      label: cat("village", "Desa Wisata"),     count: dest.villagesCount ?? dest.desa ?? 0 },
+    { id: "itinerary", label: cat("itinerary", "Itinerary"),     count: dest.itinerariesCount ?? dest.itin ?? 0 },
+    { id: "pemandu",   label: cat("guide", "Pemandu"),           count: dest.tourGuidesCount ?? dest.guide ?? 0 },
+    { id: "cerita",    label: "Cerita Wisatawan" },
+    { id: "info",      label: "Travel Info & Tips" },
   ];
 }
 
-import DestHero from "./_components/DestHero";
-import DestTabs from "./_components/DestTabs";
-import DestSidebar from "./_components/DestSidebar";
-import { AtraksiTab, DesaTab, ItineraryTab, PemanduTab, CeritaTab, InfoTab } from "./_components/TabPanels";
+function mapApiDest(apiDest) {
+  return {
+    ...apiDest,
+    img: apiDest.coverImage?.url || apiDest.cover_image?.url || '',
+    name: apiDest.name?.id || apiDest.name || '',
+    description: apiDest.description?.id || apiDest.description || '',
+    province: apiDest.province?.name || apiDest.province || '',
+    type: apiDest.type || 'city',
+    area: '',
+    population: '',
+    bestTime: '',
+    language: '',
+    rating: apiDest.ratingAverage ?? apiDest.rating_average ?? 0,
+    attr: apiDest.attractionsCount ?? apiDest.attractions_count ?? 0,
+    desa: apiDest.villagesCount ?? apiDest.villages_count ?? 0,
+    itin: apiDest.itinerariesCount ?? apiDest.itineraries_count ?? 0,
+    guide: apiDest.tourGuidesCount ?? apiDest.tour_guides_count ?? 0,
+  };
+}
 
-/* ==========================================================
-   MAIN PAGE
-   ========================================================== */
 export default function DestinationDetailPage({ params: paramsPromise }) {
   const [params, setParams] = useState(null);
   const [activeTab, setActiveTab] = useState("atraksi");
@@ -63,12 +64,7 @@ export default function DestinationDetailPage({ params: paramsPromise }) {
 
   useEffect(() => {
     const tab = searchParams.get("tab");
-    if (
-      tab &&
-      ["atraksi", "desa", "itinerary", "pemandu", "cerita", "info"].includes(
-        tab,
-      )
-    ) {
+    if (tab && ["atraksi", "desa", "itinerary", "pemandu", "cerita", "info"].includes(tab)) {
       setActiveTab(tab);
     }
   }, [searchParams]);
@@ -80,19 +76,33 @@ export default function DestinationDetailPage({ params: paramsPromise }) {
     window.history.replaceState({}, "", url);
   }, []);
 
+  const slug = params?.slug;
+  const { data: apiData, isLoading, error } = useSWR(slug ? `/destinations/${slug}` : null);
+
+  useEffect(() => {
+    if (!isLoading && error) {
+      console.warn("[DestinationDetailPage] API error:", error);
+    }
+  }, [error, isLoading]);
+
   if (!params) return null;
 
-  const { slug } = params;
-
-  const dest = DESTINATIONS.find((d) => slugify(d.name) === slug);
-
-  if (!dest) {
-    if (typeof window !== "undefined") {
-      router.replace("/destinations");
-    }
-    return null;
+  if (error) {
+    return (
+      <div>
+        <TopNav active="Jelajahi" />
+        <div style={{ textAlign: "center", padding: 80, color: "var(--atr-text-muted)" }}>
+          <div style={{ fontSize: 48, marginBottom: 12 }}>🔍</div>
+          <p style={{ fontSize: 15 }}>Destinasi tidak ditemukan.</p>
+        </div>
+        <SiteFooter />
+      </div>
+    );
   }
 
+  if (isLoading || !apiData?.data) return null;
+
+  const dest = mapApiDest(apiData.data);
   const covers = [dest.img, ...FALLBACK_COVERS.slice(0, 3)];
   const tabs = getTabs(dest);
 
@@ -100,19 +110,15 @@ export default function DestinationDetailPage({ params: paramsPromise }) {
     <div>
       <TopNav active="Jelajahi" />
       <DestHero dest={dest} covers={covers} />
-      <DestTabs
-        tabs={tabs}
-        activeTab={activeTab}
-        setActiveTab={handleSetActiveTab}
-      />
+      <DestTabs tabs={tabs} activeTab={activeTab} setActiveTab={handleSetActiveTab} />
       <div style={dh.pageBody}>
         <main>
-          {activeTab === "atraksi" && <AtraksiTab dest={dest} />}
-          {activeTab === "desa" && <DesaTab dest={dest} />}
+          {activeTab === "atraksi"   && <AtraksiTab dest={dest} />}
+          {activeTab === "desa"      && <DesaTab dest={dest} />}
           {activeTab === "itinerary" && <ItineraryTab dest={dest} />}
-          {activeTab === "pemandu" && <PemanduTab dest={dest} />}
-          {activeTab === "cerita" && <CeritaTab />}
-          {activeTab === "info" && <InfoTab dest={dest} />}
+          {activeTab === "pemandu"   && <PemanduTab dest={dest} />}
+          {activeTab === "cerita"    && <CeritaTab />}
+          {activeTab === "info"      && <InfoTab dest={dest} />}
         </main>
         <DestSidebar dest={dest} />
       </div>

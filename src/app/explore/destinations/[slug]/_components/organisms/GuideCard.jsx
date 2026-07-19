@@ -2,6 +2,7 @@
 
 import React from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import tc from "../tab-card-styles";
 import CardPrice from "../molecules/CardPrice";
 import StatusDot from "../atoms/StatusDot";
@@ -22,7 +23,6 @@ export default function GuideCard({ p }) {
     </span>
   ) : null;
 
-  // CTAs are <button> not <a> to avoid nesting links (whole card is already a link).
   function handleCtaClick(e) {
     e.preventDefault();
     e.stopPropagation();
@@ -30,7 +30,7 @@ export default function GuideCard({ p }) {
   }
 
   return (
-    <a href={slug} style={{ ...tc.guideCard, textDecoration: "none", color: "inherit" }}>
+    <Link href={slug} style={{ ...tc.guideCard, textDecoration: "none", color: "inherit" }}>
       <div style={tc.guideImgWrap}>
         <img src={p.img} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
         {verifiedBadge}
@@ -80,6 +80,6 @@ export default function GuideCard({ p }) {
           </button>
         </div>
       </div>
-    </a>
+    </Link>
   );
 }

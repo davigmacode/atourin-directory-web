@@ -32,6 +32,8 @@ export const getController = new Elysia()
         cover_image,
         featured,
         adwi_level_id,
+        categories,
+        activities,
         adwi_level:taxonomies!adwi_level_id (
           id,
           slug,
@@ -87,41 +89,19 @@ export const getController = new Elysia()
       return { error: 'Tourism village not found' };
     }
 
-    // 2. Fetch category assignments
-    const { data: assignmentsData, error: assignError } = await supabaseAdmin
-      .schema('directory')
-      .from('tourism_village_categories')
-      .select(`
-        taxonomy:taxonomies (
-          id,
-          slug,
-          name,
-          type,
-          metadata
-        )
-      `)
-      .eq('tourism_village_id', row.id);
+    // 2. Fetch categories from taxonomy metadata
+    const catSlugs = (row as any).categories ?? [];
+    const { data: assignTaxData } = catSlugs.length
+      ? await supabaseAdmin.schema('directory').from('taxonomies')
+          .select('id, slug, name, type, metadata').in('slug', catSlugs)
+      : { data: [] };
 
-    // 2b. Fetch activity assignments
-    const { data: activitiesData, error: actError } = await supabaseAdmin
-      .schema('directory')
-      .from('tourism_village_activities')
-      .select(`
-        taxonomy:taxonomies (
-          id,
-          slug,
-          name,
-          type,
-          metadata
-        )
-      `)
-      .eq('tourism_village_id', row.id);
-
-    if (assignError) {
-      console.error('[api/tourism-villages/[slug] GET assignments]', assignError.message);
-      set.status = 500;
-      return { error: assignError.message };
-    }
+    // 2b. Fetch activities from taxonomy metadata
+    const actSlugs = (row as any).activities ?? [];
+    const { data: actTaxData } = actSlugs.length
+      ? await supabaseAdmin.schema('directory').from('taxonomies')
+          .select('id, slug, name, type, metadata').in('slug', actSlugs)
+      : { data: [] };
 
     // 3. Fetch all facilities that are expected for villages from the database
     const { data: allFacs, error: allFacsError } = await supabaseAdmin
@@ -170,10 +150,8 @@ export const getController = new Elysia()
       return { error: mediaError.message };
     }
 
-    // Process categories Ã¢â‚¬â€ preserve type and raw name for ADWI resolution
-    const categories = (assignmentsData ?? []).map((ca: any) => {
-      const cat = ca.taxonomy;
-      if (!cat) return null;
+    // Process categories
+    const categories = (assignTaxData ?? []).map((cat: any) => {
       const nameObj = cat.name;
       let catName = '';
       if (typeof nameObj === 'string') {
@@ -189,12 +167,10 @@ export const getController = new Elysia()
         type: cat.type,
         metadata: cat.metadata || {},
       };
-    }).filter((c) => c !== null);
+    });
 
     // Process activities
-    const activities = (activitiesData ?? []).map((ca: any) => {
-      const cat = ca.taxonomy;
-      if (!cat) return null;
+    const activities = (actTaxData ?? []).map((cat: any) => {
       const nameObj = cat.name;
       let catName = '';
       if (typeof nameObj === 'string') {
@@ -209,7 +185,7 @@ export const getController = new Elysia()
         type: cat.type,
         metadata: cat.metadata || {},
       };
-    }).filter((c) => c !== null);
+    });
 
     // Process facilities
     const facilities = (allFacs ?? []).map((fac: any) => {

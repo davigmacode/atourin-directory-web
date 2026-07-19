@@ -1,11 +1,16 @@
 "use client";
 
 import React from "react";
+import Link from "next/link";
 import tc from "../tab-card-styles";
 import CardImageWithBadge from "../molecules/CardImageWithBadge";
 import CardInfo from "../atoms/CardInfo";
 import CardBudget from "../molecules/CardBudget";
 import CardCreatorInfo from "../molecules/CardCreatorInfo";
+
+function slugify(text) {
+  return text.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+}
 
 export default function ItineraryCard({ it }) {
   const themeColor = "#FFE9D6";
@@ -19,7 +24,7 @@ export default function ItineraryCard({ it }) {
   ];
 
   return (
-    <a href="#" style={{ ...tc.itinCard, textDecoration: "none", color: "inherit" }}>
+    <Link href={`/explore/itinerary/${slugify(it.title)}`} style={{ ...tc.itinCard, textDecoration: "none", color: "inherit" }}>
       <CardImageWithBadge src={it.img} alt={it.title} badges={badges} />
       <div style={tc.cardBody}>
         <h3 style={tc.cardName}>{it.title}</h3>
@@ -38,6 +43,6 @@ export default function ItineraryCard({ it }) {
           <div style={tc.itinRatingBlock}>★ <strong>{it.rating}</strong></div>
         </div>
       </div>
-    </a>
+    </Link>
   );
 }
