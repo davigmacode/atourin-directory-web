@@ -154,11 +154,11 @@ export const getController = new Elysia()
         name,
         description,
         cover_image,
-        days,
-        daily_price,
+        duration_days,
+        budget_estimation,
         rating_average,
         reviews_count,
-        tag,
+        categories,
         destination:destinations ( id, name, slug )
       `)
       .eq('destination_id', row.id)
@@ -181,11 +181,8 @@ export const getController = new Elysia()
         rating_average,
         trips_count,
         daily_rate,
-        experience_years,
+        year_experience,
         verified,
-        specializations,
-        languages,
-        certifications,
         destination:destinations (
           id,
           name,
@@ -199,6 +196,45 @@ export const getController = new Elysia()
     if (guideError) {
       console.error('[api/destinations/[slug] GET related guides]', guideError.message);
     }
+
+    // Batch-fetch guide specialisms, languages, certifications
+    const guideIds = (guidesData ?? []).map((g: any) => g.id);
+
+    const { data: specData } = guideIds.length
+      ? await supabaseAdmin.schema('directory').from('tour_guide_specialism')
+          .select('guide_id, taxonomy:taxonomies!taxonomy_id(slug)').in('guide_id', guideIds)
+      : { data: [] };
+    const specByGuide: Record<string, string[]> = {};
+    (specData ?? []).forEach((r: any) => {
+      const gid = r.guide_id;
+      if (!specByGuide[gid]) specByGuide[gid] = [];
+      const t = r.taxonomy;
+      specByGuide[gid].push(typeof t === 'object' ? (t.slug || '') : '');
+    });
+
+    const { data: langData } = guideIds.length
+      ? await supabaseAdmin.schema('directory').from('tour_guide_languages')
+          .select('guide_id, tax:taxonomies!category_id(slug)').in('guide_id', guideIds)
+      : { data: [] };
+    const langByGuide: Record<string, string[]> = {};
+    (langData ?? []).forEach((r: any) => {
+      const gid = r.guide_id;
+      if (!langByGuide[gid]) langByGuide[gid] = [];
+      const t = r.tax;
+      langByGuide[gid].push(typeof t === 'object' ? (t.slug || '') : '');
+    });
+
+    const { data: certData } = guideIds.length
+      ? await supabaseAdmin.schema('directory').from('tour_guide_certifications')
+          .select('tour_guide_id, cert:certifications!certification_id(slug)').in('tour_guide_id', guideIds)
+      : { data: [] };
+    const certByGuide: Record<string, string[]> = {};
+    (certData ?? []).forEach((r: any) => {
+      const gid = r.tour_guide_id;
+      if (!certByGuide[gid]) certByGuide[gid] = [];
+      const t = r.cert;
+      certByGuide[gid].push(typeof t === 'object' ? (t.slug || '') : '');
+    });
 
     const tags = catSlugs.map((s: string) => {
       const name = assignMetaBySlug.get(s);
@@ -281,12 +317,12 @@ export const getController = new Elysia()
         title: iName,
         desc: iDesc,
         city: rawDest?.name || '',
-        budget: i.daily_price || 0,
+        budget: i.budget_estimation || 0,
         author: 'Atourin',
         authorType: 'Official',
         rating: Number(i.rating_average) || 0,
-        days: i.days || 1,
-        tag: i.tag || '',
+        days: i.duration_days || 1,
+        tag: (i.categories ?? [])[0] || '',
       };
     });
 
@@ -299,13 +335,13 @@ export const getController = new Elysia()
         name: g.name,
         img: g.avatar?.url || 'https://i.pravatar.cc/200?img=12',
         region: rawDest ? `${rawDest.name}, ${rawProv?.name || ''}` : '',
-        spec: g.specializations || [],
-        langs: g.languages || [],
-        certs: g.certifications || [],
+        spec: specByGuide[g.id] || [],
+        langs: langByGuide[g.id] || [],
+        certs: certByGuide[g.id] || [],
         rating: Number(g.rating_average) || 0,
         trips: g.trips_count || 0,
         price: g.daily_rate || 0,
-        exp: g.experience_years ? `${g.experience_years} tahun` : '',
+        exp: g.year_experience ? `${g.year_experience} tahun` : '',
         verified: g.verified || false,
       };
     });

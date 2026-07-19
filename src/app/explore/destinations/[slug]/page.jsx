@@ -23,10 +23,10 @@ const WEATHER_COND = ["Cerah", "Cerah berawan", "Berawan", "Hujan ringan", "Mend
 
 function getTabs(dest) {
   return [
-    { id: "atraksi",   label: cat("attraction", "Atraksi"),     count: dest.attractionsCount ?? dest.attr ?? 0 },
-    { id: "desa",      label: cat("village", "Desa Wisata"),     count: dest.villagesCount ?? dest.desa ?? 0 },
-    { id: "itinerary", label: cat("itinerary", "Itinerary"),     count: dest.itinerariesCount ?? dest.itin ?? 0 },
-    { id: "pemandu",   label: cat("guide", "Pemandu"),           count: dest.tourGuidesCount ?? dest.guide ?? 0 },
+    { id: "atraksi",   label: cat("attraction", "Atraksi"),     count: dest.relatedAttractions?.length ?? dest.attractionsCount ?? dest.attr ?? 0 },
+    { id: "desa",      label: cat("village", "Desa Wisata"),     count: dest.relatedVillages?.length ?? dest.villagesCount ?? dest.desa ?? 0 },
+    { id: "itinerary", label: cat("itinerary", "Itinerary"),     count: dest.relatedItineraries?.length ?? dest.itinerariesCount ?? dest.itin ?? 0 },
+    { id: "pemandu",   label: cat("guide", "Pemandu"),           count: dest.relatedTourGuides?.length ?? dest.tourGuidesCount ?? dest.guide ?? 0 },
     { id: "cerita",    label: "Cerita Wisatawan" },
     { id: "info",      label: "Travel Info & Tips" },
   ];
