@@ -135,7 +135,7 @@ export default function FeaturedCarousel({ featured = [], isLoading = false }) {
                 <Link
                   href={getFeaturedRoute(f)}
                   key={i}
-                  style={{ textDecoration: "none", color: "inherit", flex: cardStyle.flex, flexShrink: 0 }}
+                  style={{ textDecoration: "none", color: "inherit", flex: cardStyle.flex }}
                 >
                   <article style={{ ...cardStyle, flex: "1 1 auto" }}>
                     <div style={ex.featImgWrap}>

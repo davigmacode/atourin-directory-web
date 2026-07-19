@@ -46,7 +46,7 @@ export default function CategoryGrid({ categories = [], isLoading = false }) {
             </div>
           ))
           : categories.map((c) => (
-            <Link key={c.name} href={getCategoryRoute(c)} style={{ ...ex.catCard, textDecoration: "none" }}>
+            <Link key={c.id || c.slug || c.name} href={getCategoryRoute(c)} style={{ ...ex.catCard, textDecoration: "none" }}>
               <div style={{ ...ex.catIcon, background: c.metadata.color }}>
                 {c.metadata.icon}
               </div>

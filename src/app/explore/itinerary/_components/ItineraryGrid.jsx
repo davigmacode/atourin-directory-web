@@ -65,16 +65,33 @@ export function ItinCard({
   days,
   city,
   tag,
-  title,
+  title: titleProp,
+  name: nameProp,
   author,
   role,
   price,
   rating,
+  ratingAverage,
   reviews,
+  reviewsCount,
   views,
+  destination,
+  durationDays,
+  durationNights,
+  budgetEstimation,
   save: initialSave,
   day1,
 }) {
+  // Handle both old-style (flat) and new-style (nested API) data
+  const title = titleProp || nameProp?.id || nameProp?.en || '';
+  const desc = city || destination?.name || '';
+  const dayLabel = days || (durationDays ? `${durationDays} Hari` : '') + (durationNights ? ` · ${durationNights} Malam` : '');
+  const rtg = rating || ratingAverage || 0;
+  const rvw = reviews || reviewsCount || 0;
+  const src = img || '';
+  const priceLabel = price ? price : 
+    typeof budgetEstimation === 'number' ? `Rp ${(budgetEstimation / 1000).toFixed(0)}rb` : '';
+
   const [save, setSave] = useState(initialSave);
   const [hover, setHover] = useState(false);
   const router = useRouter();
@@ -100,8 +117,8 @@ export function ItinCard({
       onClick={() => router.push(`/explore/itinerary/${slug}`)}
     >
       <div style={cardStyles.cardImgWrap}>
-        <SafeImage src={img} alt="" style={cardStyles.cardImg} />
-        <span style={cardStyles.cardTag}>{tag}</span>
+        <SafeImage src={src} alt="" style={cardStyles.cardImg} />
+        <span style={cardStyles.cardTag}>{tag || ''}</span>
         <button
           style={{
             ...cardStyles.cardSave,
@@ -116,10 +133,10 @@ export function ItinCard({
         </button>
         <div style={cardStyles.cardImgBottom}>
           <span style={cardStyles.cardDaysPill}>
-            <ClockSm /> {days}
+            <ClockSm /> {dayLabel}
           </span>
           <span style={cardStyles.cardCityPill}>
-            <PinSm /> {city}
+            <PinSm /> {desc}
           </span>
         </div>
       </div>
@@ -138,20 +155,20 @@ export function ItinCard({
         </div>
         <div style={cardStyles.cardFooter}>
           <div style={cardStyles.cardAuthor}>
-            <div style={cardStyles.authorAvatar}>{author?.[0]}</div>
+            <div style={cardStyles.authorAvatar}>{typeof author === 'object' ? (author.name?.[0] || author.displayName?.[0] || '') : (author?.[0] || '')}</div>
             <div>
-              <div style={cardStyles.cardAuthorName}>{author}</div>
-              <div style={cardStyles.cardAuthorRole}>{role}</div>
+              <div style={cardStyles.cardAuthorName}>{typeof author === 'object' ? (author.name || author.displayName || '') : (author || '')}</div>
+              <div style={cardStyles.cardAuthorRole}>{typeof author === 'object' ? '' : (role || '')}</div>
             </div>
           </div>
           <div style={cardStyles.cardMeta}>
             <div style={cardStyles.ratingRow}>
-              <StarFill /> <strong>{rating}</strong>
-              <span style={cardStyles.reviewCount}>({reviews})</span>
+              <StarFill /> <strong>{rtg}</strong>
+              <span style={cardStyles.reviewCount}>({rvw})</span>
             </div>
             <div style={cardStyles.priceRow}>
               <span style={cardStyles.priceFrom}>mulai</span>
-              <span style={cardStyles.priceVal}>{price}</span>
+              <span style={cardStyles.priceVal}>{priceLabel}</span>
             </div>
           </div>
         </div>

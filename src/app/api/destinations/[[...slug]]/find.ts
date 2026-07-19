@@ -28,6 +28,7 @@ export const findController = new Elysia()
         province_id,
         cover_image,
         description,
+        categories,
         attractions_count,
         villages_count,
         itineraries_count,
@@ -58,35 +59,7 @@ export const findController = new Elysia()
     }
 
     if (category) {
-      const { data: catData } = await supabaseAdmin
-        .schema('directory')
-        .from('taxonomies')
-        .select('id')
-        .eq('type', 'category')
-        .or(`slug.ilike.${category},name->>id.ilike.${category},name->>en.ilike.${category}`);
-
-      const targetTaxonomyIds = catData ? catData.map((c) => c.id) : [];
-      if (targetTaxonomyIds.length === 0) {
-        return {
-          data: [],
-          pagination: { page, limit, total: 0, totalPages: 0 }
-        };
-      }
-
-      const { data: assData } = await supabaseAdmin
-        .schema('directory')
-        .from('destination_categories')
-        .select('destination_id')
-        .in('taxonomy_id', targetTaxonomyIds);
-
-      const matchedDestinationIds = assData ? assData.map((a) => a.destination_id) : [];
-      if (matchedDestinationIds.length === 0) {
-        return {
-          data: [],
-          pagination: { page, limit, total: 0, totalPages: 0 }
-        };
-      }
-      dbQuery = dbQuery.in('id', matchedDestinationIds);
+      dbQuery = dbQuery.contains('categories', [category]);
     }
 
     // Sorting
@@ -122,25 +95,19 @@ export const findController = new Elysia()
       };
     }
 
-    // Query category assignments (only for paged destinations)
-    const { data: assignmentsData, error: assignError } = await supabaseAdmin
-      .schema('directory')
-      .from('destination_categories')
-      .select(`
-        destination_id,
-        taxonomy:taxonomies (
-          slug,
-          name,
-          type
-        )
-      `)
-      .in('destination_id', destinationIds);
+    // Get categories from the main query column
+    const categorySlugsByDest: Record<string, string[]> = {};
+    (dbData ?? []).forEach((row: any) => {
+      categorySlugsByDest[row.id] = row.categories ?? [];
+    });
 
-    if (assignError) {
-      console.error('[api/destinations GET assignments]', assignError.message);
-      set.status = 500;
-      return { error: assignError.message };
-    }
+    // Fetch taxonomy metadata for category slugs
+    const allCatSlugs = [...new Set(Object.values(categorySlugsByDest).flat())];
+    const { data: catMetaData } = allCatSlugs.length
+      ? await supabaseAdmin.schema('directory').from('taxonomies')
+          .select('slug, name').in('slug', allCatSlugs).eq('type', 'category')
+      : { data: [] };
+    const catMetaBySlug = new Map((catMetaData ?? []).map((t: any) => [t.slug, t.name]));
 
     // Query media (only for paged destinations)
     const { data: mediaData, error: mediaError } = await supabaseAdmin
@@ -163,30 +130,6 @@ export const findController = new Elysia()
       return { error: mediaError.message };
     }
 
-    // Process assignments into a lookup map
-    const assignmentsMap: Record<string, { slug: string; name: string }[]> = {};
-    (assignmentsData ?? []).forEach((row: any) => {
-      const entityId = row.destination_id;
-      const cat = row.taxonomy;
-      if (!cat) return;
-      const nameObj = cat.name;
-      let tagName = '';
-      if (typeof nameObj === 'string') {
-        tagName = nameObj;
-      } else if (nameObj && typeof nameObj === 'object') {
-        tagName = nameObj[lang] || nameObj.id || nameObj.en || '';
-      }
-      if (tagName) {
-        if (!assignmentsMap[entityId]) {
-          assignmentsMap[entityId] = [];
-        }
-        assignmentsMap[entityId].push({
-          slug: cat.slug || '',
-          name: tagName,
-        });
-      }
-    });
-
     // Process media into a lookup map
     const mediaMap: Record<string, any[]> = {};
     (mediaData ?? []).forEach((m: any) => {
@@ -207,7 +150,14 @@ export const findController = new Elysia()
 
     // Map rows to Destination interfaces
     const destinations: Destination[] = (dbData ?? []).map((row: any) => {
-      const tags = assignmentsMap[row.id] ?? [];
+      const slugs = categorySlugsByDest[row.id] ?? [];
+      const tags = slugs.map((s: string) => ({
+        slug: s,
+        name: catMetaBySlug.get(s) ? (() => {
+          const n = catMetaBySlug.get(s);
+          return typeof n === 'object' ? (n[lang] || n.id || n.en || s) : n;
+        })() : s,
+      }));
       const media = (mediaMap[row.id] ?? []).sort((a: any, b: any) => a.sortOrder - b.sortOrder);
 
       const rawProvince = Array.isArray(row.province) ? row.province[0] : row.province;

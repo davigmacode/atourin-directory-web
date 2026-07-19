@@ -16,6 +16,7 @@ export const getController = new Elysia()
         id,
         slug,
         name,
+        categories,
         destination_id,
         cover_image,
         description,
@@ -58,26 +59,13 @@ export const getController = new Elysia()
       return { error: 'Attraction not found' };
     }
 
-    // 2. Fetch category assignments
-    const { data: assignmentsData, error: assignError } = await supabaseAdmin
-      .schema('directory')
-      .from('attraction_categories')
-      .select(`
-        taxonomy:taxonomies (
-          id,
-          slug,
-          name,
-          type,
-          metadata
-        )
-      `)
-      .eq('attraction_id', row.id);
-
-    if (assignError) {
-      console.error('[api/attractions/[slug] GET assignments]', assignError.message);
-      set.status = 500;
-      return { error: assignError.message };
-    }
+    // 2. Fetch categories from taxonomy metadata
+    const catSlugs = (row as any).categories ?? [];
+    const { data: catTaxData } = catSlugs.length
+      ? await supabaseAdmin.schema('directory').from('taxonomies')
+          .select('id, slug, name, type, metadata').in('slug', catSlugs).eq('type', 'category')
+      : { data: [] };
+    const catBySlugG = new Map((catTaxData ?? []).map((t: any) => [t.slug, t]));
 
     // 3. Fetch all facilities that are expected for attractions from the database
     const { data: allFacs, error: allFacsError } = await supabaseAdmin
@@ -141,24 +129,15 @@ export const getController = new Elysia()
       return { error: mediaError.message };
     }
 
-    // Process taxonomies
-    const categories = (assignmentsData ?? []).map((ca: any) => {
-      const cat = ca.taxonomy;
-      if (!cat) return null;
-      const nameObj = cat.name;
+    // Process taxonomies from column
+    const categories = (catSlugs ?? []).map((s: string) => {
+      const t = catBySlugG.get(s);
+      if (!t) return null;
+      const nameObj = t.name;
       let catName = '';
-      if (typeof nameObj === 'string') {
-        catName = nameObj;
-      } else if (nameObj && typeof nameObj === 'object') {
-        catName = nameObj[lang] || nameObj.id || nameObj.en || '';
-      }
-      return {
-        id: cat.id,
-        slug: cat.slug,
-        name: catName,
-        type: cat.type,
-        metadata: cat.metadata || {},
-      };
+      if (typeof nameObj === 'string') catName = nameObj;
+      else if (nameObj && typeof nameObj === 'object') catName = nameObj[lang] || nameObj.id || nameObj.en || '';
+      return { id: t.id, slug: t.slug, name: catName, type: t.type, metadata: t.metadata || {} };
     }).filter((c) => c !== null);
 
     // Process facilities

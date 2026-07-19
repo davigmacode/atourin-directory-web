@@ -20,6 +20,7 @@ export const getController = new Elysia()
         province_id,
         cover_image,
         description,
+        categories,
         attractions_count,
         villages_count,
         itineraries_count,
@@ -51,24 +52,13 @@ export const getController = new Elysia()
       return { error: 'Destination not found' };
     }
 
-    // 2. Fetch category assignments
-    const { data: assignmentsData, error: assignError } = await supabaseAdmin
-      .schema('directory')
-      .from('destination_categories')
-      .select(`
-        taxonomy:taxonomies (
-          slug,
-          name,
-          type
-        )
-      `)
-      .eq('destination_id', row.id);
-
-    if (assignError) {
-      console.error('[api/destinations/[slug] GET assignments]', assignError.message);
-      set.status = 500;
-      return { error: assignError.message };
-    }
+    // 2. Fetch categories from taxonomy metadata
+    const catSlugs = (row as any).categories ?? [];
+    const { data: assignTaxData } = catSlugs.length
+      ? await supabaseAdmin.schema('directory').from('taxonomies')
+          .select('slug, name').eq('type', 'category').in('slug', catSlugs)
+      : { data: [] };
+    const assignMetaBySlug = new Map((assignTaxData ?? []).map((t: any) => [t.slug, t.name]));
 
     // 3. Fetch media
     const { data: mediaData, error: mediaError } = await supabaseAdmin
@@ -90,23 +80,11 @@ export const getController = new Elysia()
       return { error: mediaError.message };
     }
 
-    const tags = (assignmentsData ?? [])
-      .map((ca: any) => {
-        const category = ca.taxonomy;
-        if (!category) return null;
-        const nameObj = category.name;
-        let tagName = '';
-        if (typeof nameObj === 'string') {
-          tagName = nameObj;
-        } else if (nameObj && typeof nameObj === 'object') {
-          tagName = nameObj[lang] || nameObj.id || nameObj.en || '';
-        }
-        return {
-          slug: category.slug || '',
-          name: tagName,
-        };
-      })
-      .filter((t: any) => t !== null && t.name !== '');
+    const tags = catSlugs.map((s: string) => {
+      const name = assignMetaBySlug.get(s);
+      const tagName = typeof name === 'object' ? (name[lang] || name.id || name.en || s) : (name || s);
+      return { slug: s, name: tagName };
+    }).filter((t: any) => t.name !== '');
 
     const media = (mediaData ?? [])
       .map((m: any) => ({

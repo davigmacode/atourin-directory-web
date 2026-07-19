@@ -51,6 +51,7 @@ export const findController = new Elysia()
         id,
         slug,
         name,
+        categories,
         destination_id,
         cover_image,
         description,
@@ -204,27 +205,18 @@ export const findController = new Elysia()
       };
     }
 
-    // 10. Fetch category assignments for paged attractions
-    const { data: assignmentsData, error: assignError } = await supabaseAdmin
-      .schema('directory')
-      .from('attraction_categories')
-      .select(`
-        attraction_id,
-        taxonomy:taxonomies (
-          id,
-          slug,
-          name,
-          type,
-          metadata
-        )
-      `)
-      .in('attraction_id', attractionIds);
+    // 10. Get categories from column + lookup taxonomy metadata
+    const catSlugsByAttr: Record<string, string[]> = {};
+    (dbData ?? []).forEach((row: any) => {
+      catSlugsByAttr[row.id] = row.categories ?? [];
+    });
 
-    if (assignError) {
-      console.error('[api/attractions GET assignments]', assignError.message);
-      set.status = 500;
-      return { error: assignError.message };
-    }
+    const allCatSlugs = [...new Set(Object.values(catSlugsByAttr).flat())];
+    const { data: catTaxa } = allCatSlugs.length
+      ? await supabaseAdmin.schema('directory').from('taxonomies')
+          .select('id, slug, name, type, metadata').in('slug', allCatSlugs).eq('type', 'category')
+      : { data: [] };
+    const catBySlug = new Map((catTaxa ?? []).map((t: any) => [t.slug, t]));
 
     // 11. Fetch facility assignments for paged attractions
     const { data: facilityData, error: facilityError } = await supabaseAdmin
@@ -286,30 +278,18 @@ export const findController = new Elysia()
     }
     priceTiersData = ptData ?? [];
 
-    // Process taxonomies lookup map
-    const categoriesMap: Record<string, Taxonomy[]> = {};
-    (assignmentsData ?? []).forEach((row: any) => {
-      const entityId = row.attraction_id;
-      const cat = row.taxonomy;
-      if (!cat) return;
-
-      const nameObj = cat.name;
-      let catName = '';
-      if (typeof nameObj === 'string') {
-        catName = nameObj;
-      } else if (nameObj && typeof nameObj === 'object') {
-        catName = nameObj[lang] || nameObj.id || nameObj.en || '';
-      }
-
-      if (!categoriesMap[entityId]) {
-        categoriesMap[entityId] = [];
-      }
-      categoriesMap[entityId].push({
-        id: cat.id,
-        slug: cat.slug,
-        name: catName,
-        type: cat.type,
-        metadata: cat.metadata || {},
+    // Process taxonomies lookup map from column
+    const categoriesMap: Record<string, any[]> = {};
+    (dbData ?? []).forEach((row: any) => {
+      const slugs = row.categories ?? [];
+      categoriesMap[row.id] = slugs.map((s: string) => {
+        const t = catBySlug.get(s);
+        if (!t) return { id: '', slug: s, name: s, type: 'category', metadata: {} };
+        const nameObj = t.name;
+        let catName = '';
+        if (typeof nameObj === 'string') catName = nameObj;
+        else if (nameObj && typeof nameObj === 'object') catName = nameObj[lang] || nameObj.id || nameObj.en || '';
+        return { id: t.id, slug: t.slug, name: catName, type: t.type, metadata: t.metadata || {} };
       });
     });
 
