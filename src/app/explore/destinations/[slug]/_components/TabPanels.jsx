@@ -1,10 +1,6 @@
 "use client";
 
 import React, { useState } from "react";
-import { ATTR_DATA } from "@/data/attractions";
-import { VIL_DATA } from "@/data/villages";
-import { ITIN_DATA } from "@/data/itineraries";
-import { GUIDE_DATA } from "@/data/guides";
 import dh from "@/styles/destination-detail";
 import {
   AttractionCardGrid,
@@ -28,11 +24,9 @@ export function AtraksiTab({ dest }) {
   const [sort, setSort] = useState("popular");
   const [view, setView] = useState("grid");
 
-  const data = ATTR_DATA.filter(
-    (a) => a.region && a.region.toLowerCase().includes(dest.name.toLowerCase()),
-  );
+  const data = dest.relatedAttractions || [];
 
-  const allCats = [...new Set(ATTR_DATA.map((a) => a.cat))];
+  const allCats = [...new Set(data.map((a) => a.cat))];
 
   const filtered = data
     .filter(
@@ -140,11 +134,9 @@ export function DesaTab({ dest }) {
   const [statusFilter, setStatusFilter] = useState([]);
   const [sort, setSort] = useState("popular");
 
-  const data = VIL_DATA.filter(
-    (d) => d.region && d.region.toLowerCase().includes(dest.province.toLowerCase().replace("di ", "")),
-  );
+  const data = dest.relatedVillages || [];
 
-  const allThemes = [...new Set(VIL_DATA.map((d) => d.theme))];
+  const allThemes = [...new Set(data.map((d) => d.theme))];
 
   const filtered = data
     .filter((d) => d.name.toLowerCase().includes(search.toLowerCase()))
@@ -210,11 +202,9 @@ export function ItineraryTab({ dest }) {
   const [themeFilter, setThemeFilter] = useState([]);
   const [sort, setSort] = useState("popular");
 
-  const data = ITIN_DATA.filter(
-    (i) => i.city && i.city.toLowerCase().includes(dest.name.toLowerCase()),
-  );
+  const data = dest.relatedItineraries || [];
 
-  const allThemes = [...new Set(ITIN_DATA.map((i) => i.tag))];
+  const allThemes = [...new Set(data.map((i) => i.tag))];
 
   const filtered = data
     .filter((i) => i.title.toLowerCase().includes(search.toLowerCase()))
@@ -268,11 +258,9 @@ export function PemanduTab({ dest }) {
   const [ratingFilter, setRatingFilter] = useState("");
   const [sort, setSort] = useState("rating");
 
-  const data = GUIDE_DATA.filter(
-    (g) => g.region && g.region.toLowerCase().includes(dest.name.toLowerCase()),
-  );
+  const data = dest.relatedTourGuides || [];
 
-  const allSpecs = [...new Set(GUIDE_DATA.flatMap((g) => g.spec))];
+  const allSpecs = [...new Set(data.flatMap((g) => g.spec))];
 
   const filtered = data
     .filter((p) => p.name.toLowerCase().includes(search.toLowerCase()))

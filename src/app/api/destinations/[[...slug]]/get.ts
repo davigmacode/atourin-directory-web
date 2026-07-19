@@ -80,6 +80,126 @@ export const getController = new Elysia()
       return { error: mediaError.message };
     }
 
+    // 4. Fetch related attractions
+    const { data: attractionsData, error: attrError } = await supabaseAdmin
+      .schema('directory')
+      .from('attractions')
+      .select(`
+        id,
+        slug,
+        name,
+        description,
+        cover_image,
+        min_price,
+        rating_average,
+        reviews_count,
+        categories,
+        destination:destinations (
+          id,
+          name,
+          slug,
+          province:provinces ( id, name, slug )
+        )
+      `)
+      .eq('destination_id', row.id)
+      .limit(20);
+
+    if (attrError) {
+      console.error('[api/destinations/[slug] GET related attractions]', attrError.message);
+    }
+
+    // 5. Fetch related tourism villages
+    const { data: villagesData, error: vilError } = await supabaseAdmin
+      .schema('directory')
+      .from('tourism_villages')
+      .select(`
+        id,
+        slug,
+        name,
+        description,
+        cover_image,
+        featured,
+        adwi_level_id,
+        adwi_level:taxonomies!adwi_level_id ( id, slug, name, metadata ),
+        village_theme_id,
+        village_theme:taxonomies!village_theme_id ( id, slug, name, metadata ),
+        rating_average,
+        reviews_count,
+        homestay_count,
+        homestay_min_price,
+        signature,
+        categories,
+        activities,
+        destination:destinations (
+          id,
+          name,
+          slug,
+          province:provinces ( id, name, slug )
+        )
+      `)
+      .eq('destination_id', row.id)
+      .limit(20);
+
+    if (vilError) {
+      console.error('[api/destinations/[slug] GET related villages]', vilError.message);
+    }
+
+    // 6. Fetch related itineraries
+    const { data: itinerariesData, error: itinError } = await supabaseAdmin
+      .schema('directory')
+      .from('itineraries')
+      .select(`
+        id,
+        slug,
+        name,
+        description,
+        cover_image,
+        days,
+        daily_price,
+        rating_average,
+        reviews_count,
+        tag,
+        destination:destinations ( id, name, slug )
+      `)
+      .eq('destination_id', row.id)
+      .limit(20);
+
+    if (itinError) {
+      console.error('[api/destinations/[slug] GET related itineraries]', itinError.message);
+    }
+
+    // 7. Fetch related tour guides
+    const { data: guidesData, error: guideError } = await supabaseAdmin
+      .schema('directory')
+      .from('tour_guides')
+      .select(`
+        id,
+        slug,
+        name,
+        avatar,
+        destination_id,
+        rating_average,
+        trips_count,
+        daily_rate,
+        experience_years,
+        verified,
+        specializations,
+        languages,
+        certifications,
+        destination:destinations (
+          id,
+          name,
+          slug,
+          province:provinces ( id, name, slug )
+        )
+      `)
+      .eq('destination_id', row.id)
+      .limit(20);
+
+    if (guideError) {
+      console.error('[api/destinations/[slug] GET related guides]', guideError.message);
+    }
+
     const tags = catSlugs.map((s: string) => {
       const name = assignMetaBySlug.get(s);
       const tagName = typeof name === 'object' ? (name[lang] || name.id || name.en || s) : (name || s);
@@ -103,7 +223,99 @@ export const getController = new Elysia()
       ? (Array.isArray(rawProvince.island) ? rawProvince.island[0] : rawProvince.island)
       : null;
 
-    const destination: Destination = {
+    // Map related attractions
+    const mappedAttractions = (attractionsData ?? []).map((a: any) => {
+      const rawDest = Array.isArray(a.destination) ? a.destination[0] : a.destination;
+      const rawProv = rawDest ? (Array.isArray(rawDest.province) ? rawDest.province[0] : rawDest.province) : null;
+      const nameObj = a.name;
+      const aName = typeof nameObj === 'object' ? (nameObj[lang] || nameObj.id || nameObj.en || '') : (nameObj || '');
+      const descObj = a.description;
+      const aDesc = typeof descObj === 'object' ? (descObj[lang] || descObj.id || descObj.en || '') : (descObj || '');
+      return {
+        id: a.slug,
+        img: a.cover_image?.url || '',
+        name: aName,
+        desc: aDesc,
+        cat: (a.categories ?? [])[0] || '',
+        price: a.min_price || 0,
+        rating: Number(a.rating_average) || 0,
+        reviews: a.reviews_count || 0,
+        region: rawDest ? `${rawDest.name}, ${rawProv?.name || ''}` : '',
+      };
+    });
+
+    // Map related villages
+    const mappedVillages = (villagesData ?? []).map((v: any) => {
+      const rawDest = Array.isArray(v.destination) ? v.destination[0] : v.destination;
+      const rawProv = rawDest ? (Array.isArray(rawDest.province) ? rawDest.province[0] : rawDest.province) : null;
+      const adwiCat = Array.isArray(v.adwi_level) ? v.adwi_level[0] : v.adwi_level;
+      const themeCat = Array.isArray(v.village_theme) ? v.village_theme[0] : v.village_theme;
+      return {
+        id: v.slug,
+        img: v.cover_image?.url || '',
+        name: v.name,
+        region: rawDest ? `${rawDest.name}, ${rawProv?.name || ''}` : '',
+        adwi: adwiCat?.slug || 'Rintisan',
+        adwiBg: adwiCat?.metadata?.color || '#F0F0F0',
+        adwiFg: adwiCat?.metadata?.fg || '#5C5C5C',
+        theme: themeCat?.name?.[lang] || themeCat?.name?.id || themeCat?.name?.en || themeCat?.slug || '',
+        activities: v.activities || [],
+        price: v.homestay_min_price || 0,
+        rating: Number(v.rating_average) || 0,
+        families: v.reviews_count || 0,
+        signature: v.signature || '',
+        featured: v.featured || false,
+      };
+    });
+
+    // Map related itineraries
+    const mappedItineraries = (itinerariesData ?? []).map((i: any) => {
+      const rawDest = Array.isArray(i.destination) ? i.destination[0] : i.destination;
+      const nameObj = i.name;
+      const iName = typeof nameObj === 'object' ? (nameObj[lang] || nameObj.id || nameObj.en || '') : (nameObj || '');
+      const descObj = i.description;
+      const iDesc = typeof descObj === 'object' ? (descObj[lang] || descObj.id || descObj.en || '') : (descObj || '');
+      return {
+        id: i.slug,
+        img: i.cover_image?.url || '',
+        title: iName,
+        desc: iDesc,
+        city: rawDest?.name || '',
+        budget: i.daily_price || 0,
+        author: 'Atourin',
+        authorType: 'Official',
+        rating: Number(i.rating_average) || 0,
+        days: i.days || 1,
+        tag: i.tag || '',
+      };
+    });
+
+    // Map related tour guides
+    const mappedGuides = (guidesData ?? []).map((g: any) => {
+      const rawDest = Array.isArray(g.destination) ? g.destination[0] : g.destination;
+      const rawProv = rawDest ? (Array.isArray(rawDest.province) ? rawDest.province[0] : rawDest.province) : null;
+      return {
+        id: g.slug,
+        name: g.name,
+        img: g.avatar?.url || 'https://i.pravatar.cc/200?img=12',
+        region: rawDest ? `${rawDest.name}, ${rawProv?.name || ''}` : '',
+        spec: g.specializations || [],
+        langs: g.languages || [],
+        certs: g.certifications || [],
+        rating: Number(g.rating_average) || 0,
+        trips: g.trips_count || 0,
+        price: g.daily_rate || 0,
+        exp: g.experience_years ? `${g.experience_years} tahun` : '',
+        verified: g.verified || false,
+      };
+    });
+
+    const destination: Destination & {
+      relatedAttractions: any[];
+      relatedVillages: any[];
+      relatedItineraries: any[];
+      relatedTourGuides: any[];
+    } = {
       id: row.id,
       slug: row.slug,
       name: row.name,
@@ -142,6 +354,10 @@ export const getController = new Elysia()
       popularScore: row.popular_score,
       tags,
       media,
+      relatedAttractions: mappedAttractions,
+      relatedVillages: mappedVillages,
+      relatedItineraries: mappedItineraries,
+      relatedTourGuides: mappedGuides,
     };
 
     return { data: destination };
