@@ -51,10 +51,19 @@ CREATE TABLE directory.itinerary_schedules (
   id            text PRIMARY KEY DEFAULT gen_random_uuid()::text,
   -- Parent itinerary
   itinerary_id  text NOT NULL REFERENCES directory.itineraries(id) ON DELETE CASCADE,
-  -- First day of this departure
+  -- First day of this departure (e.g. "2026-08-07")
   start_date    date NOT NULL,
   -- Optional title override for this specific departure
   custom_title  text,
+  -- Booking status: scheduled (default) â†' available â†' sold_out â†' cancelled
+  status        text NOT NULL DEFAULT 'scheduled'
+    CHECK (status IN ('scheduled', 'available', 'sold_out', 'cancelled')),
+  -- Per-schedule pax limits (NULL = fallback to itinerary's min_pax / max_pax)
+  min_pax       integer CHECK (min_pax IS NULL OR min_pax >= 1),
+  max_pax       integer CHECK (max_pax IS NULL OR max_pax >= 1),
+  -- Per-schedule budget override in IDR (NULL = use itinerary.budget_estimation)
+  -- Allows seasonal pricing (e.g., peak season = higher per-person price)
+  budget_estimation integer CHECK (budget_estimation IS NULL OR budget_estimation >= 0),
   created_at    timestamptz NOT NULL DEFAULT now(),
   updated_at    timestamptz NOT NULL DEFAULT now()
 );

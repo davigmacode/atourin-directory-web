@@ -149,6 +149,90 @@ export type Database = {
         }
         Relationships: []
       }
+      creator_badges: {
+        Row: {
+          created_at: string
+          creator_id: string
+          id: string
+          issued_at: string | null
+          taxonomy_id: string
+          updated_at: string
+          valid_until: string | null
+        }
+        Insert: {
+          created_at?: string
+          creator_id: string
+          id?: string
+          issued_at?: string | null
+          taxonomy_id: string
+          updated_at?: string
+          valid_until?: string | null
+        }
+        Update: {
+          created_at?: string
+          creator_id?: string
+          id?: string
+          issued_at?: string | null
+          taxonomy_id?: string
+          updated_at?: string
+          valid_until?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "creator_badges_creator_id_fkey"
+            columns: ["creator_id"]
+            isOneToOne: false
+            referencedRelation: "creators"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "creator_badges_taxonomy_id_fkey"
+            columns: ["taxonomy_id"]
+            isOneToOne: false
+            referencedRelation: "taxonomies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      creators: {
+        Row: {
+          avatar: Json
+          bio: Json
+          created_at: string
+          display_name: string | null
+          id: string
+          is_verified: boolean
+          name: string
+          slug: string
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          avatar?: Json
+          bio?: Json
+          created_at?: string
+          display_name?: string | null
+          id?: string
+          is_verified?: boolean
+          name: string
+          slug: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          avatar?: Json
+          bio?: Json
+          created_at?: string
+          display_name?: string | null
+          id?: string
+          is_verified?: boolean
+          name?: string
+          slug?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       destination_categories: {
         Row: {
           created_at: string
@@ -332,6 +416,414 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      itineraries: {
+        Row: {
+          author_id: string
+          best_time_crowd: Json
+          best_time_note: Json | null
+          best_time_weather: Json
+          budget_breakdown: Json
+          budget_estimation: number | null
+          cover_image: Json
+          created_at: string
+          description: Json
+          destination_id: string
+          difficulty: string | null
+          duration_days: number
+          duration_nights: number
+          id: string
+          is_featured: boolean
+          is_published: boolean
+          max_pax: number
+          min_pax: number
+          name: Json
+          rating_average: number
+          reviews_count: number
+          saves_count: number
+          slug: string
+          target_audience: Json
+          updated_at: string
+          views_count: number
+        }
+        Insert: {
+          author_id: string
+          best_time_crowd?: Json
+          best_time_note?: Json | null
+          best_time_weather?: Json
+          budget_breakdown?: Json
+          budget_estimation?: number | null
+          cover_image?: Json
+          created_at?: string
+          description?: Json
+          destination_id: string
+          difficulty?: string | null
+          duration_days?: number
+          duration_nights?: number
+          id?: string
+          is_featured?: boolean
+          is_published?: boolean
+          max_pax?: number
+          min_pax?: number
+          name?: Json
+          rating_average?: number
+          reviews_count?: number
+          saves_count?: number
+          slug: string
+          target_audience?: Json
+          updated_at?: string
+          views_count?: number
+        }
+        Update: {
+          author_id?: string
+          best_time_crowd?: Json
+          best_time_note?: Json | null
+          best_time_weather?: Json
+          budget_breakdown?: Json
+          budget_estimation?: number | null
+          cover_image?: Json
+          created_at?: string
+          description?: Json
+          destination_id?: string
+          difficulty?: string | null
+          duration_days?: number
+          duration_nights?: number
+          id?: string
+          is_featured?: boolean
+          is_published?: boolean
+          max_pax?: number
+          min_pax?: number
+          name?: Json
+          rating_average?: number
+          reviews_count?: number
+          saves_count?: number
+          slug?: string
+          target_audience?: Json
+          updated_at?: string
+          views_count?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "itineraries_author_id_fkey"
+            columns: ["author_id"]
+            isOneToOne: false
+            referencedRelation: "creators"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "itineraries_destination_id_fkey"
+            columns: ["destination_id"]
+            isOneToOne: false
+            referencedRelation: "destinations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      itinerary_categories: {
+        Row: {
+          category_id: string
+          created_at: string
+          itinerary_id: string
+          sort_order: number
+        }
+        Insert: {
+          category_id: string
+          created_at?: string
+          itinerary_id: string
+          sort_order?: number
+        }
+        Update: {
+          category_id?: string
+          created_at?: string
+          itinerary_id?: string
+          sort_order?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "itinerary_categories_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "taxonomies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "itinerary_categories_itinerary_id_fkey"
+            columns: ["itinerary_id"]
+            isOneToOne: false
+            referencedRelation: "itineraries"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      itinerary_daily: {
+        Row: {
+          created_at: string
+          day_number: number
+          id: string
+          itinerary_id: string
+          summary_hours: number
+          summary_km: number
+          summary_price: number
+          summary_stops: number
+          title: Json
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          day_number: number
+          id?: string
+          itinerary_id: string
+          summary_hours?: number
+          summary_km?: number
+          summary_price?: number
+          summary_stops?: number
+          title?: Json
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          day_number?: number
+          id?: string
+          itinerary_id?: string
+          summary_hours?: number
+          summary_km?: number
+          summary_price?: number
+          summary_stops?: number
+          title?: Json
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "itinerary_daily_itinerary_id_fkey"
+            columns: ["itinerary_id"]
+            isOneToOne: false
+            referencedRelation: "itineraries"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      itinerary_daily_stops: {
+        Row: {
+          created_at: string
+          id: string
+          itinerary_daily_id: string
+          lat: number | null
+          lng: number | null
+          name: Json
+          sort_order: number
+          type: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          itinerary_daily_id: string
+          lat?: number | null
+          lng?: number | null
+          name?: Json
+          sort_order?: number
+          type?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          itinerary_daily_id?: string
+          lat?: number | null
+          lng?: number | null
+          name?: Json
+          sort_order?: number
+          type?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "itinerary_daily_stops_itinerary_daily_id_fkey"
+            columns: ["itinerary_daily_id"]
+            isOneToOne: false
+            referencedRelation: "itinerary_daily"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      itinerary_daily_timelines: {
+        Row: {
+          created_at: string
+          description: Json
+          duration_minutes: number | null
+          id: string
+          includes: Json
+          itinerary_daily_id: string
+          sort_order: number
+          stop_id: string | null
+          time: string
+          title: Json
+          travel_info: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: Json
+          duration_minutes?: number | null
+          id?: string
+          includes?: Json
+          itinerary_daily_id: string
+          sort_order?: number
+          stop_id?: string | null
+          time: string
+          title?: Json
+          travel_info?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: Json
+          duration_minutes?: number | null
+          id?: string
+          includes?: Json
+          itinerary_daily_id?: string
+          sort_order?: number
+          stop_id?: string | null
+          time?: string
+          title?: Json
+          travel_info?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "itinerary_daily_timelines_itinerary_daily_id_fkey"
+            columns: ["itinerary_daily_id"]
+            isOneToOne: false
+            referencedRelation: "itinerary_daily"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "itinerary_daily_timelines_stop_id_fkey"
+            columns: ["stop_id"]
+            isOneToOne: false
+            referencedRelation: "itinerary_daily_stops"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      itinerary_highlights: {
+        Row: {
+          created_at: string
+          description: Json
+          itinerary_id: string
+          sort_order: number
+          taxonomy_id: string
+        }
+        Insert: {
+          created_at?: string
+          description?: Json
+          itinerary_id: string
+          sort_order?: number
+          taxonomy_id: string
+        }
+        Update: {
+          created_at?: string
+          description?: Json
+          itinerary_id?: string
+          sort_order?: number
+          taxonomy_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "itinerary_highlights_itinerary_id_fkey"
+            columns: ["itinerary_id"]
+            isOneToOne: false
+            referencedRelation: "itineraries"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "itinerary_highlights_taxonomy_id_fkey"
+            columns: ["taxonomy_id"]
+            isOneToOne: false
+            referencedRelation: "taxonomies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      itinerary_languages: {
+        Row: {
+          created_at: string
+          itinerary_id: string
+          taxonomy_id: string
+        }
+        Insert: {
+          created_at?: string
+          itinerary_id: string
+          taxonomy_id: string
+        }
+        Update: {
+          created_at?: string
+          itinerary_id?: string
+          taxonomy_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "itinerary_languages_itinerary_id_fkey"
+            columns: ["itinerary_id"]
+            isOneToOne: false
+            referencedRelation: "itineraries"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "itinerary_languages_taxonomy_id_fkey"
+            columns: ["taxonomy_id"]
+            isOneToOne: false
+            referencedRelation: "taxonomies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      itinerary_schedules: {
+        Row: {
+          budget_estimation: number | null
+          created_at: string
+          custom_title: string | null
+          id: string
+          itinerary_id: string
+          max_pax: number | null
+          min_pax: number | null
+          start_date: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          budget_estimation?: number | null
+          created_at?: string
+          custom_title?: string | null
+          id?: string
+          itinerary_id: string
+          max_pax?: number | null
+          min_pax?: number | null
+          start_date: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          budget_estimation?: number | null
+          created_at?: string
+          custom_title?: string | null
+          id?: string
+          itinerary_id?: string
+          max_pax?: number | null
+          min_pax?: number | null
+          start_date?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "itinerary_schedules_itinerary_id_fkey"
+            columns: ["itinerary_id"]
+            isOneToOne: false
+            referencedRelation: "itineraries"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       media: {
         Row: {

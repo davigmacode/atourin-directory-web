@@ -196,7 +196,7 @@ export const getController = new Elysia()
     const { data: scheduleData, error: schedError } = await supabaseAdmin
       .schema('directory')
       .from('itinerary_schedules')
-      .select('id, start_date, custom_title')
+      .select('id, start_date, custom_title, status, min_pax, max_pax, budget_estimation')
       .eq('itinerary_id', (row as any).id)
       .gte('start_date', new Date().toISOString().slice(0, 10))
       .order('start_date', { ascending: true });
@@ -307,9 +307,13 @@ export const getController = new Elysia()
     }).filter(Boolean);
 
     const schedules = (scheduleData ?? []).map((s: any) => ({
-      id:          s.id,
-      startDate:   s.start_date,
-      customTitle: s.custom_title ?? null,
+      id:                      s.id,
+      startDate:               s.start_date,
+      customTitle:             s.custom_title ?? null,
+      status:                  s.status ?? 'scheduled',
+      minPax:                  s.min_pax ?? null,
+      maxPax:                  s.max_pax ?? null,
+      budgetEstimation: s.budget_estimation ?? null,
     }));
 
     const rawDest = Array.isArray((row as any).destination)

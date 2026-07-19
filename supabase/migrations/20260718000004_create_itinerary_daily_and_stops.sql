@@ -42,8 +42,9 @@ CREATE TABLE directory.itinerary_daily_stops (
   id                  text PRIMARY KEY DEFAULT gen_random_uuid()::text,
   -- Which day this stop belongs to
   itinerary_daily_id  text NOT NULL REFERENCES directory.itinerary_daily(id) ON DELETE CASCADE,
-  -- Place name shown in the stop pill
-  name                text NOT NULL,
+  -- Place name — multilingual: { id: "...", en: "..." }
+  -- (e.g., { id: "Sirkuit Mandalika", en: "Mandalika Circuit" })
+  name                jsonb NOT NULL DEFAULT '{"id": "", "en": ""}'::jsonb,
   -- Display order within the day (0-indexed)
   -- Named sort_order to avoid collision with SQL reserved keyword ORDER
   sort_order          integer NOT NULL DEFAULT 0,

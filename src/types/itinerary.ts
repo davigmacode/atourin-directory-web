@@ -38,7 +38,8 @@ export interface ItineraryPriceItem {
 
 export interface ItineraryStop {
   id: string;
-  name: string;
+  /** Multilingual place name: { id: "Sirkuit Mandalika", en: "Mandalika Circuit" } */
+  name: I18nText;
   /** Renamed from `order` (SQL reserved keyword) */
   sortOrder: number;
   lat?: number | null;
@@ -94,11 +95,23 @@ export interface ItineraryDay {
 
 // ─── Schedule ────────────────────────────────────────────────
 
+export type ScheduleStatus = 'scheduled' | 'available' | 'sold_out' | 'cancelled';
+
 export interface ItinerarySchedule {
   id: string;
   /** ISO date string, e.g. "2026-08-07" */
   startDate: string;
   customTitle?: string | null;
+  /** Booking status: scheduled â†' available â†' sold_out â†' cancelled */
+  status: ScheduleStatus;
+  /** Per-schedule pax limits (null = fallback to itinerary-level) */
+  minPax?: number | null;
+  maxPax?: number | null;
+  /**
+   * Per-schedule budget in IDR (null = use itinerary-level budgetEstimation).
+   * Enables seasonal pricing (e.g., peak season = higher per-person price).
+   */
+  budgetEstimation?: number | null;
 }
 
 // ─── Category ────────────────────────────────────────────────

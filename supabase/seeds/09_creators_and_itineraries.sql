@@ -127,26 +127,26 @@ ON CONFLICT (itinerary_id, day_number) DO NOTHING;
 
 -- Day 1 stops
 INSERT INTO directory.itinerary_daily_stops (id, itinerary_daily_id, name, sort_order, lat, lng, type) VALUES
-  ('stop-d1-01', 'daily-lombok-d1', 'Pantai Kuta Lombok',   0, -8.8937, 116.2985, 'attraction'),
-  ('stop-d1-02', 'daily-lombok-d1', 'Pantai Seger',         1, -8.9002, 116.3021, 'attraction'),
-  ('stop-d1-03', 'daily-lombok-d1', 'Bukit Merese',         2, -8.9082, 116.3145, 'attraction'),
-  ('stop-d1-04', 'daily-lombok-d1', 'Warung Pantai Seger',  3, -8.9010, 116.3025, 'food'),
-  ('stop-d1-05', 'daily-lombok-d1', 'Penginapan Kuta',      4, -8.8950, 116.2991, 'rest')
+  ('stop-d1-01', 'daily-lombok-d1', '{"en": "Kuta Lombok Beach",  "id": "Pantai Kuta Lombok"}'::jsonb,   0, -8.8937, 116.2985, 'attraction'),
+  ('stop-d1-02', 'daily-lombok-d1', '{"en": "Seger Beach",       "id": "Pantai Seger"}'::jsonb,          1, -8.9002, 116.3021, 'attraction'),
+  ('stop-d1-03', 'daily-lombok-d1', '{"en": "Merese Hill",       "id": "Bukit Merese"}'::jsonb,         2, -8.9082, 116.3145, 'attraction'),
+  ('stop-d1-04', 'daily-lombok-d1', '{"en": "Seger Beach Warung","id": "Warung Pantai Seger"}'::jsonb,  3, -8.9010, 116.3025, 'food'),
+  ('stop-d1-05', 'daily-lombok-d1', '{"en": "Kuta Accommodation","id": "Penginapan Kuta"}'::jsonb,      4, -8.8950, 116.2991, 'rest')
 ON CONFLICT (id) DO NOTHING;
 
 -- Day 2 stops
 INSERT INTO directory.itinerary_daily_stops (id, itinerary_daily_id, name, sort_order, lat, lng, type) VALUES
-  ('stop-d2-01', 'daily-lombok-d2', 'Desa Sade',            0, -8.8598, 116.2757, 'attraction'),
-  ('stop-d2-02', 'daily-lombok-d2', 'Pasar Seni Sukarara',  1, -8.7982, 116.2647, 'attraction'),
-  ('stop-d2-03', 'daily-lombok-d2', 'Rumah Makan Taliwang', 2, -8.8150, 116.2800, 'food'),
-  ('stop-d2-04', 'daily-lombok-d2', 'Pantai Mawun',         3, -8.9370, 116.2530, 'attraction')
+  ('stop-d2-01', 'daily-lombok-d2', '{"en": "Sade Village",         "id": "Desa Sade"}'::jsonb,           0, -8.8598, 116.2757, 'attraction'),
+  ('stop-d2-02', 'daily-lombok-d2', '{"en": "Sukarara Craft Market","id": "Pasar Seni Sukarara"}'::jsonb,1, -8.7982, 116.2647, 'attraction'),
+  ('stop-d2-03', 'daily-lombok-d2', '{"en": "Taliwang Restaurant",  "id": "Rumah Makan Taliwang"}'::jsonb,2, -8.8150, 116.2800, 'food'),
+  ('stop-d2-04', 'daily-lombok-d2', '{"en": "Mawun Beach",          "id": "Pantai Mawun"}'::jsonb,       3, -8.9370, 116.2530, 'attraction')
 ON CONFLICT (id) DO NOTHING;
 
 -- Day 3 stops
 INSERT INTO directory.itinerary_daily_stops (id, itinerary_daily_id, name, sort_order, lat, lng, type) VALUES
-  ('stop-d3-01', 'daily-lombok-d3', 'Tanjung Aan',          0, -8.9182, 116.3265, 'attraction'),
-  ('stop-d3-02', 'daily-lombok-d3', 'Warung Tepi Pantai',   1, -8.9185, 116.3270, 'food'),
-  ('stop-d3-03', 'daily-lombok-d3', 'BIL Lombok Airport',   2, -8.7486, 116.2742, 'transport')
+  ('stop-d3-01', 'daily-lombok-d3', '{"en": "Tanjung Aan",          "id": "Tanjung Aan"}'::jsonb,        0, -8.9182, 116.3265, 'attraction'),
+  ('stop-d3-02', 'daily-lombok-d3', '{"en": "Beachside Warung",     "id": "Warung Tepi Pantai"}'::jsonb, 1, -8.9185, 116.3270, 'food'),
+  ('stop-d3-03', 'daily-lombok-d3', '{"en": "Lombok Airport (LOP)", "id": "BIL Lombok Airport"}'::jsonb, 2, -8.7486, 116.2742, 'transport')
 ON CONFLICT (id) DO NOTHING;
 
 -- ── 8. Timelines ─────────────────────────────────────────────
@@ -245,9 +245,11 @@ VALUES
 ON CONFLICT (id) DO NOTHING;
 
 -- ── 9. Schedules ─────────────────────────────────────────────
-INSERT INTO directory.itinerary_schedules (id, itinerary_id, start_date, custom_title) VALUES
-  ('sched-lombok-aug-01', 'itin-lombok-3d2n-001', '2026-08-07', NULL),
-  ('sched-lombok-aug-02', 'itin-lombok-3d2n-001', '2026-08-21', NULL),
-  ('sched-lombok-sep-01', 'itin-lombok-3d2n-001', '2026-09-04', 'Long Weekend Edition'),
-  ('sched-lombok-sep-02', 'itin-lombok-3d2n-001', '2026-09-18', NULL)
+INSERT INTO directory.itinerary_schedules
+  (id, itinerary_id, start_date, custom_title, status, min_pax, max_pax, budget_estimation)
+VALUES
+  ('sched-lombok-aug-01', 'itin-lombok-3d2n-001', '2026-08-07', NULL,          'available', 1, 12, NULL),
+  ('sched-lombok-aug-02', 'itin-lombok-3d2n-001', '2026-08-21', NULL,          'available', 2, 8,  2750000),
+  ('sched-lombok-sep-01', 'itin-lombok-3d2n-001', '2026-09-04', 'Long Weekend Edition', 'sold_out', 1, 12, 2850000),
+  ('sched-lombok-sep-02', 'itin-lombok-3d2n-001', '2026-09-18', NULL,          'available', 1, 12, NULL)
 ON CONFLICT (id) DO NOTHING;
