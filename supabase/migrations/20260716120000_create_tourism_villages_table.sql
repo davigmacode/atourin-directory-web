@@ -9,6 +9,10 @@ CREATE TABLE IF NOT EXISTS directory.tourism_villages (
   slug                   text UNIQUE NOT NULL,
   name                   text NOT NULL,
   description            jsonb NOT NULL DEFAULT '{"id": "", "en": ""}'::jsonb,
+  -- Theme categories: array of taxonomy slugs (type='village_theme'), GIN-indexed
+  categories             text[] NOT NULL DEFAULT '{}',
+  -- Activities: array of taxonomy slugs (type='village_activity'), GIN-indexed
+  activities             text[] NOT NULL DEFAULT '{}',
   destination_id         text NOT NULL REFERENCES directory.destinations(id) ON DELETE CASCADE,
   cover_image            jsonb NOT NULL,
   featured               boolean NOT NULL DEFAULT false,
@@ -42,6 +46,8 @@ CREATE INDEX IF NOT EXISTS tourism_villages_slug_idx ON directory.tourism_villag
 CREATE INDEX IF NOT EXISTS tourism_villages_destination_id_idx ON directory.tourism_villages (destination_id);
 CREATE INDEX IF NOT EXISTS tourism_villages_adwi_level_id_idx ON directory.tourism_villages (adwi_level_id);
 CREATE INDEX IF NOT EXISTS tourism_villages_village_theme_id_idx ON directory.tourism_villages (village_theme_id);
+CREATE INDEX IF NOT EXISTS tourism_villages_categories_idx ON directory.tourism_villages USING gin(categories);
+CREATE INDEX IF NOT EXISTS tourism_villages_activities_idx ON directory.tourism_villages USING gin(activities);
 
 -- Trigger for updated_at
 CREATE TRIGGER tourism_villages_updated_at

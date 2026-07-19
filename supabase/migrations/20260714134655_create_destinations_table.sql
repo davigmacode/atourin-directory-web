@@ -12,6 +12,8 @@ CREATE TABLE IF NOT EXISTS directory.destinations (
   province_id            text NOT NULL REFERENCES directory.provinces(id) ON DELETE CASCADE,
   cover_image            jsonb NOT NULL,
   description            jsonb NOT NULL DEFAULT '{"id": "", "en": ""}'::jsonb,
+  -- Categories: array of taxonomy slugs (type='category'), GIN-indexed for contains filter
+  categories             text[] NOT NULL DEFAULT '{}',
   attractions_count      integer NOT NULL DEFAULT 0,
   villages_count         integer NOT NULL DEFAULT 0,
   itineraries_count      integer NOT NULL DEFAULT 0,
@@ -35,6 +37,7 @@ ALTER TABLE directory.destinations
 CREATE INDEX IF NOT EXISTS destinations_slug_idx ON directory.destinations (slug);
 CREATE INDEX IF NOT EXISTS destinations_name_idx ON directory.destinations (name);
 CREATE INDEX IF NOT EXISTS destinations_province_id_idx ON directory.destinations (province_id);
+CREATE INDEX IF NOT EXISTS destinations_categories_idx ON directory.destinations USING gin(categories);
 
 -- Trigger to auto-update updated_at
 CREATE TRIGGER destinations_updated_at

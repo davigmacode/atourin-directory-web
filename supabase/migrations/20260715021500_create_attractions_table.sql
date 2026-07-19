@@ -11,6 +11,8 @@ CREATE TABLE IF NOT EXISTS directory.attractions (
   destination_id         text NOT NULL REFERENCES directory.destinations(id) ON DELETE CASCADE,
   cover_image            jsonb NOT NULL,
   description            jsonb NOT NULL DEFAULT '{"id": "", "en": ""}'::jsonb,
+  -- Categories: array of taxonomy slugs (type='category'), GIN-indexed for contains filter
+  categories             text[] NOT NULL DEFAULT '{}',
   min_price              integer NOT NULL DEFAULT 0,
   rating_average         numeric(3,2) NOT NULL DEFAULT 0.0 CHECK (rating_average >= 0.0 AND rating_average <= 5.0),
   reviews_count          integer NOT NULL DEFAULT 0,
@@ -36,6 +38,7 @@ ALTER TABLE directory.attractions
 -- Indexes
 CREATE INDEX IF NOT EXISTS attractions_slug_idx ON directory.attractions (slug);
 CREATE INDEX IF NOT EXISTS attractions_destination_id_idx ON directory.attractions (destination_id);
+CREATE INDEX IF NOT EXISTS attractions_categories_idx ON directory.attractions USING gin(categories);
 
 -- Trigger for updated_at
 CREATE TRIGGER attractions_updated_at

@@ -36,7 +36,7 @@ INSERT INTO directory.itineraries (
   duration_days, duration_nights, min_pax, max_pax,
   destination_id, author_id, difficulty,
   budget_estimation, budget_breakdown,
-  target_audience,
+  languages, categories, highlights, target_audience,
   best_time_weather, best_time_crowd, best_time_note,
   is_featured, is_published
 )
@@ -62,7 +62,10 @@ SELECT
     {"label": "Makan 3x sehari", "sublabel": "Estimasi per orang", "amount": 750000},
     {"label": "Oleh-oleh & lain-lain", "amount": 300000}
   ]'::jsonb,
-  '["Solo", "Couple", "Group"]'::jsonb,
+  '{id,en}'::text[],
+  '{petualangan,bahari}'::text[],
+  '{pemandangan,kearifan-budaya,biota-alam,kuliner-otentik}'::text[],
+  '{solo,couple,group}'::text[],
   '{"jan": "rain", "feb": "rain", "mar": "ok", "apr": "ideal", "may": "ideal", "jun": "ideal", "jul": "ideal", "aug": "ideal", "sep": "ideal", "oct": "ok", "nov": "rain", "dec": "rain"}'::jsonb,
   '{"jan": "high", "feb": "high", "mar": "mid", "apr": "high", "may": "high", "jun": "high", "jul": "high", "aug": "high", "sep": "high", "oct": "mid", "nov": "low", "dec": "mid"}'::jsonb,
   '{"id": "Waktu terbaik: April–September (musim kemarau). Hindari Desember–Februari karena curah hujan tinggi.", "en": "Best time: April–September (dry season). Avoid December–February due to high rainfall."}'::jsonb,
@@ -72,43 +75,7 @@ FROM directory.destinations d
 WHERE d.slug = 'lombok-tengah'
 ON CONFLICT (id) DO NOTHING;
 
--- ── 3. Languages ─────────────────────────────────────────────
-INSERT INTO directory.itinerary_languages (itinerary_id, taxonomy_id)
-SELECT 'itin-lombok-3d2n-001', t.id
-FROM directory.taxonomies t
-WHERE t.slug IN ('id', 'en') AND t.type = 'language'
-ON CONFLICT DO NOTHING;
-
--- ── 4. Highlights ─────────────────────────────────────────────
-INSERT INTO directory.itinerary_highlights (itinerary_id, taxonomy_id, description, sort_order)
-SELECT
-  'itin-lombok-3d2n-001', t.id,
-  CASE t.slug
-    WHEN 'pemandangan'     THEN '{"id": "Jelajahi garis pantai eksotis dan bentang alam memukau khas Lombok Tengah.", "en": "Explore exotic coastlines and stunning landscapes of Central Lombok."}'::jsonb
-    WHEN 'kearifan-budaya' THEN '{"id": "Saksikan kehidupan sehari-hari masyarakat Sasak dan tradisi tenun Lombok.", "en": "Witness daily life of Sasak people and traditional Lombok weaving."}'::jsonb
-    WHEN 'biota-alam'      THEN '{"id": "Snorkeling di perairan jernih Tanjung Aan dan Pantai Seger yang kaya terumbu karang.", "en": "Snorkel in the crystal-clear waters of Tanjung Aan and Seger Beach, rich with coral reefs."}'::jsonb
-    WHEN 'kuliner-otentik' THEN '{"id": "Nikmati plecing kangkung, ayam taliwang, dan jajanan pasar khas Lombok.", "en": "Enjoy plecing kangkung, ayam taliwang, and traditional Lombok street food."}'::jsonb
-  END,
-  CASE t.slug
-    WHEN 'pemandangan'     THEN 0
-    WHEN 'kearifan-budaya' THEN 1
-    WHEN 'biota-alam'      THEN 2
-    WHEN 'kuliner-otentik' THEN 3
-  END
-FROM directory.taxonomies t
-WHERE t.slug IN ('pemandangan', 'kearifan-budaya', 'biota-alam', 'kuliner-otentik')
-  AND t.type = 'itinerary_highlight'
-ON CONFLICT DO NOTHING;
-
--- ── 5. Categories ─────────────────────────────────────────────
-INSERT INTO directory.itinerary_categories (itinerary_id, category_id, sort_order)
-SELECT 'itin-lombok-3d2n-001', t.id,
-  CASE t.slug WHEN 'petualangan' THEN 0 WHEN 'bahari' THEN 1 END
-FROM directory.taxonomies t
-WHERE t.slug IN ('petualangan', 'bahari') AND t.type = 'itinerary_category'
-ON CONFLICT DO NOTHING;
-
--- ── 6. Daily plans ────────────────────────────────────────────
+-- ── 3. Daily plans ────────────────────────────────────────────
 
 INSERT INTO directory.itinerary_daily (id, itinerary_id, day_number, title, summary_stops, summary_hours, summary_km, summary_price)
 VALUES
@@ -123,7 +90,7 @@ VALUES
    3, 5, 20, 880000)
 ON CONFLICT (itinerary_id, day_number) DO NOTHING;
 
--- ── 7. Stops ─────────────────────────────────────────────────
+-- -- 4. Stops ─────────────────────────────────────────────────
 
 -- Day 1 stops
 INSERT INTO directory.itinerary_daily_stops (id, itinerary_daily_id, name, sort_order, lat, lng, type) VALUES
@@ -149,7 +116,7 @@ INSERT INTO directory.itinerary_daily_stops (id, itinerary_daily_id, name, sort_
   ('stop-d3-03', 'daily-lombok-d3', '{"en": "Lombok Airport (LOP)", "id": "BIL Lombok Airport"}'::jsonb, 2, -8.7486, 116.2742, 'transport')
 ON CONFLICT (id) DO NOTHING;
 
--- ── 8. Timelines ─────────────────────────────────────────────
+-- -- 5. Timelines ─────────────────────────────────────────────
 
 -- Day 1 timeline
 INSERT INTO directory.itinerary_daily_timelines
@@ -244,7 +211,7 @@ VALUES
    '[]'::jsonb, '28 km · 40 menit', 2)
 ON CONFLICT (id) DO NOTHING;
 
--- ── 9. Schedules ─────────────────────────────────────────────
+-- -- 6. Schedules ─────────────────────────────────────────────
 INSERT INTO directory.itinerary_schedules
   (id, itinerary_id, start_date, custom_title, status, min_pax, max_pax, budget_estimation)
 VALUES

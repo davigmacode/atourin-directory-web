@@ -113,37 +113,9 @@ export const findController = new Elysia()
       }
     }
 
-    // 5. Category Filter
+    // 5. Category Filter — GIN containment on text[] categories column
     if (category) {
-      const { data: catData } = await supabaseAdmin
-        .schema('directory')
-        .from('taxonomies')
-        .select('id')
-        .eq('type', 'category')
-        .or(`slug.ilike.${category},name->>id.ilike.${category},name->>en.ilike.${category}`);
-
-      const targetTaxonomyIds = catData ? catData.map((c) => c.id) : [];
-      if (targetTaxonomyIds.length === 0) {
-        return {
-          data: [],
-          pagination: { page, limit, total: 0, totalPages: 0 }
-        };
-      }
-
-      const { data: assData } = await supabaseAdmin
-        .schema('directory')
-        .from('attraction_categories')
-        .select('attraction_id')
-        .in('taxonomy_id', targetTaxonomyIds);
-
-      const matchedAttractionIds = assData ? assData.map((a) => a.attraction_id) : [];
-      if (matchedAttractionIds.length === 0) {
-        return {
-          data: [],
-          pagination: { page, limit, total: 0, totalPages: 0 }
-        };
-      }
-      dbQuery = dbQuery.in('id', matchedAttractionIds);
+      dbQuery = dbQuery.contains('categories', [category]);
     }
 
     // 6. Facilities Filter

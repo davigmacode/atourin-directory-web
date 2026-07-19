@@ -4,7 +4,6 @@ import type { Itinerary, ItineraryFilters } from '@/types/itinerary';
 
 const PER_PAGE = 12;
 
-/** Parse "1" | "2-3" | "4-7" | "7+" into [min, max] day range */
 function parseDuration(value: string): [number, number] | null {
   if (value === '1')   return [1, 1];
   if (value === '2-3') return [2, 3];
@@ -13,7 +12,6 @@ function parseDuration(value: string): [number, number] | null {
   return null;
 }
 
-/** Parse "<500rb" | "500-2jt" | ">2jt" into [min, max] IDR range */
 function parseBudget(value: string): [number, number] | null {
   if (value === '<500rb')  return [0, 500_000];
   if (value === '500-2jt') return [500_000, 2_000_000];
@@ -35,6 +33,7 @@ export const findController = new Elysia()
       difficulty,
       author,
       language,
+      audience,
       month,
       startDate,
     } = query as Record<string, string | undefined>;
@@ -43,7 +42,6 @@ export const findController = new Elysia()
     const limitNum = Math.min(50, Math.max(1, parseInt(limit || String(PER_PAGE))));
     const offset   = (pageNum - 1) * limitNum;
 
-    // ── Base query ──────────────────────────────────────────
     let q = supabaseAdmin
       .schema('directory')
       .from('itineraries')
@@ -63,14 +61,15 @@ export const findController = new Elysia()
         max_pax,
         difficulty,
         budget_estimation,
+        languages,
+        categories,
+        highlights,
         target_audience,
         is_featured,
         destination:destinations ( id, slug, name ),
         author:creators ( id, slug, name, display_name, avatar, is_verified )
       `, { count: 'exact' })
       .eq('is_published', true);
-
-    // ── Filters ─────────────────────────────────────────────
 
     // destination (slug)
     if (destination) {
@@ -83,6 +82,12 @@ export const findController = new Elysia()
       if (dest) q = q.eq('destination_id', dest.id);
       else return { data: [], pagination: { page: pageNum, limit: limitNum, total: 0, totalPages: 0 } };
     }
+
+    // Array containment filters (gin-indexed)
+    if (language)  q = q.contains('languages', [language]);
+    if (category)  q = q.contains('categories', [category]);
+    if (theme)     q = q.contains('highlights', [theme]);
+    if (audience)  q = q.contains('target_audience', [audience]);
 
     // difficulty
     if (difficulty && ['easy', 'medium', 'hard'].includes(difficulty)) {
@@ -106,54 +111,7 @@ export const findController = new Elysia()
       const monthNames = ['jan','feb','mar','apr','may','jun','jul','aug','sep','oct','nov','dec'];
       const monthIdx = parseInt(month) - 1;
       const monthKey = monthNames[monthIdx];
-      if (monthKey) {
-        q = q.contains('best_time_weather', { [monthKey]: 'ideal' });
-      }
-    }
-
-    // category — filter via itinerary_categories join
-    if (category) {
-      const { data: catRows } = await supabaseAdmin
-        .schema('directory')
-        .from('itinerary_categories')
-        .select('itinerary_id, taxonomy:taxonomies!inner(slug)')
-        .eq('taxonomy.slug', category);
-      if (catRows?.length) {
-        const ids = catRows.map((r: any) => r.itinerary_id);
-        q = q.in('id', ids);
-      } else {
-        return { data: [], pagination: { page: pageNum, limit: limitNum, total: 0, totalPages: 0 } };
-      }
-    }
-
-    // theme — filter via itinerary_highlights join
-    if (theme) {
-      const { data: themeRows } = await supabaseAdmin
-        .schema('directory')
-        .from('itinerary_highlights')
-        .select('itinerary_id, taxonomy:taxonomies!inner(slug)')
-        .eq('taxonomy.slug', theme);
-      if (themeRows?.length) {
-        const ids = themeRows.map((r: any) => r.itinerary_id);
-        q = q.in('id', ids);
-      } else {
-        return { data: [], pagination: { page: pageNum, limit: limitNum, total: 0, totalPages: 0 } };
-      }
-    }
-
-    // language — filter via itinerary_languages join
-    if (language) {
-      const { data: langRows } = await supabaseAdmin
-        .schema('directory')
-        .from('itinerary_languages')
-        .select('itinerary_id, taxonomy:taxonomies!inner(slug)')
-        .eq('taxonomy.slug', language);
-      if (langRows?.length) {
-        const ids = langRows.map((r: any) => r.itinerary_id);
-        q = q.in('id', ids);
-      } else {
-        return { data: [], pagination: { page: pageNum, limit: limitNum, total: 0, totalPages: 0 } };
-      }
+      if (monthKey) q = q.contains('best_time_weather', { [monthKey]: 'ideal' });
     }
 
     // author — filter via creators.slug
@@ -183,24 +141,14 @@ export const findController = new Elysia()
       }
     }
 
-    // ── Sort ────────────────────────────────────────────────
+    // Sort
     switch (sort) {
-      case 'rating':
-        q = q.order('rating_average', { ascending: false });
-        break;
-      case 'newest':
-        q = q.order('created_at', { ascending: false });
-        break;
-      case 'budget':
-        q = q.order('budget_estimation', { ascending: true });
-        break;
-      case 'popular':
-      default:
-        q = q.order('views_count', { ascending: false });
-        break;
+      case 'rating': q = q.order('rating_average', { ascending: false }); break;
+      case 'newest': q = q.order('created_at', { ascending: false }); break;
+      case 'budget': q = q.order('budget_estimation', { ascending: true }); break;
+      default:       q = q.order('views_count', { ascending: false }); break;
     }
 
-    // ── Paginate ────────────────────────────────────────────
     q = q.range(offset, offset + limitNum - 1);
 
     const { data: rows, error, count } = await q;
@@ -214,7 +162,6 @@ export const findController = new Elysia()
     const total      = count ?? 0;
     const totalPages = Math.ceil(total / limitNum);
 
-    // ── Shape response ──────────────────────────────────────
     const data = (rows ?? []).map((row: any) => {
       const rawAuthor = Array.isArray(row.author) ? row.author[0] : row.author;
       const rawDest   = Array.isArray(row.destination) ? row.destination[0] : row.destination;
@@ -234,6 +181,9 @@ export const findController = new Elysia()
         maxPax:          row.max_pax,
         difficulty:      row.difficulty,
         budgetEstimation:row.budget_estimation,
+        languages:       row.languages ?? [],
+        categories:      row.categories ?? [],
+        highlights:      row.highlights ?? [],
         targetAudience:  row.target_audience ?? [],
         isFeatured:      row.is_featured,
         destination: rawDest

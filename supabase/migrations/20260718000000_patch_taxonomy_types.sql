@@ -27,7 +27,9 @@ ALTER TABLE directory.taxonomies
     -- new types for itineraries
     'creator_role',
     'itinerary_category',
-    'itinerary_highlight'
+    'itinerary_highlight',
+    -- audience segments for target_audience text[] column
+    'target_audience'
   ));
 
 -- ── 2. Rename type: guide_language → language ────────────────
@@ -65,4 +67,12 @@ INSERT INTO directory.taxonomies (slug, name, type, metadata) VALUES
   ('bahari',        '{"id": "Bahari",      "en": "Marine"}'::jsonb,        'itinerary_category', '{"icon": "🌊", "color": "#D4ECF4"}'),
   ('kuliner',       '{"id": "Kuliner",     "en": "Culinary"}'::jsonb,      'itinerary_category', '{"icon": "🍽️", "color": "#FFE2E2"}'),
   ('backpacker',    '{"id": "Backpacker",  "en": "Backpacker"}'::jsonb,    'itinerary_category', '{"icon": "🎒", "color": "#D9F2DA"}')
+ON CONFLICT (type, slug) DO NOTHING;
+
+-- target_audience — audience chips shown on itinerary cards
+INSERT INTO directory.taxonomies (slug, name, type, metadata) VALUES
+  ('solo',    '{"id": "Solo",     "en": "Solo"}'::jsonb,     'target_audience', '{"icon": "solo"}'),
+  ('couple',  '{"id": "Pasangan", "en": "Couple"}'::jsonb,   'target_audience', '{"icon": "couple"}'),
+  ('group',   '{"id": "Rombongan","en": "Group"}'::jsonb,    'target_audience', '{"icon": "group"}'),
+  ('family',  '{"id": "Keluarga", "en": "Family"}'::jsonb,   'target_audience', '{"icon": "family"}')
 ON CONFLICT (type, slug) DO NOTHING;

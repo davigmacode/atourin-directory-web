@@ -23,6 +23,9 @@ CREATE TABLE IF NOT EXISTS directory.taxonomies (
   id            text PRIMARY KEY DEFAULT gen_random_uuid()::text,
   slug          text NOT NULL,
   name          jsonb NOT NULL DEFAULT '{"id": "", "en": ""}'::jsonb,
+  -- Optional multilingual description: {"id": "...", "en": "..."}
+  -- Used by highlights, activities, and other taxonomy types
+  description   jsonb NOT NULL DEFAULT '{"id": "", "en": ""}'::jsonb,
   type          text NOT NULL,
   metadata      jsonb NOT NULL DEFAULT '{}'::jsonb,
   created_at    timestamptz NOT NULL DEFAULT now(),
@@ -34,7 +37,8 @@ CREATE TABLE IF NOT EXISTS directory.taxonomies (
     'village_theme',
     'village_activity',
     'guide_language',
-    'guide_specialism'
+    'guide_specialism',
+    'target_audience'
   )),
   CONSTRAINT taxonomies_type_slug_unique UNIQUE (type, slug)
 );

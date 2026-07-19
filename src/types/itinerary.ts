@@ -10,8 +10,12 @@ export type BestTimeWeather = "rain" | "ok" | "ideal";
 /** Crowd level per month */
 export type BestTimeCrowd = "low" | "mid" | "high";
 
-/** Audience segment shown in chips */
-export type TargetAudience = "Solo" | "Couple" | "Group" | "Family" | (string & {});
+export interface ItineraryAudience {
+  id: string;
+  slug: string;
+  name: I18nText;
+  icon?: string | null;
+}
 
 // ─── Shared shapes ───────────────────────────────────────────
 
@@ -130,10 +134,9 @@ export interface ItineraryCategory {
 export interface ItineraryHighlight {
   id: string;
   slug: string;
-  /** Multilingual from taxonomies.name */
   name: I18nText;
   icon: string;
-  /** Multilingual per-itinerary description override */
+  /** Global description from taxonomies.description, not per-itinerary */
   description: I18nText;
   sortOrder: number;
 }
@@ -171,7 +174,7 @@ export interface Itinerary {
   difficulty: Difficulty | null;
   budgetEstimation?: number | null;
   budgetBreakdown: ItineraryPriceItem[];
-  targetAudience: TargetAudience[];
+  targetAudience: ItineraryAudience[];
   bestTimeWeather: ItineraryTimeMap;
   bestTimeCrowd: ItineraryTimeMap;
   /** Multilingual note — matches DB jsonb column */

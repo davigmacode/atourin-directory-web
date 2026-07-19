@@ -2,6 +2,8 @@ import { Elysia } from 'elysia';
 import { supabaseAdmin } from '@/lib/supabase';
 import type { Itinerary } from '@/types/itinerary';
 
+const TAXONOMY_TYPES = ['language', 'itinerary_category', 'itinerary_highlight', 'target_audience'] as const;
+
 export const getController = new Elysia()
   .get('/:slug', async ({ params: { slug }, set }) => {
 
@@ -26,6 +28,9 @@ export const getController = new Elysia()
         difficulty,
         budget_estimation,
         budget_breakdown,
+        languages,
+        categories,
+        highlights,
         target_audience,
         best_time_weather,
         best_time_crowd,
@@ -75,69 +80,32 @@ export const getController = new Elysia()
       `)
       .eq('creator_id', authorRow?.id ?? '');
 
-    // ── 4. Fetch categories ─────────────────────────────────
-    const { data: categoryData, error: catError } = await supabaseAdmin
-      .schema('directory')
-      .from('itinerary_categories')
-      .select(`
-        sort_order,
-        taxonomy:taxonomies ( id, slug, name, metadata )
-      `)
-      .eq('itinerary_id', (row as any).id)
-      .order('sort_order', { ascending: true });
+    // ── 4. Fetch taxonomy metadata for all slugs ────────────
+    const allSlugs = [
+      ...((row as any).languages ?? []),
+      ...((row as any).categories ?? []),
+      ...((row as any).highlights ?? []),
+      ...((row as any).target_audience ?? []),
+    ];
 
-    if (catError) {
-      console.error('[api/itineraries/[slug] GET categories]', catError.message);
-      set.status = 500;
-      return { error: catError.message };
-    }
+    const { data: taxData } = allSlugs.length
+      ? await supabaseAdmin
+          .schema('directory')
+          .from('taxonomies')
+          .select('id, slug, name, type, metadata, description')
+          .in('slug', allSlugs)
+          .in('type', TAXONOMY_TYPES as unknown as string[])
+      : { data: [] };
 
-    // ── 5. Fetch highlights ─────────────────────────────────
-    const { data: highlightData, error: hlError } = await supabaseAdmin
-      .schema('directory')
-      .from('itinerary_highlights')
-      .select(`
-        description,
-        sort_order,
-        taxonomy:taxonomies ( id, slug, name, metadata )
-      `)
-      .eq('itinerary_id', (row as any).id)
-      .order('sort_order', { ascending: true });
+    const taxBySlugType = new Map(
+      (taxData ?? []).map((t: any) => [`${t.type}:${t.slug}`, t])
+    );
 
-    if (hlError) {
-      console.error('[api/itineraries/[slug] GET highlights]', hlError.message);
-      set.status = 500;
-      return { error: hlError.message };
-    }
-
-    // ── 6. Fetch languages ──────────────────────────────────
-    const { data: languageData, error: langError } = await supabaseAdmin
-      .schema('directory')
-      .from('itinerary_languages')
-      .select(`
-        taxonomy:taxonomies ( id, slug, name, metadata )
-      `)
-      .eq('itinerary_id', (row as any).id);
-
-    if (langError) {
-      console.error('[api/itineraries/[slug] GET languages]', langError.message);
-      set.status = 500;
-      return { error: langError.message };
-    }
-
-    // ── 7. Fetch daily plans ────────────────────────────────
+    // ── 5. Fetch daily plans ────────────────────────────────
     const { data: dailyData, error: dailyError } = await supabaseAdmin
       .schema('directory')
       .from('itinerary_daily')
-      .select(`
-        id,
-        day_number,
-        title,
-        summary_stops,
-        summary_hours,
-        summary_km,
-        summary_price
-      `)
+      .select('id, day_number, title, summary_stops, summary_hours, summary_km, summary_price')
       .eq('itinerary_id', (row as any).id)
       .order('day_number', { ascending: true });
 
@@ -149,7 +117,7 @@ export const getController = new Elysia()
 
     const dailyIds = (dailyData ?? []).map((d: any) => d.id);
 
-    // ── 8. Fetch stops for all days ─────────────────────────
+    // ── 6. Fetch stops for all days ─────────────────────────
     const { data: stopsData, error: stopsError } = dailyIds.length
       ? await supabaseAdmin
           .schema('directory')
@@ -165,23 +133,12 @@ export const getController = new Elysia()
       return { error: stopsError.message };
     }
 
-    // ── 9. Fetch timelines for all days ────────────────────
+    // ── 7. Fetch timelines for all days ────────────────────
     const { data: timelineData, error: tlError } = dailyIds.length
       ? await supabaseAdmin
           .schema('directory')
           .from('itinerary_daily_timelines')
-          .select(`
-            id,
-            itinerary_daily_id,
-            time,
-            duration_minutes,
-            title,
-            stop_id,
-            description,
-            includes,
-            travel_info,
-            sort_order
-          `)
+          .select('id, itinerary_daily_id, time, duration_minutes, title, stop_id, description, includes, travel_info, sort_order')
           .in('itinerary_daily_id', dailyIds)
           .order('sort_order', { ascending: true })
       : { data: [], error: null };
@@ -192,7 +149,7 @@ export const getController = new Elysia()
       return { error: tlError.message };
     }
 
-    // ── 10. Fetch schedules ─────────────────────────────────
+    // ── 8. Fetch schedules ─────────────────────────────────
     const { data: scheduleData, error: schedError } = await supabaseAdmin
       .schema('directory')
       .from('itinerary_schedules')
@@ -213,7 +170,6 @@ export const getController = new Elysia()
     const stopById = new Map<string, any>();
     (stopsData ?? []).forEach((s: any) => stopById.set(s.id, s));
 
-    // Group stops and timelines by daily_id
     const stopsByDay  = new Map<string, any[]>();
     const timesByDay  = new Map<string, any[]>();
 
@@ -260,6 +216,7 @@ export const getController = new Elysia()
       })),
     }));
 
+    // Shape creator badges
     const badges = (badgeData ?? []).map((b: any) => {
       const tax = Array.isArray(b.taxonomy) ? b.taxonomy[0] : b.taxonomy;
       return tax ? {
@@ -272,40 +229,55 @@ export const getController = new Elysia()
       } : null;
     }).filter(Boolean);
 
-    const categories = (categoryData ?? []).map((c: any) => {
-      const tax = Array.isArray(c.taxonomy) ? c.taxonomy[0] : c.taxonomy;
-      return tax ? {
-        id:        tax.id,
-        slug:      tax.slug,
-        name:      tax.name,
-        icon:      tax.metadata?.icon ?? null,
-        sortOrder: c.sort_order,
+    // Shape highlights from taxonomies
+    const highlights = ((row as any).highlights ?? []).map((slug: string, i: number) => {
+      const t = taxBySlugType.get(`itinerary_highlight:${slug}`);
+      return t ? {
+        id:          t.id,
+        slug:        t.slug,
+        name:        t.name,
+        icon:        t.metadata?.icon ?? '',
+        description: t.description ?? { id: '', en: '' },
+        sortOrder:   i,
       } : null;
     }).filter(Boolean);
 
-    const highlights = (highlightData ?? []).map((h: any) => {
-      const tax = Array.isArray(h.taxonomy) ? h.taxonomy[0] : h.taxonomy;
-      return tax ? {
-        id:          tax.id,
-        slug:        tax.slug,
-        name:        tax.name,
-        icon:        tax.metadata?.icon ?? '',
-        description: h.description,
-        sortOrder:   h.sort_order,
+    // Shape categories
+    const categories = ((row as any).categories ?? []).map((slug: string, i: number) => {
+      const t = taxBySlugType.get(`itinerary_category:${slug}`);
+      return t ? {
+        id:        t.id,
+        slug:      t.slug,
+        name:      t.name,
+        icon:      t.metadata?.icon ?? null,
+        sortOrder: i,
       } : null;
     }).filter(Boolean);
 
-    const languages = (languageData ?? []).map((l: any) => {
-      const tax = Array.isArray(l.taxonomy) ? l.taxonomy[0] : l.taxonomy;
-      return tax ? {
-        id:   tax.id,
-        slug: tax.slug,
-        name: tax.name,
-        code: tax.metadata?.code ?? null,
-        icon: tax.metadata?.icon ?? null,
+    // Shape languages
+    const languages = ((row as any).languages ?? []).map((slug: string) => {
+      const t = taxBySlugType.get(`language:${slug}`);
+      return t ? {
+        id:   t.id,
+        slug: t.slug,
+        name: t.name,
+        code: t.metadata?.code ?? null,
+        icon: t.metadata?.icon ?? null,
       } : null;
     }).filter(Boolean);
 
+    // Shape target audience
+    const targetAudience = ((row as any).target_audience ?? []).map((slug: string) => {
+      const t = taxBySlugType.get(`target_audience:${slug}`);
+      return t ? {
+        id:   t.id,
+        slug: t.slug,
+        name: t.name,
+        icon: t.metadata?.icon ?? null,
+      } : { slug };
+    });
+
+    // Shape schedules
     const schedules = (scheduleData ?? []).map((s: any) => ({
       id:                      s.id,
       startDate:               s.start_date,
@@ -313,7 +285,7 @@ export const getController = new Elysia()
       status:                  s.status ?? 'scheduled',
       minPax:                  s.min_pax ?? null,
       maxPax:                  s.max_pax ?? null,
-      budgetEstimation: s.budget_estimation ?? null,
+      budgetEstimation:        s.budget_estimation ?? null,
     }));
 
     const rawDest = Array.isArray((row as any).destination)
@@ -337,7 +309,7 @@ export const getController = new Elysia()
       difficulty:       (row as any).difficulty ?? null,
       budgetEstimation: (row as any).budget_estimation ?? null,
       budgetBreakdown:  (row as any).budget_breakdown ?? [],
-      targetAudience:   (row as any).target_audience ?? [],
+      targetAudience,
       bestTimeWeather:  (row as any).best_time_weather ?? {},
       bestTimeCrowd:    (row as any).best_time_crowd ?? {},
       bestTimeNote:     (row as any).best_time_note ?? null,
