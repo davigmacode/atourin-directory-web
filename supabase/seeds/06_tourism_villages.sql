@@ -2,9 +2,9 @@
 INSERT INTO directory.tourism_villages (
   slug, name, destination_id, cover_image, description,
   featured, adwi_level_id, village_theme_id, rating_average, reviews_count,
-  homestay_count, homestay_min_price, max_daily_visitor, signature,
-  categories,
+  homestay_count, homestay_min_price,   max_daily_visitor, signature,
   activities,
+  categories,
   location_address, location_accessibility, location_directions, location_latitude, location_longitude
 ) VALUES
   (
