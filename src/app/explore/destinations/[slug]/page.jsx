@@ -27,7 +27,7 @@ function getTabs(dest) {
     { id: "desa",      label: cat("village", "Desa Wisata"),     count: dest.relatedVillages?.length ?? dest.villagesCount ?? dest.desa ?? 0 },
     { id: "itinerary", label: cat("itinerary", "Itinerary"),     count: dest.relatedItineraries?.length ?? dest.itinerariesCount ?? dest.itin ?? 0 },
     { id: "pemandu",   label: cat("guide", "Pemandu"),           count: dest.relatedTourGuides?.length ?? dest.tourGuidesCount ?? dest.guide ?? 0 },
-    { id: "cerita",    label: "Cerita Wisatawan" },
+    { id: "cerita",    label: "Cerita Wisatawan",                count: dest.relatedJournals?.length ?? dest.ceritaCount ?? 0 },
     { id: "info",      label: "Travel Info & Tips" },
   ];
 }
@@ -49,6 +49,8 @@ function mapApiDest(apiDest) {
     desa: apiDest.villagesCount ?? apiDest.villages_count ?? 0,
     itin: apiDest.itinerariesCount ?? apiDest.itineraries_count ?? 0,
     guide: apiDest.tourGuidesCount ?? apiDest.tour_guides_count ?? 0,
+    ceritaCount: apiDest.journalsCount ?? apiDest.journals_count ?? 0,
+    relatedJournals: apiDest.relatedJournals ?? [],
   };
 }
 
@@ -117,7 +119,7 @@ export default function DestinationDetailPage({ params: paramsPromise }) {
           {activeTab === "desa"      && <DesaTab dest={dest} />}
           {activeTab === "itinerary" && <ItineraryTab dest={dest} />}
           {activeTab === "pemandu"   && <PemanduTab dest={dest} />}
-          {activeTab === "cerita"    && <CeritaTab />}
+          {activeTab === "cerita"    && <CeritaTab dest={dest} />}
           {activeTab === "info"      && <InfoTab dest={dest} />}
         </main>
         <DestSidebar dest={dest} />

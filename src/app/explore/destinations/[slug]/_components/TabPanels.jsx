@@ -319,37 +319,15 @@ export function PemanduTab({ dest }) {
 /* ==========================================================
    CERITA TAB
    ========================================================== */
-const CERITA_WEB = [
-  {
-    img: "https://images.unsplash.com/photo-1528127269322-539801943592?w=600&auto=format&fit=crop&q=70",
-    title: "Petualangan tak terlupakan",
-    author: "Dimas Prasetyo",
-    days: 3,
-    date: "Mei 2026",
-    likes: 48,
-    excerpt: "Tiga hari keliling, highlight-nya jelas pemandangan yang luar biasa!",
-  },
-  {
-    img: "https://images.unsplash.com/photo-1604999565976-8913ad2ddb7c?w=600&auto=format&fit=crop&q=70",
-    title: "Sunrise yang tak terlupakan",
-    author: "Nadia Ananta",
-    days: 4,
-    date: "Apr 2026",
-    likes: 31,
-    excerpt: "Trek pagi ke puncak worth it banget. Pemandangan luar biasa!",
-  },
-  {
-    img: "https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=600&auto=format&fit=crop&q=70",
-    title: "Pengalaman pertama yang amazing",
-    author: "Rizky Hidayat",
-    days: 2,
-    date: "Mar 2026",
-    likes: 27,
-    excerpt: "Pengalaman pertama yang bikin pengen balik lagi.",
-  },
-];
+function formatDate(dateStr) {
+  if (!dateStr) return "";
+  const date = new Date(dateStr);
+  return date.toLocaleDateString("id-ID", { month: "short", year: "numeric" });
+}
 
-export function CeritaTab() {
+export function CeritaTab({ dest }) {
+  const journals = dest?.relatedJournals ?? [];
+
   return (
     <div style={{padding:"4px 0 8px"}}>
       <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:16,flexWrap:"wrap",marginBottom:16}}>
@@ -358,8 +336,16 @@ export function CeritaTab() {
           <p style={{fontSize:14,color:"var(--atr-text-muted)",margin:0}}>Journal publik dari wisatawan yang pernah menjelajahi destinasi ini.</p>
         </div>
       </div>
+
+      {journals.length === 0 && (
+        <div style={{textAlign:"center",padding:60,color:"var(--atr-text-muted)"}}>
+          <div style={{fontSize:48,marginBottom:12}}>📖</div>
+          <p style={{fontSize:15}}>Belum ada cerita wisatawan untuk {dest?.name}.</p>
+        </div>
+      )}
+
       <div style={{display:"grid",gridTemplateColumns:"repeat(2,1fr)",gap:16}} className="cerita-grid">
-        {CERITA_WEB.map((c, i) => (
+        {journals.map((c, i) => (
           <div key={i} style={{border:"1px solid var(--atr-outline)",borderRadius:16,overflow:"hidden",background:"#fff",cursor:"pointer"}}>
             <div style={{height:160,background:`url(${c.img}) center/cover`}}/>
             <div style={{padding:16}}>
@@ -367,10 +353,14 @@ export function CeritaTab() {
               <div style={{fontSize:13,color:"var(--atr-text-muted)",marginTop:6,lineHeight:1.5}}>{c.excerpt}</div>
               <div style={{display:"flex",alignItems:"center",gap:10,marginTop:12,fontSize:12.5,color:"var(--atr-text-muted)"}}>
                 <span style={{display:"inline-flex",alignItems:"center",gap:6}}>
-                  <span style={{width:24,height:24,borderRadius:999,background:"var(--atr-purple-50)",color:"var(--atr-purple)",display:"inline-flex",alignItems:"center",justifyContent:"center",fontSize:11,fontWeight:800}}>{c.author[0]}</span>
-                  {c.author}
+                  {c.authorAvatar ? (
+                    <img src={c.authorAvatar} alt={c.author} style={{width:24,height:24,borderRadius:999,objectFit:"cover"}} />
+                  ) : (
+                    <span style={{width:24,height:24,borderRadius:999,background:"var(--atr-purple-50)",color:"var(--atr-purple)",display:"inline-flex",alignItems:"center",justifyContent:"center",fontSize:11,fontWeight:800}}>{c.author ? c.author[0] : 'U'}</span>
+                  )}
+                  {c.author || "Anonim"}
                 </span>
-                <span>· {c.days} hari · {c.date}</span>
+                <span>· {formatDate(c.date)}</span>
                 <span style={{marginLeft:"auto",color:"var(--atr-red)"}}>❤ {c.likes}</span>
               </div>
             </div>

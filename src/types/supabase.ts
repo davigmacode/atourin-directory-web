@@ -1,4 +1,4 @@
-﻿export type Json =
+export type Json =
   | string
   | number
   | boolean
@@ -212,6 +212,7 @@ export type Database = {
           description: Json
           id: string
           itineraries_count: number
+          journals_count: number
           market_products_count: number
           name: string
           popular_score: number
@@ -231,6 +232,7 @@ export type Database = {
           description?: Json
           id: string
           itineraries_count?: number
+          journals_count?: number
           market_products_count?: number
           name: string
           popular_score?: number
@@ -250,6 +252,7 @@ export type Database = {
           description?: Json
           id?: string
           itineraries_count?: number
+          journals_count?: number
           market_products_count?: number
           name?: string
           popular_score?: number
@@ -662,6 +665,75 @@ export type Database = {
             columns: ["itinerary_id"]
             isOneToOne: false
             referencedRelation: "itineraries"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      journals: {
+        Row: {
+          author_id: string
+          categories: string[]
+          content: Json
+          cover_image: Json
+          created_at: string
+          description: Json
+          destination_id: string
+          id: string
+          likes_count: number
+          rating_average: number
+          reviews_count: number
+          slug: string
+          title: Json
+          updated_at: string
+          views_count: number
+        }
+        Insert: {
+          author_id: string
+          categories?: string[]
+          content?: Json
+          cover_image: Json
+          created_at?: string
+          description?: Json
+          destination_id: string
+          id?: string
+          likes_count?: number
+          rating_average?: number
+          reviews_count?: number
+          slug: string
+          title?: Json
+          updated_at?: string
+          views_count?: number
+        }
+        Update: {
+          author_id?: string
+          categories?: string[]
+          content?: Json
+          cover_image?: Json
+          created_at?: string
+          description?: Json
+          destination_id?: string
+          id?: string
+          likes_count?: number
+          rating_average?: number
+          reviews_count?: number
+          slug?: string
+          title?: Json
+          updated_at?: string
+          views_count?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "journals_author_id_fkey"
+            columns: ["author_id"]
+            isOneToOne: false
+            referencedRelation: "creators"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "journals_destination_id_fkey"
+            columns: ["destination_id"]
+            isOneToOne: false
+            referencedRelation: "destinations"
             referencedColumns: ["id"]
           },
         ]

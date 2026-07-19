@@ -25,6 +25,7 @@ export const getController = new Elysia()
         villages_count,
         itineraries_count,
         tour_guides_count,
+        journals_count,
         market_products_count,
         rating_average,
         popular_score,
@@ -197,6 +198,37 @@ export const getController = new Elysia()
       console.error('[api/destinations/[slug] GET related guides]', guideError.message);
     }
 
+    // 7.5. Fetch related journals
+    const { data: journalsData, error: journalError } = await supabaseAdmin
+      .schema('directory')
+      .from('journals')
+      .select(`
+        id,
+        slug,
+        title,
+        description,
+        cover_image,
+        rating_average,
+        reviews_count,
+        likes_count,
+        views_count,
+        created_at,
+        author:creators (
+          id,
+          slug,
+          name,
+          display_name,
+          avatar,
+          is_verified
+        )
+      `)
+      .eq('destination_id', row.id)
+      .limit(20);
+
+    if (journalError) {
+      console.error('[api/destinations/[slug] GET related journals]', journalError.message);
+    }
+
     // Batch-fetch guide specialisms, languages, certifications
     const guideIds = (guidesData ?? []).map((g: any) => g.id);
 
@@ -346,11 +378,33 @@ export const getController = new Elysia()
       };
     });
 
-    const destination: Destination & {
+    // Map related journals
+    const mappedJournals = (journalsData ?? []).map((j: any) => {
+      const rawAuthor = Array.isArray(j.author) ? j.author[0] : j.author;
+      const titleObj = j.title;
+      const jTitle = typeof titleObj === 'object' ? (titleObj[lang] || titleObj.id || titleObj.en || '') : (titleObj || '');
+      const descObj = j.description;
+      const jDesc = typeof descObj === 'object' ? (descObj[lang] || descObj.id || descObj.en || '') : (descObj || '');
+      return {
+        id: j.slug,
+        img: j.cover_image?.url || '',
+        title: jTitle,
+        excerpt: jDesc,
+        author: rawAuthor ? (rawAuthor.display_name || rawAuthor.name) : '',
+        authorAvatar: rawAuthor?.avatar?.url || '',
+        rating: Number(j.rating_average) || 0,
+        likes: j.likes_count || 0,
+        views: j.views_count || 0,
+        date: j.created_at,
+      };
+    });
+
+    const destination: Omit<Destination, 'relatedJournals'> & {
       relatedAttractions: any[];
       relatedVillages: any[];
       relatedItineraries: any[];
       relatedTourGuides: any[];
+      relatedJournals: any[];
     } = {
       id: row.id,
       slug: row.slug,
@@ -385,6 +439,7 @@ export const getController = new Elysia()
       villagesCount: row.villages_count,
       itinerariesCount: row.itineraries_count,
       tourGuidesCount: row.tour_guides_count,
+      journalsCount: row.journals_count,
       marketProductsCount: row.market_products_count,
       ratingAverage: Number(row.rating_average),
       popularScore: row.popular_score,
@@ -394,6 +449,7 @@ export const getController = new Elysia()
       relatedVillages: mappedVillages,
       relatedItineraries: mappedItineraries,
       relatedTourGuides: mappedGuides,
+      relatedJournals: mappedJournals,
     };
 
     return { data: destination };

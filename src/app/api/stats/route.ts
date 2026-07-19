@@ -31,7 +31,7 @@ export async function GET(request: Request) {
       provinceIds = (provRows ?? []).map((r: any) => r.id);
     } else {
       return NextResponse.json({
-        data: { provinces: 0, destinations: 0, attractions: 0, villages: 0, guides: 0, itineraries: 0 }
+        data: { provinces: 0, destinations: 0, attractions: 0, villages: 0, guides: 0, itineraries: 0, journals: 0 }
       });
     }
   }
@@ -49,13 +49,13 @@ export async function GET(request: Request) {
       const pId = provinceRow.id;
       if (provinceIds !== null && !provinceIds.includes(pId)) {
         return NextResponse.json({
-          data: { provinces: 0, destinations: 0, attractions: 0, villages: 0, guides: 0, itineraries: 0 }
+          data: { provinces: 0, destinations: 0, attractions: 0, villages: 0, guides: 0, itineraries: 0, journals: 0 }
         });
       }
       provinceIds = [pId];
     } else {
       return NextResponse.json({
-        data: { provinces: 0, destinations: 0, attractions: 0, villages: 0, guides: 0, itineraries: 0 }
+        data: { provinces: 0, destinations: 0, attractions: 0, villages: 0, guides: 0, itineraries: 0, journals: 0 }
       });
     }
   }
@@ -83,14 +83,14 @@ export async function GET(request: Request) {
       const dId = destRow.id;
       if (destinationIds !== null && !destinationIds.includes(dId)) {
         return NextResponse.json({
-          data: { provinces: 0, destinations: 0, attractions: 0, villages: 0, guides: 0, itineraries: 0 }
+          data: { provinces: 0, destinations: 0, attractions: 0, villages: 0, guides: 0, itineraries: 0, journals: 0 }
         });
       }
       destinationIds = [dId];
       provinceIds = [destRow.province_id];
     } else {
       return NextResponse.json({
-        data: { provinces: 0, destinations: 0, attractions: 0, villages: 0, guides: 0, itineraries: 0 }
+        data: { provinces: 0, destinations: 0, attractions: 0, villages: 0, guides: 0, itineraries: 0, journals: 0 }
       });
     }
   }
@@ -172,6 +172,18 @@ export async function GET(request: Request) {
     itinQuery = itinQuery.or(`name->>'id'.ilike.%${search}%,name->>'en'.ilike.%${search}%,description->>'id'.ilike.%${search}%,description->>'en'.ilike.%${search}%`);
   }
 
+  let journalQuery = supabaseAdmin
+    .schema('directory')
+    .from('journals')
+    .select('id', { count: 'exact', head: true });
+
+  if (destinationIds !== null) {
+    journalQuery = journalQuery.in('destination_id', destinationIds);
+  }
+  if (search) {
+    journalQuery = journalQuery.or(`title->>'id'.ilike.%${search}%,title->>'en'.ilike.%${search}%,description->>'id'.ilike.%${search}%,description->>'en'.ilike.%${search}%`);
+  }
+
   // 3. Execute in parallel
   const [
     { count: countProvinces },
@@ -179,14 +191,16 @@ export async function GET(request: Request) {
     { count: countAttractions },
     { count: countVillages },
     { count: countGuides },
-    { count: countItineraries }
+    { count: countItineraries },
+    { count: countJournals }
   ] = await Promise.all([
     provQuery,
     destQuery,
     attrQuery,
     villageQuery,
     guideQuery,
-    itinQuery
+    itinQuery,
+    journalQuery
   ]);
 
   return NextResponse.json({
@@ -196,7 +210,8 @@ export async function GET(request: Request) {
       attractions: countAttractions ?? 0,
       villages: countVillages ?? 0,
       guides: countGuides ?? 0,
-      itineraries: countItineraries ?? 0
+      itineraries: countItineraries ?? 0,
+      journals: countJournals ?? 0
     }
   });
 }
