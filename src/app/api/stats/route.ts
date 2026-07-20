@@ -12,87 +12,122 @@ export async function GET(request: Request) {
   let provinceIds: string[] | null = null;
   let destinationIds: string[] | null = null;
 
-  // Resolve Island
+  // Resolve Island (Multi choice)
   if (island) {
-    const { data: islandRow } = await supabaseAdmin
-      .schema('directory')
-      .from('islands')
-      .select('id')
-      .or(`id.eq.${island},name.ilike.%${island}%`)
-      .maybeSingle();
-
-    if (islandRow) {
-      const { data: provRows } = await supabaseAdmin
-        .schema('directory')
-        .from('provinces')
-        .select('id')
-        .eq('island_id', islandRow.id);
-
-      provinceIds = (provRows ?? []).map((r: any) => r.id);
-    } else {
-      return NextResponse.json({
-        data: { provinces: 0, destinations: 0, attractions: 0, villages: 0, guides: 0, itineraries: 0, journals: 0 }
+    const islandValues = island.split(',').map(i => i.trim()).filter(Boolean);
+    if (islandValues.length > 0) {
+      const orParts: string[] = [];
+      islandValues.forEach(val => {
+        orParts.push(`id.eq.${val}`, `name.ilike.%${val}%`);
       });
-    }
-  }
+      const { data: islandRows } = await supabaseAdmin
+        .schema('directory')
+        .from('islands')
+        .select('id')
+        .or(orParts.join(','));
 
-  // Resolve Province
-  if (province) {
-    const { data: provinceRow } = await supabaseAdmin
-      .schema('directory')
-      .from('provinces')
-      .select('id')
-      .or(`slug.eq.${province},name.ilike.%${province}%`)
-      .maybeSingle();
-
-    if (provinceRow) {
-      const pId = provinceRow.id;
-      if (provinceIds !== null && !provinceIds.includes(pId)) {
+      const islandIds = (islandRows ?? []).map((r: any) => r.id);
+      if (islandIds.length > 0) {
+        const { data: provRows } = await supabaseAdmin
+          .schema('directory')
+          .from('provinces')
+          .select('id')
+          .in('island_id', islandIds);
+        provinceIds = (provRows ?? []).map((r: any) => r.id);
+      } else {
         return NextResponse.json({
           data: { provinces: 0, destinations: 0, attractions: 0, villages: 0, guides: 0, itineraries: 0, journals: 0 }
         });
       }
-      provinceIds = [pId];
-    } else {
-      return NextResponse.json({
-        data: { provinces: 0, destinations: 0, attractions: 0, villages: 0, guides: 0, itineraries: 0, journals: 0 }
-      });
     }
   }
 
-  // Resolve Destinations under resolved Provinces
-  if (provinceIds !== null) {
+  // Resolve Province (Multi choice)
+  if (province) {
+    const provinceValues = province.split(',').map(p => p.trim()).filter(Boolean);
+    if (provinceValues.length > 0) {
+      const orParts: string[] = [];
+      provinceValues.forEach(val => {
+        orParts.push(`slug.eq.${val}`, `name.ilike.%${val}%`);
+      });
+      const { data: provinceRows } = await supabaseAdmin
+        .schema('directory')
+        .from('provinces')
+        .select('id')
+        .or(orParts.join(','));
+
+      const matchedProvIds = (provinceRows ?? []).map((r: any) => r.id);
+      if (matchedProvIds.length > 0) {
+        if (provinceIds !== null) {
+          provinceIds = provinceIds.filter(id => matchedProvIds.includes(id));
+        } else {
+          provinceIds = matchedProvIds;
+        }
+      } else {
+        return NextResponse.json({
+          data: { provinces: 0, destinations: 0, attractions: 0, villages: 0, guides: 0, itineraries: 0, journals: 0 }
+        });
+      }
+    }
+  }
+
+  // Resolve specific Destination (Multi choice)
+  if (destination) {
+    const destValues = destination.split(',').map(d => d.trim()).filter(Boolean);
+    if (destValues.length > 0) {
+      const orParts: string[] = [];
+      destValues.forEach(val => {
+        const slug = val.toLowerCase().replace(/\s+/g, '-');
+        orParts.push(`slug.eq.${slug}`, `name.ilike.%${val}%`);
+      });
+      const { data: destRows } = await supabaseAdmin
+        .schema('directory')
+        .from('destinations')
+        .select('id, province_id')
+        .or(orParts.join(','));
+
+      const matchedDestIds = (destRows ?? []).map((r: any) => r.id);
+      const matchedProvIds = [...new Set((destRows ?? []).map((r: any) => r.province_id))];
+
+      if (matchedDestIds.length > 0) {
+        if (destinationIds !== null) {
+          destinationIds = destinationIds.filter(id => matchedDestIds.includes(id));
+        } else {
+          destinationIds = matchedDestIds;
+        }
+        if (provinceIds !== null) {
+          provinceIds = provinceIds.filter(id => matchedProvIds.includes(id));
+        } else {
+          provinceIds = matchedProvIds;
+        }
+      } else {
+        return NextResponse.json({
+          data: { provinces: 0, destinations: 0, attractions: 0, villages: 0, guides: 0, itineraries: 0, journals: 0 }
+        });
+      }
+    }
+  }
+
+  // Guard: if resolved lists are empty, return all 0s directly
+  if (provinceIds !== null && provinceIds.length === 0) {
+    return NextResponse.json({
+      data: { provinces: 0, destinations: 0, attractions: 0, villages: 0, guides: 0, itineraries: 0, journals: 0 }
+    });
+  }
+  if (destinationIds !== null && destinationIds.length === 0) {
+    return NextResponse.json({
+      data: { provinces: 0, destinations: 0, attractions: 0, villages: 0, guides: 0, itineraries: 0, journals: 0 }
+    });
+  }
+
+  // If destinationIds is still null but provinceIds is populated, get all destinations under those provinces
+  if (destinationIds === null && provinceIds !== null) {
     const { data: destRows } = await supabaseAdmin
       .schema('directory')
       .from('destinations')
       .select('id')
       .in('province_id', provinceIds);
     destinationIds = (destRows ?? []).map((r: any) => r.id);
-  }
-
-  // Resolve specific Destination
-  if (destination) {
-    const { data: destRow } = await supabaseAdmin
-      .schema('directory')
-      .from('destinations')
-      .select('id, province_id')
-      .or(`slug.eq.${destination},name.ilike.%${destination}%`)
-      .maybeSingle();
-
-    if (destRow) {
-      const dId = destRow.id;
-      if (destinationIds !== null && !destinationIds.includes(dId)) {
-        return NextResponse.json({
-          data: { provinces: 0, destinations: 0, attractions: 0, villages: 0, guides: 0, itineraries: 0, journals: 0 }
-        });
-      }
-      destinationIds = [dId];
-      provinceIds = [destRow.province_id];
-    } else {
-      return NextResponse.json({
-        data: { provinces: 0, destinations: 0, attractions: 0, villages: 0, guides: 0, itineraries: 0, journals: 0 }
-      });
-    }
   }
 
   // 2. Build Parallel Count Queries

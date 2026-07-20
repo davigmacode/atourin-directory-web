@@ -80,7 +80,9 @@ export default function FilterBar({
   filterOptions = FILTER_OPTIONS,
   resultLabel = "itinerary",
   totalResults = 2412,
+  isLoading = false,
   onFilterChange,
+  onActiveChipsChange,
 }) {
   const wrapRef = useRef(null);
   useEffect(() => {
@@ -99,25 +101,22 @@ export default function FilterBar({
     state.setOpenSort(false);
   }
   function pickFilter(label, value) {
-    if (!state.activeChips.includes(value)) {
-      state.setActiveChips([...state.activeChips, value]);
-      const key = FILTER_KEY_MAP[label];
-      if (key && onFilterChange) {
-        onFilterChange(key, value);
-      }
+    let newChips;
+    if (state.activeChips.includes(value)) {
+      newChips = state.activeChips.filter((x) => x !== value);
+    } else {
+      newChips = [...state.activeChips, value];
     }
-    state.setOpenFilter(null);
+    state.setActiveChips(newChips);
+    if (onActiveChipsChange) {
+      onActiveChipsChange(newChips);
+    }
   }
   function removeChip(c) {
-    state.setActiveChips(state.activeChips.filter((x) => x !== c));
-    for (const [label, opts] of Object.entries(FILTER_OPTIONS)) {
-      if (opts.includes(c)) {
-        const key = FILTER_KEY_MAP[label];
-        if (key && onFilterChange) {
-          onFilterChange(key, "");
-        }
-        break;
-      }
+    const newChips = state.activeChips.filter((x) => x !== c);
+    state.setActiveChips(newChips);
+    if (onActiveChipsChange) {
+      onActiveChipsChange(newChips);
     }
   }
 
@@ -151,14 +150,29 @@ export default function FilterBar({
       </div>
       <div style={dirStyles.activeRow}>
         <span style={dirStyles.resultCount}>
-          <strong>
-            {(
-              totalResults -
-              state.activeChips.length *
-              Math.max(20, Math.floor(totalResults / 50))
-            ).toLocaleString("id-ID")}
-          </strong>{" "}
-          {resultLabel} cocok untukmu
+          {isLoading ? (
+            <span style={{ display: "inline-flex", alignItems: "center", gap: "8px", verticalAlign: "middle" }}>
+              <span
+                style={{
+                  width: "14px",
+                  height: "14px",
+                  border: "2.2px solid var(--atr-outline)",
+                  borderTop: "2.2px solid var(--atr-purple)",
+                  borderRadius: "50%",
+                  animation: "atr-spin 0.8s linear infinite",
+                  display: "inline-block",
+                }}
+              />
+              <span style={{ fontSize: "14px", color: "var(--atr-text-muted)" }}>Memuat rute...</span>
+            </span>
+          ) : (
+            <>
+              <strong>
+                {totalResults.toLocaleString("id-ID")}
+              </strong>{" "}
+              {resultLabel} cocok untukmu
+            </>
+          )}
         </span>
         <div style={dirStyles.activeChips}>
           {state.activeChips.map((c) => (
@@ -173,11 +187,8 @@ export default function FilterBar({
             <button
               onClick={() => {
                 state.setActiveChips([]);
-                if (onFilterChange) {
-                  // Reset hook filters
-                  Object.keys(FILTER_KEY_MAP).forEach((lbl) => {
-                    onFilterChange(FILTER_KEY_MAP[lbl], "");
-                  });
+                if (onActiveChipsChange) {
+                  onActiveChipsChange([]);
                 }
               }}
               style={dirStyles.clearAll}

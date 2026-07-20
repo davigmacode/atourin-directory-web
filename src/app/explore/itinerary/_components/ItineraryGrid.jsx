@@ -265,11 +265,15 @@ export default function ItineraryGrid({
             ))}
           </div>
           <div style={cardStyles.paginationRow}>
-            {hasMore && (
-              <button style={cardStyles.loadMore} onClick={loadMore}>
-                Muat 24 itinerary lagi
-              </button>
-            )}
+            {hasMore && (() => {
+              const remaining = totalCount ? totalCount - data.length : 0;
+              const nextLoadCount = remaining > 0 ? Math.min(12, remaining) : 12;
+              return (
+                <button style={cardStyles.loadMore} onClick={loadMore}>
+                  Muat {nextLoadCount} itinerary lagi
+                </button>
+              );
+            })()}
             <div style={cardStyles.pageInfo}>
               Menampilkan {data.length.toLocaleString("id-ID")}
               {totalCount ? ` dari ${totalCount.toLocaleString("id-ID")}` : ""}

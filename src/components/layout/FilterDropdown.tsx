@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useRef, useEffect } from "react";
 import { dirStyles as dirStylesRaw } from "@/styles/attraction-styles";
 import { FilterGlyph, ChevDown, CheckIcon } from "@/components/icons";
 
@@ -25,8 +25,21 @@ export default function FilterDropdown({
   onToggle,
   onPick,
 }: FilterDropdownProps) {
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    function handleClickOutside(e: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        onToggle();
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [isOpen, onToggle]);
+
   return (
-    <div style={{ position: "relative" }}>
+    <div style={{ position: "relative" }} ref={dropdownRef}>
       <button
         onClick={onToggle}
         style={{

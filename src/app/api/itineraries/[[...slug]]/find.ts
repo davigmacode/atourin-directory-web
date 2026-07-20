@@ -28,12 +28,15 @@ export const findController = new Elysia()
       destination,
       theme,
       category,
+      kategori,
       duration,
+      durasi,
       budget,
       difficulty,
       author,
       language,
       audience,
+      tipe_perjalanan,
       month,
       startDate,
     } = query as Record<string, string | undefined>;
@@ -41,6 +44,10 @@ export const findController = new Elysia()
     const pageNum  = Math.max(1, parseInt(page || '1'));
     const limitNum = Math.min(50, Math.max(1, parseInt(limit || String(PER_PAGE))));
     const offset   = (pageNum - 1) * limitNum;
+
+    const categoryValue = kategori || category;
+    const targetAudienceValue = tipe_perjalanan || audience;
+    const durationValue = durasi || duration;
 
     let q = supabaseAdmin
       .schema('directory')
@@ -71,42 +78,116 @@ export const findController = new Elysia()
       `, { count: 'exact' })
       .eq('is_published', true);
 
-    // destination (slug)
-    if (destination) {
-      const { data: dest } = await supabaseAdmin
-        .schema('directory')
-        .from('destinations')
-        .select('id')
-        .eq('slug', destination)
-        .maybeSingle();
-      if (dest) q = q.eq('destination_id', dest.id);
-      else return { data: [], pagination: { page: pageNum, limit: limitNum, total: 0, totalPages: 0 } };
+    function slugify(text: string): string {
+      return text
+        .toLowerCase()
+        .trim()
+        .replace(/[^\w\s-]/g, '')
+        .replace(/[\s_-]+/g, '-')
+        .replace(/^-+|-+$/g, '');
     }
 
-    // Array containment filters (gin-indexed)
-    if (language)  q = q.contains('languages', [language]);
-    if (category)  q = q.contains('categories', [category]);
-    if (theme)     q = q.contains('highlights', [theme]);
-    if (audience)  q = q.contains('target_audience', [audience]);
+    function parseDuration(value: string): [number, number] | null {
+      const val = value.trim();
+      if (val === '1 Hari' || val === '1') return [1, 1];
+      if (val === '2D1N' || val === '2') return [2, 2];
+      if (val === '3D2N' || val === '3') return [3, 3];
+      if (val === '4D3N' || val === '4') return [4, 4];
+      if (val === '5D4N' || val === '5') return [5, 5];
+      if (val === '6D+' || val === '6+') return [6, 9999];
+      if (val === '2-3') return [2, 3];
+      if (val === '4-7') return [4, 7];
+      if (val === '7+') return [8, 9999];
+      return null;
+    }
+
+    function parseBudget(value: string): [number, number] | null {
+      const val = value.trim().replace(/\s+/g, '');
+      if (val === '<Rp500rb' || val === '<500rb') return [0, 500000];
+      if (val === '<Rp1jt' || val === '<1jt') return [0, 1000000];
+      if (val.includes('Rp1jt') && val.includes('Rp3jt') || val === '1-3jt') return [1000000, 3000000];
+      if (val.includes('Rp3jt') && val.includes('Rp6jt') || val === '3-6jt') return [3000000, 6000000];
+      if (val === 'Rp6jt+' || val === '>6jt') return [6000001, 999999999];
+      if (val === '500-2jt') return [500000, 2000000];
+      if (val === '>2jt') return [2000001, 999999999];
+      return null;
+    }
+
+    // destination (slug)
+    if (destination) {
+      const destSlugs = destination.split(',').map(s => slugify(s.trim())).filter(Boolean);
+      if (destSlugs.length > 0) {
+        const { data: dests } = await supabaseAdmin
+          .schema('directory')
+          .from('destinations')
+          .select('id')
+          .in('slug', destSlugs);
+        if (dests && dests.length > 0) {
+          const destIds = dests.map(d => d.id);
+          q = q.in('destination_id', destIds);
+        } else {
+          return { data: [], pagination: { page: pageNum, limit: limitNum, total: 0, totalPages: 0 } };
+        }
+      }
+    }
+
+    // Array containment / overlaps filters
+    if (language) q = q.contains('languages', [language]);
+    if (categoryValue) {
+      const catListOriginal = categoryValue.split(',').map(c => c.trim()).filter(Boolean);
+      const catListLower = categoryValue.split(',').map(c => c.trim().toLowerCase()).filter(Boolean);
+      const combinedList = [...new Set([...catListOriginal, ...catListLower])];
+      q = q.overlaps('categories', combinedList);
+    }
+    if (theme) {
+      const themeList = theme.split(',').map(t => t.trim()).filter(Boolean);
+      if (themeList.length > 0) {
+        q = q.overlaps('highlights', themeList);
+      }
+    }
+    if (targetAudienceValue) {
+      const audListOriginal = targetAudienceValue.split(',').map(a => a.trim()).filter(Boolean);
+      const audListLower = targetAudienceValue.split(',').map(a => a.trim().toLowerCase()).filter(Boolean);
+      const combinedList = [...new Set([...audListOriginal, ...audListLower])];
+      q = q.overlaps('target_audience', combinedList);
+    }
 
     // difficulty
     if (difficulty && ['easy', 'medium', 'hard'].includes(difficulty)) {
       q = q.eq('difficulty', difficulty);
     }
 
-    // duration_days range
-    if (duration) {
-      const range = parseDuration(duration);
-      if (range) q = q.gte('duration_days', range[0]).lte('duration_days', range[1]);
+    // duration_days range (multiple choice with OR)
+    if (durationValue) {
+      const durList = durationValue.split(',').map(d => d.trim()).filter(Boolean);
+      const orConditions: string[] = [];
+      durList.forEach(dur => {
+        const range = parseDuration(dur);
+        if (range) {
+          orConditions.push(`and(duration_days.gte.${range[0]},duration_days.lte.${range[1]})`);
+        }
+      });
+      if (orConditions.length > 0) {
+        q = q.or(orConditions.join(','));
+      }
     }
 
-    // budget_estimation range
+    // budget_estimation range (multiple choice with OR)
     if (budget) {
-      const range = parseBudget(budget);
-      if (range) q = q.gte('budget_estimation', range[0]).lte('budget_estimation', range[1]);
+      const budList = budget.split(',').map(b => b.trim()).filter(Boolean);
+      const orConditions: string[] = [];
+      budList.forEach(bud => {
+        const range = parseBudget(bud);
+        if (range) {
+          orConditions.push(`and(budget_estimation.gte.${range[0]},budget_estimation.lte.${range[1]})`);
+        }
+      });
+      if (orConditions.length > 0) {
+        q = q.or(orConditions.join(','));
+      }
     }
 
-    // month — best_time_weather @> '{"<month>":"ideal"}'
+    // month
     if (month) {
       const monthNames = ['jan','feb','mar','apr','may','jun','jul','aug','sep','oct','nov','dec'];
       const monthIdx = parseInt(month) - 1;
