@@ -146,15 +146,20 @@ export default function VillagesGrid({
         ))}
       </div>
       <div style={cardStyles.paginationRow}>
-        {hasMore && (
-          <button
-            style={cardStyles.loadMore}
-            onClick={loadMore}
-            disabled={isLoading}
-          >
-            {isLoading ? "Memuat\u2026" : "Muat lebih banyak"}
-          </button>
-        )}
+        {hasMore && (() => {
+          const totalCount = pagination?.total || 0;
+          const remaining = totalCount ? totalCount - data.length : 0;
+          const nextLoadCount = remaining > 0 ? Math.min(12, remaining) : 12;
+          return (
+            <button
+              style={cardStyles.loadMore}
+              onClick={loadMore}
+              disabled={isLoading}
+            >
+              {isLoading ? "Memuat\u2026" : `Muat ${nextLoadCount} desa wisata lagi`}
+            </button>
+          );
+        })()}
         <div style={cardStyles.pageInfo}>
           Menampilkan {data.length}
           {pagination?.total ? ` dari ${pagination.total}` : ""}

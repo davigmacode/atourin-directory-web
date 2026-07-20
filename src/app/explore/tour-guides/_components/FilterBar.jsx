@@ -1,6 +1,4 @@
-"use client";
-
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { FilterDropdown, SortAndViewToggle } from "@/components/layout";
 import { dirStyles } from "@/styles/attraction-styles";
 import {
@@ -9,89 +7,74 @@ import {
   SORT_OPTIONS,
 } from "@/data/guides";
 
-const FILTER_KEY_MAP = {
-  Wilayah: "wilayah",
-  Spesialisasi: "spesialisasi",
-  Bahasa: "bahasa",
-  Harga: "harga",
-  Sertifikasi: "sertifikasi",
-};
-
 const SORT_LABEL_TO_VALUE = {
-  "Paling populer": "popular",
-  "Rating tertinggi": "rating",
-  "Harga terendah": "price_low",
-  "Harga tertinggi": "price_high",
-  "Pengalaman terbanyak": "experience",
+  "Paling populer": "popularity",
+  "Rating tertinggi": "rating-desc",
+  "Harga terendah": "price-asc",
+  "Harga tertinggi": "price-desc",
+  "Pengalaman terbanyak": "experience-desc",
 };
 
 const SORT_VALUE_TO_LABEL = Object.fromEntries(
   Object.entries(SORT_LABEL_TO_VALUE).map(([k, v]) => [v, k]),
 );
 
-
-
 export default function FilterBar({
   filters = GUIDE_FILTERS,
   filterOptions = GUIDE_FILTER_OPTIONS,
   resultLabel = "tour guide",
   totalResults = 638,
-  activeFilterValues = {},
-  onFilterChange,
+  activeChips = [],
+  onActiveChipsChange,
+  sort = "popularity",
+  onSortChange,
   view = "grid",
   onViewChange,
+  isLoading = false,
 }) {
   const [openFilter, setOpenFilter] = useState(null);
   const [openSort, setOpenSort] = useState(false);
+  const wrapRef = useRef(null);
 
-  const activeChips = Object.entries(activeFilterValues)
-    .filter(([key, val]) => val && key !== "sort")
-    .map(([, val]) => val);
+  useEffect(() => {
+    function onDoc(e) {
+      if (wrapRef.current && !wrapRef.current.contains(e.target)) {
+        setOpenFilter(null);
+        setOpenSort(false);
+      }
+    }
+    document.addEventListener("mousedown", onDoc);
+    return () => document.removeEventListener("mousedown", onDoc);
+  }, []);
 
-  const currentSortLabel =
-    SORT_VALUE_TO_LABEL[activeFilterValues.sort] || "Paling populer";
+  const currentSortLabel = SORT_VALUE_TO_LABEL[sort] || "Paling populer";
 
   function toggleFilter(label) {
     setOpenFilter(openFilter === label ? null : label);
     setOpenSort(false);
   }
+
   function pickFilter(label, value) {
-    const key = FILTER_KEY_MAP[label];
-    if (key && onFilterChange) {
-      onFilterChange({ ...activeFilterValues, [key]: value });
+    let nextChips;
+    if (activeChips.includes(value)) {
+      nextChips = activeChips.filter((c) => c !== value);
+    } else {
+      nextChips = [...activeChips, value];
     }
-    setOpenFilter(null);
+    onActiveChipsChange?.(nextChips);
   }
+
   function removeChip(chip) {
-    if (!onFilterChange) return;
-    const next = { ...activeFilterValues };
-    for (const key of Object.values(FILTER_KEY_MAP)) {
-      if (next[key] === chip) {
-        next[key] = "";
-        break;
-      }
-    }
-    onFilterChange(next);
+    const nextChips = activeChips.filter((c) => c !== chip);
+    onActiveChipsChange?.(nextChips);
   }
+
   function clearAll() {
-    if (!onFilterChange) return;
-    const next = { ...activeFilterValues };
-    for (const key of Object.values(FILTER_KEY_MAP)) {
-      next[key] = "";
-    }
-    onFilterChange(next);
-  }
-  function pickSort(label) {
-    if (!onFilterChange) return;
-    const val = SORT_LABEL_TO_VALUE[label];
-    if (val) {
-      onFilterChange({ ...activeFilterValues, sort: val });
-    }
-    setOpenSort(false);
+    onActiveChipsChange?.([]);
   }
 
   return (
-    <div style={dirStyles.filterWrap}>
+    <div style={dirStyles.filterWrap} ref={wrapRef}>
       <div style={dirStyles.filterRow}>
         <div style={dirStyles.filterLeft}>
           {filters.map((f) => {
@@ -115,12 +98,34 @@ export default function FilterBar({
           onViewChange={onViewChange}
           sort={currentSortLabel}
           sortOptions={SORT_OPTIONS}
-          onSortChange={(s) => pickSort(s)}
+          onSortChange={(s) => {
+            const val = SORT_LABEL_TO_VALUE[s] || "popularity";
+            onSortChange?.(val);
+          }}
         />
       </div>
       <div style={dirStyles.activeRow}>
         <span style={dirStyles.resultCount}>
-          <strong>{totalResults}</strong> {resultLabel} cocok untukmu
+          {isLoading ? (
+            <span style={{ display: "inline-flex", alignItems: "center", gap: "8px", verticalAlign: "middle" }}>
+              <span
+                style={{
+                  width: "14px",
+                  height: "14px",
+                  border: "2.2px solid var(--atr-outline)",
+                  borderTop: "2.2px solid var(--atr-purple)",
+                  borderRadius: "50%",
+                  animation: "atr-spin 0.8s linear infinite",
+                  display: "inline-block",
+                }}
+              />
+              <span style={{ fontSize: "14px", color: "var(--atr-text-muted)" }}>Memuat guide...</span>
+            </span>
+          ) : (
+            <>
+              <strong>{totalResults.toLocaleString("id-ID")}</strong> {resultLabel} cocok untukmu
+            </>
+          )}
         </span>
         <div style={dirStyles.activeChips}>
           {activeChips.map((c) => (

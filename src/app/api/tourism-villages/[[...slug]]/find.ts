@@ -105,62 +105,73 @@ export const findController = new Elysia()
 
     // 2. Province Filter
     if (province) {
-      dbQuery = dbQuery.ilike('destination.province.name', province);
+      const provinceValues = province.split(',').map(p => p.trim()).filter(Boolean);
+      if (provinceValues.length > 0) {
+        dbQuery = dbQuery.in('destination.province.slug', provinceValues);
+      }
     }
 
     // 3. ADWI Level Filter
     if (adwi) {
-      const { data: adwiCat } = await supabaseAdmin
-        .schema('directory')
-        .from('taxonomies')
-        .select('id')
-        .eq('type', 'adwi_level')
-        .eq('slug', adwi.toLowerCase())
-        .maybeSingle();
+      const adwiValues = adwi.split(',').map(a => a.trim().toLowerCase()).filter(Boolean);
+      if (adwiValues.length > 0) {
+        const { data: adwiCats } = await supabaseAdmin
+          .schema('directory')
+          .from('taxonomies')
+          .select('id')
+          .eq('type', 'adwi_level')
+          .in('slug', adwiValues);
 
-      if (!adwiCat) {
-        return {
-          data: [],
-          pagination: { page, limit, total: 0, totalPages: 0 }
-        };
+        if (adwiCats && adwiCats.length > 0) {
+          dbQuery = dbQuery.in('adwi_level_id', adwiCats.map(c => c.id));
+        }
       }
-      dbQuery = dbQuery.eq('adwi_level_id', adwiCat.id);
     }
 
-    // 4. Theme Filter Ã¢â‚¬â€ resolved directly via village_theme_id FK
+    // 4. Theme Filter
     if (theme) {
-      const { data: themeCat } = await supabaseAdmin
-        .schema('directory')
-        .from('taxonomies')
-        .select('id')
-        .eq('type', 'village_theme')
-        .or(`slug.eq.${theme.toLowerCase()},slug.ilike.${theme},name->>id.ilike.${theme},name->>en.ilike.${theme}`)
-        .maybeSingle();
+      const themeValues = theme.split(',').map(t => t.trim().toLowerCase()).filter(Boolean);
+      if (themeValues.length > 0) {
+        const { data: themeCats } = await supabaseAdmin
+          .schema('directory')
+          .from('taxonomies')
+          .select('id')
+          .eq('type', 'village_theme')
+          .in('slug', themeValues);
 
-      if (!themeCat) {
-        return {
-          data: [],
-          pagination: { page, limit, total: 0, totalPages: 0 }
-        };
+        if (themeCats && themeCats.length > 0) {
+          dbQuery = dbQuery.in('village_theme_id', themeCats.map(c => c.id));
+        }
       }
-      dbQuery = dbQuery.eq('village_theme_id', themeCat.id);
     }
 
     // 5. Activity Filter
     if (activity) {
-      dbQuery = dbQuery.contains('activities', [activity]);
+      const activityValues = activity.split(',').map(a => a.trim()).filter(Boolean);
+      if (activityValues.length > 0) {
+        dbQuery = dbQuery.overlaps('activities', activityValues);
+      }
     }
 
     // 6. Price Filter
     if (price) {
-      const range = parsePriceRange(price);
-      if (range) {
-        const [min, max] = range;
-        if (max === Infinity) {
-          dbQuery = dbQuery.gte('homestay_min_price', min);
-        } else {
-          dbQuery = dbQuery.gte('homestay_min_price', min).lte('homestay_min_price', max);
+      const ranges = price.split(',').map(r => r.trim()).filter(Boolean);
+      const conditions: string[] = [];
+      ranges.forEach(r => {
+        const range = parsePriceRange(r);
+        if (range) {
+          const [min, max] = range;
+          if (max === Infinity) {
+            conditions.push(`homestay_min_price.gte.${min}`);
+          } else if (min === max) {
+            conditions.push(`homestay_min_price.eq.${min}`);
+          } else {
+            conditions.push(`and(homestay_min_price.gte.${min},homestay_min_price.lte.${max})`);
+          }
         }
+      });
+      if (conditions.length > 0) {
+        dbQuery = dbQuery.or(conditions.join(','));
       }
     }
 

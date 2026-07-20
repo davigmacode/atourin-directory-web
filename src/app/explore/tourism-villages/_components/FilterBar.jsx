@@ -1,33 +1,36 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { FilterDropdown, SortAndViewToggle } from "@/components/layout";
 import { dirStyles } from "@/styles/attraction-styles";
 import { VIL_FILTERS, VIL_FILTER_OPTIONS, SORT_OPTIONS } from "@/data/villages";
 
-const FILTER_KEY_MAP = {
-  Provinsi: "province",
-  "Kategori ADWI": "adwi",
-  "Tema utama": "theme",
-  Aktivitas: "activity",
-  "Harga homestay": "price",
-};
-
-
-
 export default function FilterBar({
-  filters,
-  setFilters,
-  totalCount,
+  filters = VIL_FILTERS,
+  filterOptions = VIL_FILTER_OPTIONS,
+  activeChips = [],
+  onActiveChipsChange,
+  totalCount = 0,
+  sort = "Urutkan",
+  onSortChange,
   view = "grid",
   onViewChange,
+  isLoading = false,
 }) {
   const [openFilter, setOpenFilter] = useState(null);
   const [openSort, setOpenSort] = useState(false);
+  const wrapRef = useRef(null);
 
-  const activeChips = Object.values(FILTER_KEY_MAP)
-    .map((k) => filters[k])
-    .filter(Boolean);
+  useEffect(() => {
+    function onDoc(e) {
+      if (wrapRef.current && !wrapRef.current.contains(e.target)) {
+        setOpenFilter(null);
+        setOpenSort(false);
+      }
+    }
+    document.addEventListener("mousedown", onDoc);
+    return () => document.removeEventListener("mousedown", onDoc);
+  }, []);
 
   function toggleFilter(label) {
     setOpenFilter(openFilter === label ? null : label);
@@ -35,42 +38,37 @@ export default function FilterBar({
   }
 
   function pickFilter(label, value) {
-    const key = FILTER_KEY_MAP[label];
-    const next = value === filters[key] ? "" : value;
-    setFilters({ ...filters, [key]: next });
-    setOpenFilter(null);
-  }
-
-  function pickSort(value) {
-    const next = value === filters.sort ? "" : value;
-    setFilters({ ...filters, sort: next });
-    setOpenSort(false);
+    let nextChips;
+    if (activeChips.includes(value)) {
+      nextChips = activeChips.filter((c) => c !== value);
+    } else {
+      nextChips = [...activeChips, value];
+    }
+    onActiveChipsChange?.(nextChips);
   }
 
   function removeChip(chip) {
-    const entry = Object.entries(FILTER_KEY_MAP).find(
-      ([_, v]) => filters[v] === chip,
-    );
-    if (entry) {
-      setFilters({ ...filters, [entry[1]]: "" });
-    }
+    const nextChips = activeChips.filter((c) => c !== chip);
+    onActiveChipsChange?.(nextChips);
+  }
+
+  function clearAll() {
+    onActiveChipsChange?.([]);
   }
 
   return (
-    <div style={dirStyles.filterWrap}>
+    <div style={dirStyles.filterWrap} ref={wrapRef}>
       <div style={dirStyles.filterRow}>
         <div style={dirStyles.filterLeft}>
-          {VIL_FILTERS.map((f) => {
+          {filters.map((f) => {
             const open = openFilter === f.label;
-            const key = FILTER_KEY_MAP[f.label];
-            const activeValue = filters[key];
             return (
               <FilterDropdown
                 key={f.label}
                 label={f.label}
                 icon={f.icon}
-                options={VIL_FILTER_OPTIONS[f.label] || []}
-                activeValues={activeValue ? [activeValue] : []}
+                options={filterOptions[f.label] || []}
+                activeValues={activeChips}
                 isOpen={open}
                 onToggle={() => toggleFilter(f.label)}
                 onPick={(opt) => pickFilter(f.label, opt)}
@@ -81,14 +79,33 @@ export default function FilterBar({
         <SortAndViewToggle
           view={view}
           onViewChange={onViewChange}
-          sort={filters.sort || "Urutkan"}
+          sort={sort || "Urutkan"}
           sortOptions={SORT_OPTIONS}
-          onSortChange={(s) => pickSort(s)}
+          onSortChange={onSortChange}
         />
       </div>
       <div style={dirStyles.activeRow}>
         <span style={dirStyles.resultCount}>
-          <strong>{totalCount ?? 0}</strong> desa wisata cocok untukmu
+          {isLoading ? (
+            <span style={{ display: "inline-flex", alignItems: "center", gap: "8px", verticalAlign: "middle" }}>
+              <span
+                style={{
+                  width: "14px",
+                  height: "14px",
+                  border: "2.2px solid var(--atr-outline)",
+                  borderTop: "2.2px solid var(--atr-purple)",
+                  borderRadius: "50%",
+                  animation: "atr-spin 0.8s linear infinite",
+                  display: "inline-block",
+                }}
+              />
+              <span style={{ fontSize: "14px", color: "var(--atr-text-muted)" }}>Memuat desa wisata...</span>
+            </span>
+          ) : (
+            <>
+              <strong>{totalCount ?? 0}</strong> desa wisata cocok untukmu
+            </>
+          )}
         </span>
         <div style={dirStyles.activeChips}>
           {activeChips.map((c) => (
@@ -100,19 +117,7 @@ export default function FilterBar({
             </span>
           ))}
           {activeChips.length > 0 && (
-            <button
-              onClick={() =>
-                setFilters({
-                  province: "",
-                  adwi: "",
-                  theme: "",
-                  activity: "",
-                  price: "",
-                  sort: filters.sort,
-                })
-              }
-              style={dirStyles.clearAll}
-            >
+            <button onClick={clearAll} style={dirStyles.clearAll}>
               Hapus semua
             </button>
           )}

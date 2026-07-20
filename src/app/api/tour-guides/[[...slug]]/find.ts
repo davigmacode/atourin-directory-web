@@ -84,7 +84,10 @@ export const findController = new Elysia()
 
     // 2. Province filter
     if (province) {
-      dbQuery = dbQuery.ilike('destination.province.name', province);
+      const provinceValues = province.split(',').map(p => p.trim()).filter(Boolean);
+      if (provinceValues.length > 0) {
+        dbQuery = dbQuery.in('destination.province.slug', provinceValues);
+      }
     }
 
     // 3. Destination slug filter
@@ -99,115 +102,131 @@ export const findController = new Elysia()
 
     // 5. Price filter
     if (priceRange) {
-      const range = parsePriceRange(priceRange);
-      if (range) {
-        const [min, max] = range;
-        if (max === Infinity) {
-          dbQuery = dbQuery.gte('daily_rate', min);
-        } else if (min === max) {
-          dbQuery = dbQuery.eq('daily_rate', min);
-        } else {
-          dbQuery = dbQuery.gte('daily_rate', min).lte('daily_rate', max);
+      const ranges = priceRange.split(',').map(r => r.trim()).filter(Boolean);
+      const conditions: string[] = [];
+      ranges.forEach(r => {
+        const range = parsePriceRange(r);
+        if (range) {
+          const [min, max] = range;
+          if (max === Infinity) {
+            conditions.push(`daily_rate.gte.${min}`);
+          } else if (min === max) {
+            conditions.push(`daily_rate.eq.${min}`);
+          } else {
+            conditions.push(`and(daily_rate.gte.${min},daily_rate.lte.${max})`);
+          }
         }
+      });
+      if (conditions.length > 0) {
+        dbQuery = dbQuery.or(conditions.join(','));
       }
     }
 
-    // 6. Specialism filter ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â via tour_guide_specialism (taxonomy type='guide_specialism')
+    // 6. Specialism filter
     if (specialism) {
-      const { data: specCats } = await supabaseAdmin
-        .schema('directory')
-        .from('taxonomies')
-        .select('id')
-        .eq('type', 'guide_specialism')
-        .or(`slug.ilike.${specialism},name->>id.ilike.${specialism},name->>en.ilike.${specialism}`);
+      const specValues = specialism.split(',').map(s => s.trim().toLowerCase()).filter(Boolean);
+      if (specValues.length > 0) {
+        const { data: specCats } = await supabaseAdmin
+          .schema('directory')
+          .from('taxonomies')
+          .select('id')
+          .eq('type', 'guide_specialism')
+          .in('slug', specValues);
 
-      const targetTaxonomyIds = specCats ? specCats.map((c) => c.id) : [];
-      if (targetTaxonomyIds.length === 0) {
-        return {
-          data: [],
-          pagination: { page, limit, total: 0, totalPages: 0 }
-        };
+        const targetTaxonomyIds = specCats ? specCats.map((c) => c.id) : [];
+        if (targetTaxonomyIds.length === 0) {
+          return {
+            data: [],
+            pagination: { page, limit, total: 0, totalPages: 0 }
+          };
+        }
+
+        const { data: assData } = await supabaseAdmin
+          .schema('directory')
+          .from('tour_guide_specialism')
+          .select('guide_id')
+          .in('taxonomy_id', targetTaxonomyIds);
+
+        const matchedIds = assData ? Array.from(new Set(assData.map((a) => a.guide_id))) : [];
+        if (matchedIds.length === 0) {
+          return {
+            data: [],
+            pagination: { page, limit, total: 0, totalPages: 0 }
+          };
+        }
+        dbQuery = dbQuery.in('id', matchedIds);
       }
-
-      const { data: assData } = await supabaseAdmin
-        .schema('directory')
-        .from('tour_guide_specialism')
-        .select('guide_id')
-        .in('taxonomy_id', targetTaxonomyIds);
-
-      const matchedIds = assData ? Array.from(new Set(assData.map((a) => a.guide_id))) : [];
-      if (matchedIds.length === 0) {
-        return {
-          data: [],
-          pagination: { page, limit, total: 0, totalPages: 0 }
-        };
-      }
-      dbQuery = dbQuery.in('id', matchedIds);
     }
 
-    // 7. Language filter ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â via tour_guide_languages ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ taxonomy (type='guide_language')
+    // 7. Language filter
     if (language) {
-      const { data: langCats } = await supabaseAdmin
-        .schema('directory')
-        .from('taxonomies')
-        .select('id')
-        .eq('type', 'guide_language')
-        .or(`slug.ilike.${language},name->>id.ilike.${language},name->>en.ilike.${language}`);
+      const langValues = language.split(',').map(l => l.trim().toLowerCase()).filter(Boolean);
+      if (langValues.length > 0) {
+        const { data: langCats } = await supabaseAdmin
+          .schema('directory')
+          .from('taxonomies')
+          .select('id')
+          .eq('type', 'language')
+          .in('slug', langValues);
 
-      const targetLangIds = langCats ? langCats.map((c) => c.id) : [];
-      if (targetLangIds.length === 0) {
-        return {
-          data: [],
-          pagination: { page, limit, total: 0, totalPages: 0 }
-        };
+        const targetLangIds = langCats ? langCats.map((c) => c.id) : [];
+        if (targetLangIds.length === 0) {
+          return {
+            data: [],
+            pagination: { page, limit, total: 0, totalPages: 0 }
+          };
+        }
+
+        const { data: langData } = await supabaseAdmin
+          .schema('directory')
+          .from('tour_guide_languages')
+          .select('guide_id')
+          .in('category_id', targetLangIds);
+
+        const matchedIds = langData ? Array.from(new Set(langData.map((l) => l.guide_id))) : [];
+        if (matchedIds.length === 0) {
+          return {
+            data: [],
+            pagination: { page, limit, total: 0, totalPages: 0 }
+          };
+        }
+        dbQuery = dbQuery.in('id', matchedIds);
       }
-
-      const { data: langData } = await supabaseAdmin
-        .schema('directory')
-        .from('tour_guide_languages')
-        .select('guide_id')
-        .in('category_id', targetLangIds);
-
-      const matchedIds = langData ? Array.from(new Set(langData.map((l) => l.guide_id))) : [];
-      if (matchedIds.length === 0) {
-        return {
-          data: [],
-          pagination: { page, limit, total: 0, totalPages: 0 }
-        };
-      }
-      dbQuery = dbQuery.in('id', matchedIds);
     }
 
-    // 8. Certification filter ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â via tour_guide_certifications
+    // 8. Certification filter
     if (certification) {
-      const { data: certs } = await supabaseAdmin
-        .schema('directory')
-        .from('certifications')
-        .select('id')
-        .or(`slug.ilike.${certification},name->>id.ilike.${certification},name->>en.ilike.${certification}`);
+      const certValues = certification.split(',').map(c => c.trim().toLowerCase()).filter(Boolean);
+      if (certValues.length > 0) {
+        const { data: certs } = await supabaseAdmin
+          .schema('directory')
+          .from('certifications')
+          .select('id')
+          .in('slug', certValues);
 
-      const targetCertIds = certs ? certs.map((c) => c.id) : [];
-      if (targetCertIds.length === 0) {
-        return {
-          data: [],
-          pagination: { page, limit, total: 0, totalPages: 0 }
-        };
+        const targetCertIds = certs ? certs.map((c) => c.id) : [];
+        if (targetCertIds.length === 0) {
+          return {
+            data: [],
+            pagination: { page, limit, total: 0, totalPages: 0 }
+          };
+        }
+
+        const { data: certAss } = await supabaseAdmin
+          .schema('directory')
+          .from('tour_guide_certifications')
+          .select('tour_guide_id')
+          .in('certification_id', targetCertIds);
+
+        const matchedIds = certAss ? Array.from(new Set(certAss.map((a) => a.tour_guide_id))) : [];
+        if (matchedIds.length === 0) {
+          return {
+            data: [],
+            pagination: { page, limit, total: 0, totalPages: 0 }
+          };
+        }
+        dbQuery = dbQuery.in('id', matchedIds);
       }
-
-      const { data: certAss } = await supabaseAdmin
-        .schema('directory')
-        .from('tour_guide_certifications')
-        .select('tour_guide_id')
-        .in('certification_id', targetCertIds);
-
-      const matchedIds = certAss ? Array.from(new Set(certAss.map((a) => a.tour_guide_id))) : [];
-      if (matchedIds.length === 0) {
-        return {
-          data: [],
-          pagination: { page, limit, total: 0, totalPages: 0 }
-        };
-      }
-      dbQuery = dbQuery.in('id', matchedIds);
     }
 
     // 9. Sort order

@@ -418,11 +418,15 @@ export default function GuidesGrid({
             ))}
           </div>
           <div style={cardStyles.paginationRow}>
-            {hasMore && (
-              <button style={cardStyles.loadMore} onClick={loadMore}>
-                Muat 24 guide lagi
-              </button>
-            )}
+            {hasMore && (() => {
+              const remaining = total ? total - data.length : 0;
+              const nextLoadCount = remaining > 0 ? Math.min(12, remaining) : 12;
+              return (
+                <button style={cardStyles.loadMore} onClick={loadMore}>
+                  Muat {nextLoadCount} guide lagi
+                </button>
+              );
+            })()}
             <div style={cardStyles.pageInfo}>
               Menampilkan {data.length} dari {total ?? data.length}
             </div>
