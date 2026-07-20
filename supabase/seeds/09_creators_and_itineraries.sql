@@ -803,7 +803,7 @@ INSERT INTO directory.itineraries (
 )
 SELECT
   'itin-labuan-bajo-001',
-  'komodo-island-hopping-3-hari-2-malam',
+  'island-hopping-komodo-3d2n',
   '{"id": "Island Hopping Komodo 3D2N", "en": "Komodo Island Hopping 3D2N"}'::jsonb,
   '{
     "id": "Trekking mencari Komodo asli, snorkeling di Pink Beach, dan sunset dari Bukit Kalong — petualangan bahari terbaik Indonesia Timur.",

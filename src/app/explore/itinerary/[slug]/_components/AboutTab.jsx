@@ -35,12 +35,22 @@ function FaqItem({ question, answer }) {
 }
 
 export default function AboutTab({ itinerary }) {
+  const authorName = typeof itinerary.author === 'object' ? (itinerary.author?.displayName || itinerary.author?.name || '') : (itinerary.author || '');
+  const authorBio = typeof itinerary.author === 'object' ? (itinerary.author?.bio?.id || itinerary.author?.bio?.en || '') : '';
+  const isVerified = typeof itinerary.author === 'object' ? !!itinerary.author?.isVerified : false;
+  const city = itinerary.destination?.name || itinerary.city || '';
+  const daysLabel = typeof itinerary.days === 'string'
+    ? itinerary.days
+    : ((itinerary.durationDays ? `${itinerary.durationDays} Hari` : '') + (itinerary.durationNights ? ` · ${itinerary.durationNights} Malam` : ''));
+  const ratingVal = itinerary.ratingAverage || itinerary.rating || 0;
+  const viewsVal = itinerary.viewsCount || itinerary.views || 0;
+
   return (
     <div style={detailStyles.aboutWrap}>
       {/* Overview */}
-      <AboutSection eyebrow="Tentang" title={`Paket Perjalanan ${itinerary.city}`}>
+      <AboutSection eyebrow="Tentang" title={`Paket Perjalanan ${city}`}>
         <div style={detailStyles.aboutBody}>
-          Nikmati pengalaman perjalanan terbaik {itinerary.days} di {itinerary.city}.
+          Nikmati pengalaman perjalanan terbaik {daysLabel} di {city}.
           Rencana ini disusun dengan sangat cermat agar Anda dapat menikmati daya tarik
           budaya lokal, keindahan alam, serta kuliner ikonik setempat secara maksimal
           tanpa terburu-buru.
@@ -59,7 +69,7 @@ export default function AboutTab({ itinerary }) {
             {
               icon: "\u{1F3D6}",
               title: "Pantai & Pemandangan",
-              desc: `Jelajahi garis pantai eksotis dan bentang alam memukau khas ${itinerary.city}.`,
+              desc: `Jelajahi garis pantai eksotis dan bentang alam memukau khas ${city}.`,
             },
             {
               icon: "\u{1F30B}",
@@ -162,24 +172,25 @@ export default function AboutTab({ itinerary }) {
               fontWeight: 700,
             }}
           >
-            {itinerary.author?.[0]}
+            {authorName?.[0] || ''}
           </div>
           <div>
             <div style={detailStyles.authorBigName}>
-              {itinerary.author}
-              <span style={detailStyles.verifiedBadge}>
-                <CheckBadge /> {itinerary.role || "Local Guide"}
-              </span>
+              {authorName}
+              {isVerified && (
+                <span style={detailStyles.verifiedBadge}>
+                  <CheckBadge /> {"Kreator Resmi"}
+                </span>
+              )}
             </div>
             <div style={detailStyles.authorBigRole}>Travel Creator & Specialist</div>
             <div style={detailStyles.authorBigBio}>
-              Berpengalaman memandu perjalanan wisata lokal dan asing. Fokus
-              pada rute perjalanan berkelanjutan dan mengenalkan kebudayaan otentik.
+              {authorBio || "Berpengalaman memandu perjalanan wisata lokal dan asing. Fokus pada rute perjalanan berkelanjutan dan mengenalkan kebudayaan otentik."}
             </div>
             <div style={detailStyles.authorBigStats}>
-              <span>{"\u{1F4CD}"} {itinerary.city}</span>
-              <span>{"\u{2B50}"} {itinerary.rating} Rating</span>
-              <span>{"\u{1F465}"} {itinerary.views} Dilihat</span>
+              <span>{"\u{1F4CD}"} {city}</span>
+              <span>{"\u{2B50}"} {ratingVal} Rating</span>
+              <span>{"\u{1F465}"} {viewsVal} Dilihat</span>
             </div>
           </div>
         </div>

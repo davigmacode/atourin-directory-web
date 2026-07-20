@@ -219,16 +219,58 @@ function DaySelector({ days, activeDay, setActiveDay }) {
 export default function PlanView({ itinerary }) {
   const [activeDay, setActiveDay] = useState(1);
 
-  const numDays = parseInt(itinerary.days) || 1;
-  const daysList = Array.from({ length: numDays }).map((_, i) => ({
-    id: i + 1,
-    label: `Hari ${i + 1}`,
-    date: `Day ${i + 1}`,
-    title: `Eksplorasi ${itinerary.city} - Rute ${i + 1}`,
-  }));
+  const city = itinerary.destination?.name || itinerary.city || '';
+  const isDbItinerary = Array.isArray(itinerary.days);
+
+  const numDays = isDbItinerary ? itinerary.days.length : (parseInt(itinerary.days) || 1);
+  const daysList = isDbItinerary
+    ? itinerary.days.map((d) => ({
+        id: d.dayNumber,
+        label: d.title?.id || d.title?.en || `Hari ${d.dayNumber}`,
+        date: `Day ${d.dayNumber}`,
+        title: d.title?.id || d.title?.en || `Eksplorasi ${city} - Rute ${d.dayNumber}`,
+      }))
+    : Array.from({ length: numDays }).map((_, i) => ({
+        id: i + 1,
+        label: `Hari ${i + 1}`,
+        date: `Day ${i + 1}`,
+        title: `Eksplorasi ${city} - Rute ${i + 1}`,
+      }));
 
   const day1Activities = itinerary.day1 || [];
   const getActivitiesForDay = (dayId) => {
+    if (isDbItinerary) {
+      const dayObj = itinerary.days.find((d) => d.dayNumber === dayId);
+      if (!dayObj) return [];
+      return (dayObj.timeline || []).map((event, idx) => {
+        const durMin = event.durationMinutes;
+        const durStr = durMin
+          ? (durMin >= 60 ? `${Math.floor(durMin / 60)} jam${durMin % 60 ? ` ${durMin % 60} mnt` : ''}` : `${durMin} menit`)
+          : null;
+
+        const locationName = event.stop?.name?.id || event.stop?.name?.en || '';
+        let type = event.stop?.type || 'wisata';
+        if (type === 'food') type = 'meal';
+        let typeLabel = type === 'meal' ? 'Makan' : type === 'transport' ? 'Transportasi' : 'Wisata';
+
+        const title = event.title?.id || event.title?.en || '';
+        const desc = event.description?.id || event.description?.en || '';
+
+        return {
+          id: event.id || `act-${dayId}-${idx}`,
+          time: event.time,
+          duration: durStr,
+          type,
+          typeLabel,
+          title,
+          location: locationName,
+          desc,
+          tags: event.includes || [],
+          cost: event.travelInfo || 'Termasuk paket',
+        };
+      });
+    }
+
     if (dayId === 1) {
       if (day1Activities.length === 0) {
         return [
@@ -238,9 +280,9 @@ export default function PlanView({ itinerary }) {
             duration: "2 jam",
             type: "wisata",
             typeLabel: "Wisata",
-            title: `Eksplorasi ${itinerary.city}`,
-            location: itinerary.city,
-            desc: `Jelajahi objek-objek wisata terbaik di sekitar kota ${itinerary.city}.`,
+            title: `Eksplorasi ${city}`,
+            location: city,
+            desc: `Jelajahi objek-objek wisata terbaik di sekitar kota ${city}.`,
             tags: [itinerary.tag || "Wisata"],
             cost: "Gratis",
           },
@@ -254,7 +296,7 @@ export default function PlanView({ itinerary }) {
         type: idx === 1 ? "meal" : "wisata",
         typeLabel: idx === 1 ? "Makan Siang" : "Wisata",
         title: place,
-        location: `${place}, ${itinerary.city}`,
+        location: `${place}, ${city}`,
         desc: `Kunjungan menarik ke ${place} untuk menikmati keindahan pariwisata lokal dan mengabadikan momen foto terbaik.`,
         tags: [itinerary.tag || "Wisata", "Populer"],
         cost: idx === 1 ? "Termasuk paket" : "Gratis",
@@ -269,9 +311,9 @@ export default function PlanView({ itinerary }) {
           duration: "2 jam",
           type: "wisata",
           typeLabel: "Wisata",
-          title: `Spot Menarik di ${itinerary.city} (Hari ${dayId})`,
-          location: `${itinerary.city}`,
-          desc: `Eksplorasi destinasi alam dan pemandangan indah di sekitar ${itinerary.city}.`,
+          title: `Spot Menarik di ${city} (Hari ${dayId})`,
+          location: `${city}`,
+          desc: `Eksplorasi destinasi alam dan pemandangan indah di sekitar ${city}.`,
           tags: ["Alam", "Spot Foto"],
           cost: "Rp 15.000",
           tips: "Bawa topi dan air mineral ekstra.",
@@ -284,7 +326,7 @@ export default function PlanView({ itinerary }) {
           type: "meal",
           typeLabel: "Makan Siang",
           title: `Makan Siang Kuliner Khas`,
-          location: `Resto Lokal ${itinerary.city}`,
+          location: `Resto Lokal ${city}`,
           desc: `Menikmati hidangan khas masakan tradisional setempat.`,
           tags: ["Kuliner", "Khas"],
           cost: "Termasuk paket",

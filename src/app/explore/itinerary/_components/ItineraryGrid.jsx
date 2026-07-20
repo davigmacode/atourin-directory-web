@@ -81,6 +81,7 @@ export function ItinCard({
   budgetEstimation,
   save: initialSave,
   day1,
+  slug: slugProp,
 }) {
   // Handle both old-style (flat) and new-style (nested API) data
   const title = titleProp || nameProp?.id || nameProp?.en || '';
@@ -95,7 +96,7 @@ export function ItinCard({
   const [save, setSave] = useState(initialSave);
   const [hover, setHover] = useState(false);
   const router = useRouter();
-  const slug = title
+  const slug = slugProp || title
     .toLowerCase()
     .replace(/[^a-z0-9\s]/g, "")
     .replace(/\s+/g, "-");

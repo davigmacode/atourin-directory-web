@@ -24,7 +24,7 @@ export default function ItineraryCard({ it }) {
   ];
 
   return (
-    <Link href={`/explore/itinerary/${slugify(it.title)}`} style={{ ...tc.itinCard, textDecoration: "none", color: "inherit" }}>
+    <Link href={`/explore/itinerary/${it.slug || slugify(it.title)}`} style={{ ...tc.itinCard, textDecoration: "none", color: "inherit" }}>
       <CardImageWithBadge src={it.img} alt={it.title} badges={badges} />
       <div style={tc.cardBody}>
         <h3 style={tc.cardName}>{it.title}</h3>

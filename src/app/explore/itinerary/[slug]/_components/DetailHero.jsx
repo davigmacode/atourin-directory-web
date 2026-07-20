@@ -148,11 +148,25 @@ function PriceCard({ price }) {
 }
 
 export default function DetailHero({ itinerary }) {
+  // Safe extraction of fields for both database (new) and static (old) data
+  const title = itinerary.name?.id || itinerary.name?.en || itinerary.title || '';
+  const city = itinerary.destination?.name || itinerary.city || '';
+  const daysLabel = typeof itinerary.days === 'string'
+    ? itinerary.days
+    : ((itinerary.durationDays ? `${itinerary.durationDays} Hari` : '') + (itinerary.durationNights ? ` · ${itinerary.durationNights} Malam` : ''));
+  const imgUrl = itinerary.coverImage?.url || itinerary.img || '';
+
+  const rawBudget = itinerary.budgetEstimation;
+  const priceVal = itinerary.price || (typeof rawBudget === 'number' ? `Rp ${(rawBudget / 1000000).toFixed(1)}jt` : '') || 'Rp 1.500.000';
+
+  const descText = itinerary.description?.id || itinerary.description?.en || itinerary.desc || `Eksplorasi menarik di ${city} dengan rute perjalanan terbaik.`;
+  const diffLabel = itinerary.difficulty === 'easy' ? 'Mudah' : itinerary.difficulty === 'medium' ? 'Sedang' : itinerary.difficulty === 'hard' ? 'Tantangan' : 'Mudah';
+
   return (
     <section>
       {/* Cover image */}
       <div style={detailStyles.heroCover}>
-        <img src={itinerary.img} alt={itinerary.title} style={detailStyles.heroImg} />
+        <img src={imgUrl} alt={title} style={detailStyles.heroImg} />
         <div style={detailStyles.heroOverlay} />
         <button style={detailStyles.heroGalleryBtn}>
           <GalleryIcon /> Lihat Galeri
@@ -167,42 +181,41 @@ export default function DetailHero({ itinerary }) {
             <div style={detailStyles.heroChipsRow}>
               <span style={detailStyles.heroTagPurple}>ITINERARY</span>
               <span style={detailStyles.heroTagDot}>{"\u00B7"}</span>
-              <span style={detailStyles.heroTagLight}>{itinerary.city}</span>
+              <span style={detailStyles.heroTagLight}>{city}</span>
               <span style={detailStyles.heroTagDot}>{"\u00B7"}</span>
-              <span style={detailStyles.heroTagLight}>{itinerary.days}</span>
+              <span style={detailStyles.heroTagLight}>{daysLabel}</span>
             </div>
-            <h1 style={detailStyles.heroTitle}>{itinerary.title}</h1>
+            <h1 style={detailStyles.heroTitle}>{title}</h1>
             <p style={detailStyles.heroSub}>
-              Eksplorasi menarik di {itinerary.city} dengan rute perjalanan terbaik.
-              Nikmati kenyamanan transportasi, penginapan terpilih, dan destinasi ikonik.
+              {descText}
             </p>
             <div style={detailStyles.heroStatsRow}>
               <HeroStat
                 icon={<HeroStatGlyph kind="duration" />}
                 label="Durasi"
-                value={itinerary.days}
+                value={daysLabel}
               />
               <HeroStat
                 icon={<HeroStatGlyph kind="group" />}
                 label="Min. Peserta"
-                value="2 Orang"
+                value={`${itinerary.minPax || 1} Orang`}
               />
               <HeroStat
                 icon={<HeroStatGlyph kind="language" />}
                 label="Bahasa"
-                value="Indonesia"
+                value={Array.isArray(itinerary.languages) && itinerary.languages.length > 0 ? (typeof itinerary.languages[0] === 'object' ? (itinerary.languages[0].name?.id || itinerary.languages[0].name?.en) : itinerary.languages[0]) : "Indonesia"}
               />
               <HeroStat
                 icon={<HeroStatGlyph kind="difficulty" />}
                 label="Level"
-                value="Mudah"
+                value={diffLabel}
               />
             </div>
           </div>
 
           {/* Right column — PriceCard */}
           <div style={detailStyles.heroRight}>
-            <PriceCard price={itinerary.price} />
+            <PriceCard price={priceVal} />
           </div>
         </div>
       </div>
