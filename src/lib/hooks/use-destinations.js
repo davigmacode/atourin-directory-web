@@ -8,7 +8,7 @@ const PER_PAGE = 12;
 export function useDestinations(initialFilters) {
   const [page, setPage] = useState(1);
   const [filters, setFilters] = useState(
-    initialFilters || { island: "", province: "", search: "", sort: "alpha" },
+    initialFilters || { island: "", province: "", category: "", search: "", sort: "alpha" },
   );
   const [allData, setAllData] = useState([]);
   const [firstLoad, setFirstLoad] = useState(true);

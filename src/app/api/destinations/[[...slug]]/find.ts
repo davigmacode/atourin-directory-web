@@ -53,14 +53,22 @@ export const findController = new Elysia()
       dbQuery = dbQuery.ilike('name', `%${search}%`);
     }
     if (island) {
-      dbQuery = dbQuery.ilike('province.island.name', island);
+      const islandValues = island.split(',').map(i => i.trim()).filter(Boolean);
+      if (islandValues.length > 0) {
+        dbQuery = dbQuery.in('province.island.id', islandValues);
+      }
     }
     if (province) {
-      dbQuery = dbQuery.ilike('province.name', province);
+      const provinceValues = province.split(',').map(p => p.trim()).filter(Boolean);
+      if (provinceValues.length > 0) {
+        dbQuery = dbQuery.in('province.slug', provinceValues);
+      }
     }
-
     if (category) {
-      dbQuery = dbQuery.contains('categories', [category]);
+      const categoryValues = category.split(',').map(c => c.trim()).filter(Boolean);
+      if (categoryValues.length > 0) {
+        dbQuery = dbQuery.overlaps('categories', categoryValues);
+      }
     }
 
     // Sorting

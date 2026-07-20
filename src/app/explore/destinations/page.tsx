@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback, Suspense } from "react";
 import useSWR from "swr";
+import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { TopNav, SiteFooter, Breadcrumb, CategoryTabs } from "@/components/layout";
 import rgRaw from "@/styles/destination-styles";
 
@@ -33,7 +34,11 @@ interface AvailState {
   guide: boolean;
 }
 
-export default function DestinationsPage() {
+function DestinationsPageInner() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+
   /* ─── Fetch Islands and Provinces from API ─── */
   const { data: islandsRes } = useSWR<{ data: Island[] }>("/islands");
   const { data: provincesRes } = useSWR<{ data: Province[] }>("/provinces");
@@ -41,19 +46,19 @@ export default function DestinationsPage() {
   const islandsList = islandsRes?.data || [];
   const provincesList = provincesRes?.data || [];
 
-  /* ─── Read URL params for initial filter ─── */
-  const getInitialFilters = (): FiltersState => {
-    const f: FiltersState = { island: "", province: "", search: "", sort: "alpha" };
-    if (typeof window === "undefined") return f;
-    const sp = new URLSearchParams(window.location.search);
-    const urlSearch = sp.get("search");
-    const urlSort = sp.get("sort");
-    if (urlSearch) f.search = urlSearch;
-    if (urlSort) f.sort = urlSort;
-    return f;
-  };
+  /* ─── Read URL params for initial filters ─── */
+  const initialIslands = searchParams.get("island")?.split(",").map(i => i.trim()).filter(Boolean) || [];
+  const initialProvinces = searchParams.get("province")?.split(",").map(p => p.trim()).filter(Boolean) || [];
+  const initialSearch = searchParams.get("search") || "";
+  const initialSort = searchParams.get("sort") || "alpha";
 
-  const initFilters = getInitialFilters();
+  const [selectedIslands, setSelectedIslands] = useState<string[]>(initialIslands);
+  const [selectedProvinces, setSelectedProvinces] = useState<string[]>(initialProvinces);
+  const [avail, setAvail] = useState<AvailState>({
+    attr: false,
+    desa: false,
+    guide: false,
+  });
 
   const {
     data,
@@ -65,7 +70,12 @@ export default function DestinationsPage() {
     setFilters,
     loadMore,
     hasMore,
-  } = useDestinations(initFilters) as {
+  } = useDestinations({
+    island: initialIslands.join(","),
+    province: initialProvinces.join(","),
+    search: initialSearch,
+    sort: initialSort,
+  }) as {
     data: Destination[];
     pagination?: { page: number; limit: number; total: number; totalPages: number };
     isLoading: boolean;
@@ -77,97 +87,93 @@ export default function DestinationsPage() {
     hasMore: boolean;
   };
 
-  /* Multi-select and availability filters — kept client-side
-     since the hook/API supports single-string island/province only. */
-  const [selectedIslands, setSelectedIslands] = useState<string[]>([]);
-  const [selectedProvinces, setSelectedProvinces] = useState<string[]>([]);
-  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-  const [avail, setAvail] = useState<AvailState>({
-    attr: false,
-    desa: false,
-    guide: false,
-  });
-
-  /* Sync selectedIslands/Provinces and hook filters from URL parameters once API data is loaded */
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    const sp = new URLSearchParams(window.location.search);
-    const urlIsland = sp.get("island");
-    const urlProvince = sp.get("province");
-
-    let updatedIsland = "";
-    let updatedProvince = "";
-
-    if (urlIsland && islandsList.length > 0) {
-      const match = islandsList.find(
-        (i) => i.name.toLowerCase().replace(/[^a-z0-9\s]/g, "").replace(/\s+/g, "-") === urlIsland
-      );
-      if (match) {
-        updatedIsland = match.name;
-        setSelectedIslands([match.name]);
-      }
-    }
-
-    if (urlProvince && provincesList.length > 0) {
-      const match = provincesList.find((p) => p.slug === urlProvince);
-      if (match) {
-        updatedProvince = match.name;
-        setSelectedProvinces([match.name]);
-      }
-    }
-
-    if (updatedIsland || updatedProvince) {
-      setFilters({
-        ...filters,
-        island: updatedIsland || filters.island,
-        province: updatedProvince || filters.province,
-      });
-    }
-  }, [islandsList, provincesList]);
-
-  /* Sync search to the hook — drives server-side filtering */
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFilters({ ...filters, search: e.target.value });
+  /* Helper to translate slugs to readable names */
+  const getIslandName = (id: string) => {
+    const match = islandsList.find(i => i.id === id);
+    return match ? match.name : id;
   };
 
-  /* Client-side post-filter for values the hook doesn't support natively */
+  const getProvinceName = (slug: string) => {
+    const match = provincesList.find(p => p.slug === slug);
+    return match ? match.name : slug;
+  };
+
+  /* Sync filters to URL query string and SWR hook filters */
+  const syncFiltersToUrlAndHook = useCallback((
+    islands: string[],
+    provinces: string[],
+    searchVal: string,
+    sortVal: string
+  ) => {
+    const urlParams = new URLSearchParams(searchParams.toString());
+
+    if (islands.length > 0) {
+      urlParams.set("island", islands.join(","));
+    } else {
+      urlParams.delete("island");
+    }
+
+    if (provinces.length > 0) {
+      urlParams.set("province", provinces.join(","));
+    } else {
+      urlParams.delete("province");
+    }
+
+    if (searchVal) {
+      urlParams.set("search", searchVal);
+    } else {
+      urlParams.delete("search");
+    }
+
+    if (sortVal && sortVal !== "alpha") {
+      urlParams.set("sort", sortVal);
+    } else {
+      urlParams.delete("sort");
+    }
+
+    router.replace(`${pathname}?${urlParams.toString()}`, { scroll: false });
+
+    setFilters({
+      island: islands.join(","),
+      province: provinces.join(","),
+      search: searchVal,
+      sort: sortVal,
+    });
+  }, [searchParams, pathname, router, setFilters]);
+
+  /* Sync search input changes */
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value;
+    syncFiltersToUrlAndHook(selectedIslands, selectedProvinces, val, filters.sort);
+  };
+
+  /* Client-side post-filter for availability features */
   const filtered = (data || []).filter((d) => {
-    if (selectedIslands.length > 0) {
-      const dIsland = d.province?.island?.name;
-      if (!dIsland || !selectedIslands.includes(dIsland)) return false;
-    }
-    if (selectedProvinces.length > 0) {
-      const dProv = d.province?.name;
-      if (!dProv || !selectedProvinces.includes(dProv)) return false;
-    }
-    if (selectedCategories.length > 0) {
-      if (!d.tags || !selectedCategories.some((c) => d.tags?.some((t) => t.slug === c || t.name === c))) {
-        return false;
-      }
-    }
     if (avail.attr && d.attractionsCount <= 0) return false;
     if (avail.desa && d.villagesCount <= 0) return false;
     if (avail.guide && d.tourGuidesCount <= 0) return false;
     return true;
   });
 
-  /* Active filter chips */
+  /* Active filter chips list */
   const activeFilters = [
-    ...selectedIslands.map((i) => ({
+    ...selectedIslands.map((id) => ({
       k: "island",
-      v: i,
-      remove: () => setSelectedIslands((prev) => prev.filter((x) => x !== i)),
+      v: getIslandName(id),
+      remove: () => {
+        const next = selectedIslands.filter((x) => x !== id);
+        setSelectedIslands(next);
+        syncFiltersToUrlAndHook(next, selectedProvinces, filters.search, filters.sort);
+      },
     })),
-    ...selectedProvinces.map((p) => ({
+    ...selectedProvinces.map((slug) => ({
       k: "province",
-      v: p,
-      remove: () => setSelectedProvinces((prev) => prev.filter((x) => x !== p)),
-    })),
-    ...selectedCategories.map((c) => ({
-      k: "category",
-      v: c,
-      remove: () =>
-        setSelectedCategories((prev) => prev.filter((x) => x !== c)),
+      v: getProvinceName(slug),
+      remove: () => {
+        const next = selectedProvinces.filter((x) => x !== slug);
+        setSelectedProvinces(next);
+        syncFiltersToUrlAndHook(selectedIslands, next, filters.search, filters.sort);
+      },
     })),
     ...(avail.attr
       ? [
@@ -199,18 +205,17 @@ export default function DestinationsPage() {
   ];
 
   function resetAll() {
-    setFilters({ island: "", province: "", search: "", sort: "alpha" });
     setSelectedIslands([]);
     setSelectedProvinces([]);
-    setSelectedCategories([]);
     setAvail({ attr: false, desa: false, guide: false });
+    syncFiltersToUrlAndHook([], [], "", "alpha");
   }
 
   const headingTitle =
     selectedProvinces.length === 1
-      ? `Destinasi di ${selectedProvinces[0]}`
+      ? `Destinasi di ${getProvinceName(selectedProvinces[0])}`
       : selectedIslands.length === 1
-        ? `Destinasi di ${selectedIslands[0]}`
+        ? `Destinasi di ${getIslandName(selectedIslands[0])}`
         : "Semua Destinasi Wisata";
 
   /* ─── Loading state (initial fetch) ─── */
@@ -267,19 +272,18 @@ export default function DestinationsPage() {
             items={[
               "Beranda",
               "Jelajahi",
-              selectedProvinces[0] || selectedIslands[0] || "Semua Destinasi",
+              getProvinceName(selectedProvinces[0]) || getIslandName(selectedIslands[0]) || "Semua Destinasi",
             ]}
           />
           <h1 style={rg.h1}>{headingTitle}</h1>
           <p style={rg.subtitle}>
             {filtered.length} kota/kabupaten tersedia di Atourin
-            {isValidating && " \u2022 Memuat\u2026"}
           </p>
           {selectedProvinces.length === 1 && (
             <div style={rg.provMiniHero}>
               <span style={rg.provHeroIcon}>{"\uD83D\uDCCD"}</span>
               <span>
-                <strong>{selectedProvinces[0]}</strong>, Provinsi dengan{" "}
+                <strong>{getProvinceName(selectedProvinces[0])}</strong>, Provinsi dengan{" "}
                 {filtered.reduce((a, b) => a + b.attractionsCount, 0)} atraksi dan{" "}
                 {filtered.reduce((a, b) => a + b.villagesCount, 0)} desa wisata terdaftar
                 di Atourin.
@@ -320,11 +324,14 @@ export default function DestinationsPage() {
           <DropdownFilter
             label="Pulau"
             options={islandsList.map((i) => ({
-              id: i.name,
+              id: i.id,
               name: i.name,
             }))}
             selectedValues={selectedIslands}
-            onChange={setSelectedIslands}
+            onChange={(vals) => {
+              setSelectedIslands(vals);
+              syncFiltersToUrlAndHook(vals, selectedProvinces, filters.search, filters.sort);
+            }}
             multiple={true}
             minWidth={200}
           />
@@ -333,12 +340,15 @@ export default function DestinationsPage() {
           <DropdownFilter
             label="Provinsi"
             options={provincesList.map((p) => ({
-              id: p.name,
+              id: p.slug,
               name: p.name,
               subtext: p.island?.name || "",
             }))}
             selectedValues={selectedProvinces}
-            onChange={setSelectedProvinces}
+            onChange={(vals) => {
+              setSelectedProvinces(vals);
+              syncFiltersToUrlAndHook(selectedIslands, vals, filters.search, filters.sort);
+            }}
             multiple={true}
             showSearch={true}
             searchPlaceholder="Cari provinsi..."
@@ -393,7 +403,7 @@ export default function DestinationsPage() {
               selectedValues={[filters.sort]}
               onChange={(vals) => {
                 if (vals.length > 0) {
-                  setFilters({ ...filters, sort: vals[0] });
+                  syncFiltersToUrlAndHook(selectedIslands, selectedProvinces, filters.search, vals[0]);
                 }
               }}
               multiple={false}
@@ -429,8 +439,27 @@ export default function DestinationsPage() {
       <section style={rg.gridSection}>
         <div style={rg.resultRow}>
           <span style={rg.resultText}>
-            Menampilkan <strong>{filtered.length}</strong> dari{" "}
-            <strong>{pagination?.total ?? filtered.length}</strong> destinasi
+            {isLoading || isValidating ? (
+              <span style={{ display: "inline-flex", alignItems: "center", gap: "8px", verticalAlign: "middle" }}>
+                <span
+                  style={{
+                    width: "14px",
+                    height: "14px",
+                    border: "2.2px solid var(--atr-outline)",
+                    borderTop: "2.2px solid var(--atr-purple)",
+                    borderRadius: "50%",
+                    animation: "atr-spin 0.8s linear infinite",
+                    display: "inline-block",
+                  }}
+                />
+                <span style={{ fontSize: "14px", color: "var(--atr-text-muted)" }}>Memuat destinasi...</span>
+              </span>
+            ) : (
+              <>
+                Menampilkan <strong>{filtered.length}</strong> dari{" "}
+                <strong>{pagination?.total ?? filtered.length}</strong> destinasi
+              </>
+            )}
           </span>
         </div>
 
@@ -454,22 +483,30 @@ export default function DestinationsPage() {
                 <DestinationCard key={i} d={d} />
               ))}
             </div>
-            {hasMore && (
-              <div style={rg.loadMoreWrap}>
-                <button onClick={loadMore} style={rg.loadMoreBtn}>
-                  Muat lebih banyak (
-                  {isValidating
-                    ? "\u2026"
-                    : `${pagination ? pagination.total - data.length : 0} tersisa`}
-                  )
-                </button>
-              </div>
-            )}
+            {hasMore && (() => {
+              const remaining = pagination ? pagination.total - data.length : 0;
+              const nextLoadCount = Math.min(12, remaining);
+              return (
+                <div style={rg.loadMoreWrap}>
+                  <button onClick={loadMore} style={rg.loadMoreBtn}>
+                    {isValidating ? "Memuat..." : `Muat ${nextLoadCount} destinasi lagi (${remaining} tersisa)`}
+                  </button>
+                </div>
+              );
+            })()}
           </>
         )}
       </section>
 
       <SiteFooter />
     </div>
+  );
+}
+
+export default function DestinationsPage() {
+  return (
+    <Suspense fallback={<div>Memuat halaman destinasi wisata...</div>}>
+      <DestinationsPageInner />
+    </Suspense>
   );
 }

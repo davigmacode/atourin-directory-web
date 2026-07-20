@@ -235,11 +235,16 @@ export default function AttractionGrid({ data, loadMore, hasMore, pagination }: 
         ))}
       </div>
       <div style={cardStyles.paginationRow}>
-        {hasMore && (
-          <button style={cardStyles.loadMore} onClick={loadMore}>
-            Muat 24 atraksi lagi
-          </button>
-        )}
+        {hasMore && (() => {
+          const totalCount = pagination?.total || 0;
+          const remaining = totalCount ? totalCount - data.length : 0;
+          const nextLoadCount = remaining > 0 ? Math.min(12, remaining) : 12;
+          return (
+            <button style={cardStyles.loadMore} onClick={loadMore}>
+              Muat {nextLoadCount} atraksi lagi
+            </button>
+          );
+        })()}
         <div style={cardStyles.pageInfo}>
           Menampilkan {data.length} dari{" "}
           {pagination?.total?.toLocaleString("id-ID") || data.length}

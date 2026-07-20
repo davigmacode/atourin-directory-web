@@ -90,7 +90,10 @@ export const findController = new Elysia()
 
     // 2. Province Filter
     if (province) {
-      dbQuery = dbQuery.ilike('destination.province.name', province);
+      const provinceValues = province.split(',').map(p => p.trim()).filter(Boolean);
+      if (provinceValues.length > 0) {
+        dbQuery = dbQuery.in('destination.province.slug', provinceValues);
+      }
     }
 
     // 3. Rating Filter
@@ -103,22 +106,32 @@ export const findController = new Elysia()
 
     // 4. Price Range Filter
     if (priceRange) {
-      const range = parsePriceRange(priceRange);
-      if (range) {
-        const [min, max] = range;
-        if (max === Infinity) {
-          dbQuery = dbQuery.gte('min_price', min);
-        } else if (min === max) {
-          dbQuery = dbQuery.eq('min_price', min);
-        } else {
-          dbQuery = dbQuery.gte('min_price', min).lte('min_price', max);
+      const ranges = priceRange.split(',').map(r => r.trim()).filter(Boolean);
+      const conditions: string[] = [];
+      ranges.forEach(r => {
+        const range = parsePriceRange(r);
+        if (range) {
+          const [min, max] = range;
+          if (max === Infinity) {
+            conditions.push(`min_price.gte.${min}`);
+          } else if (min === max) {
+            conditions.push(`min_price.eq.${min}`);
+          } else {
+            conditions.push(`and(min_price.gte.${min},min_price.lte.${max})`);
+          }
         }
+      });
+      if (conditions.length > 0) {
+        dbQuery = dbQuery.or(conditions.join(','));
       }
     }
 
-    // 5. Category Filter — GIN containment on text[] categories column
+    // 5. Category Filter — GIN overlaps on text[] categories column
     if (category) {
-      dbQuery = dbQuery.contains('categories', [category]);
+      const categoryValues = category.split(',').map(c => c.trim()).filter(Boolean);
+      if (categoryValues.length > 0) {
+        dbQuery = dbQuery.overlaps('categories', categoryValues);
+      }
     }
 
     // 6. Facilities Filter

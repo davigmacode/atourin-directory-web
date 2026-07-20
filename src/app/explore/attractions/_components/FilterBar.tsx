@@ -130,10 +130,12 @@ interface FilterBarProps {
   onRemoveFilter?: (c: string) => void;
   onClearFilters?: () => void;
   onSortChange?: (s: string) => void;
+  onActiveChipsChange?: (chips: string[]) => void;
   filters?: { label: string; icon: string }[];
   filterOptions?: Record<string, string[]>;
   resultLabel?: string;
   totalResults?: number;
+  isLoading?: boolean;
 }
 
 export default function FilterBar({
@@ -142,10 +144,12 @@ export default function FilterBar({
   onRemoveFilter,
   onClearFilters,
   onSortChange,
+  onActiveChipsChange,
   filters = ATTR_FILTERS,
   filterOptions = ATTR_FILTER_OPTIONS,
   resultLabel = "atraksi",
   totalResults = 1247,
+  isLoading = false,
 }: FilterBarProps) {
   const wrapRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -165,16 +169,20 @@ export default function FilterBar({
   }
 
   function pickFilter(label: string, value: string) {
-    if (!ui.activeChips.includes(value)) {
-      ui.setActiveChips([...ui.activeChips, value]);
+    let newChips;
+    if (ui.activeChips.includes(value)) {
+      newChips = ui.activeChips.filter((x) => x !== value);
+    } else {
+      newChips = [...ui.activeChips, value];
     }
-    onPickFilter?.(label, value);
-    ui.setOpenFilter(null);
+    ui.setActiveChips(newChips);
+    onActiveChipsChange?.(newChips);
   }
 
   function removeChip(c: string) {
-    ui.setActiveChips(ui.activeChips.filter((x) => x !== c));
-    onRemoveFilter?.(c);
+    const newChips = ui.activeChips.filter((x) => x !== c);
+    ui.setActiveChips(newChips);
+    onActiveChipsChange?.(newChips);
   }
 
   return (
@@ -212,7 +220,26 @@ export default function FilterBar({
 
       <div style={dirStyles.activeRow}>
         <span style={dirStyles.resultCount}>
-          <strong>{totalResults}</strong> {resultLabel} cocok untukmu
+          {isLoading ? (
+            <span style={{ display: "inline-flex", alignItems: "center", gap: "8px", verticalAlign: "middle" }}>
+              <span
+                style={{
+                  width: "14px",
+                  height: "14px",
+                  border: "2.2px solid var(--atr-outline)",
+                  borderTop: "2.2px solid var(--atr-purple)",
+                  borderRadius: "50%",
+                  animation: "atr-spin 0.8s linear infinite",
+                  display: "inline-block",
+                }}
+              />
+              <span style={{ fontSize: "14px", color: "var(--atr-text-muted)" }}>Memuat atraksi...</span>
+            </span>
+          ) : (
+            <>
+              <strong>{totalResults.toLocaleString("id-ID")}</strong> {resultLabel} cocok untukmu
+            </>
+          )}
         </span>
         <div style={dirStyles.activeChips}>
           {ui.activeChips.map((c) => (
@@ -227,7 +254,7 @@ export default function FilterBar({
             <button
               onClick={() => {
                 ui.setActiveChips([]);
-                onClearFilters?.();
+                onActiveChipsChange?.([]);
               }}
               style={dirStyles.clearAll}
             >
